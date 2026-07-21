@@ -7,10 +7,27 @@ sys.path.append(PROJECT_ROOT)
 
 
 def test_get_employee_profile():
-    '''查看张三档案'''
+    """测试1：查看 张三的档案，因包含姓名和职级"""
     result = get_employee_profile.invoke({'uid': '1001'})
     assert '张三' in result
     assert 'P5' in result
+
+def test_get_leave_balance():
+    """测试2：查看 李四（1002）的剩余假期"""
+    result = get_leave_balance.invoke({'uid': '1002'})
+    assert '李四' in result
+    assert '7' in result
+
+def test_get_employment_certificate_p5():
+    """测试3：查看 张三（P5）的收入证明（预期成功）"""
+    result = generate_employment_certification.invoke({'uid': '1001', 'cer_type': 'income'})
+    assert '系统成功' in result
+    assert '收入证明' in result
+
+def test_get_employment_certificate_p4():
+    """测试4：查看 李四（P4）的收入证明（预期失败）"""
+    result = generate_employment_certification.invoke({'uid': '1002', 'cer_type': 'income'})
+    assert '无法' in result
 
 
 
