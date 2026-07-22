@@ -12,7 +12,7 @@ def get_connection(db_path: Path = DB_PATH) -> sqlite3.Connection:
             f'数据库文件未找到：{db_path}\n'
             f'请先运行初始化脚本：python database/mock_db.py'
         )
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(str(db_path),check_same_thread=False)
     conn.execute('PRAGMA foreign_keys=ON')
     return conn
 
