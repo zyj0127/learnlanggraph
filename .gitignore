@@ -1,0 +1,85 @@
+# Python 缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+*.venv
+
+# 环境变量配置（密钥不提交）
+.env
+.env.local
+.env.dev
+.env.prod
+
+# 配置缓存
+*.pkl
+*.pickle
+*.h5
+*.pt
+*.pth
+
+# 日志文件
+*.log
+logs/
+log/
+
+# 数据文件夹（数据集、输出文件）
+data/
+dataset/
+output/
+result/
+tmp/
+temp/
+
+# IDE 编辑器文件
+# VSCode
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 编译、打包文件
+*.tar.gz
+*.zip
+*.whl
