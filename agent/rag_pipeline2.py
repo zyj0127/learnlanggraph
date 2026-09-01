@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import List
 
-import reranker
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
@@ -13,7 +12,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_community.retrievers import BM25Retriever
 from langchain_classic.retrievers import EnsembleRetriever
 from pydantic import BaseModel, Field
-from sentence_transformers import SentenceTransformer, CrossEncoder
+from sentence_transformers import CrossEncoder
 
 import os
 from dotenv import load_dotenv
@@ -142,6 +141,7 @@ def expan_and_hyde(original_query: str) -> list[str]:
 
 
 # 封装工具
+@tool
 def search_hr_policy(query: str) -> str:
     """
     高级知识搜索引擎（具备自动改写、混合检索、重拍功能）。

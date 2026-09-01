@@ -74,7 +74,7 @@ def generate_employment_certification(uid: str, cer_type: str) -> str:
 
         content = f"《薪资收入证明》\n兹证明我公司员工 {employee['name']}，职级为 {employee['level']}。\n该员工基本薪资为人民币 {employee['salary']} 元。\n特此证明（公章）"
 
-        return (f"系统提示：以为你自动生成收入证明：\n=============="
+        return (f"[系统成功]已为你自动生成收入证明：\n=============="
                 f"{content}"
                 f"\n===================="
                 )

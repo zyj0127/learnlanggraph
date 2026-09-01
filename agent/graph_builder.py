@@ -15,6 +15,7 @@ from langgraph.graph import StateGraph, START, END
 
 from tools.hr_tools import get_employee_profile, get_leave_balance, generate_employment_certification
 from agent.rag_pipeline2 import search_hr_policy
+from langgraph.checkpoint.memory import  InMemorySaver
 
 
 # 1. 定义全局共享状态(state)
@@ -43,6 +44,18 @@ def chatbot_nodes(state: AgentState):
     """执行者节点意图理解，工具调用与生成内容生成"""
     messages = state.get('messages', [])
 
+    #拦截应用层发来的“超时总结”隐藏指令
+    last_message = messages[-1]
+    if isinstance(last_message, HumanMessage)and last_message.content=="__SYS_IDLE_TIMEOUT__":
+        print('超时触发压缩历史会话，生成自动总结。。。。。')
+        summery_llm=llm.model_copy(update={'temperature': 0.3})
+        summery_prompt=(
+            "你是一名hr助手，请用一两句话，总结上面对话中员工咨询的核心问题以及你给出的最终结论"
+            "直接输出结果，并以【绘画闲置总结】这几个字开头"
+        )
+        response=summery_llm.invoke(messages[:-1]+[SystemMessage(content=summery_prompt)])
+        return {'messages':[response]}
+
     # 首轮对话注入System Prompt
     if len(messages) == 1:
         system_msg = SystemMessage(
@@ -57,8 +70,8 @@ def chatbot_nodes(state: AgentState):
 
 
 class FactcheckResult(BaseModel):
-    is_pass: bool = Field(description='如果ai的回答全忠于知识库原文输出Ture，捏造了数字或者政策则输出False')
-    feedback: str = Field(description='如果False，则指出造假点，如果Ture，则输出Pass')
+    is_pass: bool = Field(description='如果ai的回答全忠于知识库原文输出True，捏造了数字或者政策则输出False')
+    feedback: str = Field(description='如果False，则指出造假点，如果True，则输出Pass')
 
 
 def fact_check_node(state: AgentState):
@@ -153,4 +166,6 @@ workflow.add_conditional_edges('fact_checker',
                                router_after_fact_check,
                                {'chatbot': 'chatbot',
                                 'end': END})
-hr_agent_app = workflow.compile()
+
+memory=InMemorySaver()
+hr_agent_app = workflow.compile(checkpointer=memory)

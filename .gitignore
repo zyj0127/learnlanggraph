@@ -35,6 +35,9 @@ venv.bak/
 .env.dev
 .env.prod
 
+# 本地模型文件
+.local_models/
+
 # 配置缓存
 *.pkl
 *.pickle
