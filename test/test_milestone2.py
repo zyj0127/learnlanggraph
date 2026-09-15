@@ -5,7 +5,7 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from agent.rag_pipeline2 import search_hr_policy
+from agent.rag_pipeline import search_hr_policy
 
 QUESTIONS = [
     'P5员工去成都出差，一天住宿报销多少',

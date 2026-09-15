@@ -65,20 +65,32 @@ HR 文档中充斥着复杂的表格（如不同职级/城市的差旅报销标�
 
 ```
 hr_agent_project/
+├── config.py                  # 全局配置：路径、环境变量、LLM 工厂
+├── logging_config.py          # 统一日志（控制台 + 滚动落盘）
+├── observability.py           # 本地可观测性：token 用量 / 延迟 / 成本
+├── streamlit_app.py           # Streamlit 前端（仅展示层）
 ├── data/                      # 数据层：存放非结构化知识和静态资源
-│   └── company_handbook.md    # 
+│   └── company_handbook.md    # 《员工手册》知识库
+├── db/                        # 落盘产物：员工库 / checkpoint / （向量库已改内存版）
 ├── database/                  # 数据库层：数据模型与连接管理
-│   ├── __init__.py            # 空文件，声明这是一个 Python 包
-│   └── mock_db.py             # 
-├── tools/                     # 工具层：Agent 可以调用的所有外部能力
-│   ├── __init__.py            
-│   └── hr_tools.py            # 
-├── tests/                     # 测试层：单元测试与验证脚本
-│   └── test_milestone1.py     # 
-├── agent/                     # 核心逻辑层 (为 Milestone 3 预留)
 │   ├── __init__.py
-│   ├── rag_pipeline.py        # 预留：文档切分与检索逻辑
-│   └── graph_builder.py       # 预留：LangGraph 状态机编排
+│   └── mock_db.py             # SQLite 初始化与通用查询
+├── tools/                     # 工具层：Agent 可以调用的所有外部能力
+│   ├── __init__.py
+│   └── hr_tools.py            # 档案查询 / 假期余额 / 证明开具
+├── agent/                     # 核心逻辑层
+│   ├── __init__.py
+│   ├── constants.py           # 前后端共享的协议常量（隐藏指令/敏感工具/转人工词表）
+│   ├── state.py               # AgentState 状态定义
+│   ├── nodes.py               # 节点实现：执行者 / 人工审批 / 事实审计
+│   ├── routers.py             # 条件路由
+│   ├── rag_pipeline.py        # RAG：查询扩写 + HyDE + 混合检索 + 重排
+│   └── graph_builder.py       # LangGraph 装配入口（导出 hr_agent_app）
+├── eval/                      # 评测层
+│   ├── dataset.py             # 检索/端到端评测集（ground truth）
+│   ├── evaluate.py            # Hit@3 + 端到端事实准确率
+│   └── benchmark.py           # token / 延迟 / 成本基准
+├── test/                      # 测试层：各 milestone 验证脚本
 ├── .env                       # 配置文件：存放 API Keys (绝对不能提交到 Git)
 ├── .gitignore                 # Git 忽略文件配置
 └── requirements.txt           # 依赖清单

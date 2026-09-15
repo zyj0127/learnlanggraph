@@ -77,8 +77,10 @@ temp/
 Thumbs.db
 .DS_Store
 
-# 数据库文件
+# 数据库文件（含薪资字段，严禁入库）
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
 

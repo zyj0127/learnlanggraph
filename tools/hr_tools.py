@@ -1,30 +1,41 @@
-import atexit
+from contextlib import contextmanager
 
 from langchain_core.tools import tool
-from pathlib import Path
 
-from database.mock_db import get_connection, query_db, close_db
+from database.mock_db import get_connection, query_db
 
-db_conn = get_connection()
-atexit.register(close_db, db_conn)
+
+@contextmanager
+def _open_db():
+    """每次调用工具时新建独立 SQLite 连接，避免长生命周期进程下
+    模块级连接因重载/线程切换而失效。"""
+    conn = get_connection()
+    try:
+        yield conn
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
 
 
 @tool
 def get_employee_profile(uid: str) -> str:
     """
-    根据员工uid查询员工的完整人事档案，包括姓名，职级，工作城市，入职年限，基本性质。
+    根据员工uid查询员工的完整人事档案，包括姓名，职级，工作城市，入职年限，基本薪资。
     当需要获取当前对话的员工的属性时，必须调用此工具
     """
     sql = "select uid,name,level,city,tenure,salary from employees where uid=?"
-    res = query_db(conn=db_conn, sql=sql, params=(uid,))
+    with _open_db() as conn:
+        res = query_db(conn=conn, sql=sql, params=(uid,))
 
     if not res:
         return f"未找到uid为{uid}的员工信息"
 
     employee = res[0]
-    return (f"档案查询结果 员工姓名{employee['name']},级别{employee['level']}"
-            f"工作地点{employee['city']},入职年限{employee['tenure']}"
-            f"基本{employee['salary']}"
+    return (f"档案查询结果：员工姓名{employee['name']}，级别{employee['level']}，"
+            f"工作地点{employee['city']}，入职年限{employee['tenure']}年，"
+            f"基本薪资{employee['salary']}元。"
             )
 
 
@@ -37,7 +48,8 @@ def get_leave_balance(uid: str) -> str:
     sql = """SELECT a.name, b.annual_leave_remaining, b.sick_leave_remaining
             from employees a LEFT JOIN leave_balances b on a.uid = b.uid
             where a.uid = ?"""
-    res = query_db(conn=db_conn, sql=sql, params=(uid,))
+    with _open_db() as conn:
+        res = query_db(conn=conn, sql=sql, params=(uid,))
     if not res:
         return f"无法获得uid为{uid}的假期"
     data = res[0]
@@ -47,16 +59,17 @@ def get_leave_balance(uid: str) -> str:
 
 @tool
 def generate_employment_certification(uid: str, cer_type: str) -> str:
-    """为员工指定生成文件。
-    参数cer_type必须是一下两个值
+    """为员工生成指定类型的证明文件。
+    参数cer_type必须是以下两个值之一
     -'employment'：仅开具在职证明
-    -'income'：开具包含薪资的在职收入证明以及收入证明（有职级权限）
+    -'income'：开具包含薪资的在职收入证明（有职级权限限制）
     """
     sql = """
     select name,level,city,salary from employees where uid=?
     """
 
-    emp_res = query_db(conn=db_conn, sql=sql, params=(uid,))
+    with _open_db() as conn:
+        emp_res = query_db(conn=conn, sql=sql, params=(uid,))
     if not emp_res:
         return f"因无法核实员工身份（uid：{uid}）证明失效"
 

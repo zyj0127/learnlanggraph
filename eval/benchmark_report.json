@@ -1,0 +1,64 @@
+{
+  "questions": 12,
+  "total_wall_time_s": 177.28,
+  "avg_end_to_end_latency_s": 14.773,
+  "usage": {
+    "llm_calls": 60,
+    "input_tokens": 80365,
+    "output_tokens": 24936,
+    "total_tokens": 105301,
+    "llm_latency_s": 172.027,
+    "avg_llm_latency_s": 2.867,
+    "estimated_cost_rmb": 0.3602
+  },
+  "per_question": [
+    {
+      "question": "P4 职级、入职满两年的员工，企业福利年假有几天？",
+      "latency_s": 55.136
+    },
+    {
+      "question": "P7 职级、入职四年的员工，年假有多少天？",
+      "latency_s": 49.001
+    },
+    {
+      "question": "P8 及以上高管每年有多少天福利年假？",
+      "latency_s": 7.065
+    },
+    {
+      "question": "员工请 2 天事假，需要谁来审批？",
+      "latency_s": 6.969
+    },
+    {
+      "question": "员工请 5 天假，审批流程是什么？",
+      "latency_s": 8.952
+    },
+    {
+      "question": "员工请 12 天长假，还需要谁审批？",
+      "latency_s": 7.41
+    },
+    {
+      "question": "P5 职级员工去北京出差，住宿每天最多能报销多少？",
+      "latency_s": 7.009
+    },
+    {
+      "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
+      "latency_s": 10.711
+    },
+    {
+      "question": "P8 高管去上海出差，住宿报销上限是多少？",
+      "latency_s": 10.886
+    },
+    {
+      "question": "P6 职级员工每天市内交通补贴是多少？",
+      "latency_s": 10.456
+    },
+    {
+      "question": "帮我查一下我的档案信息",
+      "latency_s": 1.532
+    },
+    {
+      "question": "我还有多少天年假",
+      "latency_s": 2.15
+    }
+  ]
+}
