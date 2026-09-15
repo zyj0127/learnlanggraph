@@ -27,17 +27,14 @@ from langchain_chroma import Chroma  # noqa: E402
 from langchain_classic.retrievers import EnsembleRetriever  # noqa: E402
 from langchain_community.retrievers import BM25Retriever  # noqa: E402
 from langchain_huggingface import HuggingFaceEmbeddings  # noqa: E402
-from langchain_text_splitters import (  # noqa: E402
-    MarkdownHeaderTextSplitter,
-    RecursiveCharacterTextSplitter,
-)
 
+from agent.chunking import split_handbook  # noqa: E402
 from config import DOC_PATH  # noqa: E402
 from eval.dataset import POLICY_EVAL_SET  # noqa: E402
 
 OUT = Path(__file__).resolve().parent / "weight_sweep_result.json"
 
-# ---- 与 agent/rag_pipeline.build_ensemble_retriever 保持一致的切分配置 ----
+# ---- 与 agent/rag_pipeline.build_ensemble_retriever 共用同一套切分实现 ----
 TEXT = DOC_PATH.read_text(encoding="utf-8")
 print(f"[info] 知识库文件 {DOC_PATH.name}，{len(TEXT)} 字符")
 
@@ -47,11 +44,8 @@ embeddings = HuggingFaceEmbeddings(
     encode_kwargs={"normalize_embeddings": True},
 )
 
-md_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=[("##", "Chapter"), ("###", "Section")])
-md_splits = md_splitter.split_text(TEXT)
-rec_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50, separators=["\n\n", "\n"])
-splits = rec_splitter.split_documents(md_splits)
-print(f"[info] chunk 总数：{len(splits)}  （markdown 层切分后 {len(md_splits)} 段）")
+splits = split_handbook(TEXT)
+print(f"[info] chunk 总数：{len(splits)}  （含表格逐行结构化切片）")
 
 bm25 = BM25Retriever.from_documents(splits)
 bm25.k = 5
@@ -94,7 +88,7 @@ for vw, bw, label in CONFIGS:
 
 OUT.write_text(
     json.dumps(
-        {"chunks": len(splits), "md_sections": len(md_splits), "results": results, "detail": detail_rows},
+        {"chunks": len(splits), "results": results, "detail": detail_rows},
         ensure_ascii=False,
         indent=2,
     ),

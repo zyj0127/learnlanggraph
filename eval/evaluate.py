@@ -9,6 +9,7 @@ RAG 检索命中率 + 端到端事实准确率 + 超纲拒答 + 敏感审批 评
     python eval/evaluate.py --end2end      # 只跑端到端准确率
     python eval/evaluate.py --refusal      # 只跑超纲拒答
     python eval/evaluate.py --approval     # 只跑敏感审批拦截
+    python eval/evaluate.py --trajectory   # 只跑工具调用轨迹（transcript）评测
 
 指标：
 - 检索命中率 Hit@3：正确 chunk 是否进入 Top-3 召回（衡量 RAG 召回质量）
@@ -16,6 +17,8 @@ RAG 检索命中率 + 端到端事实准确率 + 超纲拒答 + 敏感审批 评
 - 幻觉拦截：审计节点打回重写次数及最终纠正率
 - 超纲拒答率：知识库未收录问题是否转人工而非编造
 - 审批拦截率：敏感证明开具是否 100% 触发人工审批挂起
+- 轨迹指标：该调的工具调了没有 / 不该调的有没有乱调 / 执行步数与绕圈率
+  （tool_selection_accuracy / avg_steps / loop_rate，见 eval/tool_cases.py）
 
 输出：控制台表格 + eval/report.json
 """
@@ -302,15 +305,72 @@ def eval_approval(app) -> dict:
     }
 
 
+# ---------------------------------------------------------------------------
+# 5. 工具调用轨迹（transcript）评测：不只看答案，还看「过程对不对」
+#    用例与断言规则见 eval/tool_cases.py
+# ---------------------------------------------------------------------------
+def eval_trajectory(app) -> dict:
+    from eval.tool_cases import TRAJECTORY_EVAL_SET, extract_trajectory, judge_case
+
+    print("\n========== 工具调用轨迹评测（tool selection / steps / loops） ==========")
+    passed = 0
+    total_steps = 0
+    over_limit_count = 0
+    rows = []
+    for i, case in enumerate(TRAJECTORY_EVAL_SET):
+        config = {"configurable": {"thread_id": f"eval_traj_{i}"}}
+        result = app.invoke(_new_state(case["question"], case.get("uid", "1001")), config)
+        interrupted = bool(app.get_state(config).next)
+        if interrupted:
+            # 敏感审批挂起按规范拒绝，清理挂起状态后再评估轨迹
+            result = app.invoke(Command(resume="reject"), config)
+
+        traj = extract_trajectory(result["messages"])
+        verdict = judge_case(case, traj, interrupted)
+        over_limit = traj["steps"] > case["max_steps"]
+        if over_limit:
+            verdict["failures"].append(f"执行步数 {traj['steps']} 超上限 {case['max_steps']}")
+            verdict["pass"] = False
+            over_limit_count += 1
+
+        passed += int(verdict["pass"])
+        total_steps += traj["steps"]
+        rows.append({
+            "question": case["question"], "uid": case.get("uid"),
+            "tool_calls": traj["calls"], "steps": traj["steps"],
+            "max_steps": case["max_steps"], "over_limit": over_limit,
+            "handoff": traj["handoff"], "interrupted": interrupted,
+            "pass": verdict["pass"], "failures": verdict["failures"],
+        })
+        mark = "√" if verdict["pass"] else f"× {verdict['failures']}"
+        tools_used = "→".join(c["name"] for c in traj["calls"]) or "(无工具)"
+        print(f"  [{mark}] {case['question']} (uid={case.get('uid')})  轨迹: {tools_used}  步数: {traj['steps']}")
+
+    total = len(TRAJECTORY_EVAL_SET)
+    print(f"\n  工具选择准确率：{passed}/{total} = {passed / total:.1%}"
+          f" ｜ 平均步数：{total_steps / total:.2f}"
+          f" ｜ 绕圈率（超步数上限）：{over_limit_count}/{total} = {over_limit_count / total:.1%}")
+    return {
+        "metric": "工具调用轨迹（该调的调了/不该调的没调/步数与绕圈）",
+        "total": total,
+        "passed": passed,
+        "tool_selection_accuracy": passed / total if total else 0.0,
+        "avg_steps": total_steps / total if total else 0.0,
+        "loop_rate": over_limit_count / total if total else 0.0,
+        "rows": rows,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description="RAG + 端到端 + 拒答 + 审批评测")
     parser.add_argument("--retrieval", action="store_true", help="仅跑检索命中率")
     parser.add_argument("--end2end", action="store_true", help="仅跑端到端准确率")
     parser.add_argument("--refusal", action="store_true", help="仅跑超纲拒答")
     parser.add_argument("--approval", action="store_true", help="仅跑敏感审批拦截")
+    parser.add_argument("--trajectory", action="store_true", help="仅跑工具调用轨迹评测")
     args = parser.parse_args()
 
-    run_all = not (args.retrieval or args.end2end or args.refusal or args.approval)
+    run_all = not (args.retrieval or args.end2end or args.refusal or args.approval or args.trajectory)
     # 权重标注取代码里的真实默认值，避免报告头写死字符串、与实际配置产生漂移
     try:
         from agent.rag_pipeline import DEFAULT_HYBRID_WEIGHTS as _default_weights
@@ -332,7 +392,7 @@ def main():
         report["retrieval"] = eval_retrieval(retriever, search_hr_policy)
 
     app = None
-    if run_all or args.end2end or args.refusal or args.approval:
+    if run_all or args.end2end or args.refusal or args.approval or args.trajectory:
         from agent.graph_builder import hr_agent_app
         app = hr_agent_app
 
@@ -342,6 +402,8 @@ def main():
         report["out_of_scope_refusal"] = eval_refusal(app)
     if run_all or args.approval:
         report["sensitive_approval"] = eval_approval(app)
+    if run_all or args.trajectory:
+        report["trajectory"] = eval_trajectory(app)
 
     out = PROJECT_ROOT / "eval" / "report.json"
     try:

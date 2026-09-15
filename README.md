@@ -68,31 +68,73 @@ hr_agent_project/
 ├── config.py                  # 全局配置：路径、环境变量、LLM 工厂
 ├── logging_config.py          # 统一日志（控制台 + 滚动落盘）
 ├── observability.py           # 本地可观测性：token 用量 / 延迟 / 成本
+├── telemetry.py               # 会话埋点：每轮问答落库 telemetry.db
 ├── streamlit_app.py           # Streamlit 前端（仅展示层）
+├── Dockerfile                 # 容器化：FastAPI 服务 + 健康检查（模型权重经挂载卷注入）
+├── .dockerignore
 ├── data/                      # 数据层：存放非结构化知识和静态资源
-│   └── company_handbook.md    # 《员工手册》知识库
-├── db/                        # 落盘产物：员工库 / checkpoint / （向量库已改内存版）
+│   └── company_handbook.md    # 《员工手册》知识库（16509 字符，12 章 68 小节）
+├── db/                        # 落盘产物：员工库 / checkpoint / 埋点库（向量库为内存版，不落盘）
 ├── database/                  # 数据库层：数据模型与连接管理
 │   ├── __init__.py
-│   └── mock_db.py             # SQLite 初始化与通用查询
+│   └── mock_db.py             # SQLite 初始化与通用查询（80 人花名册，种子 42；
+│                              #  规模变更后必须重跑 init_db() 与磁盘库保持同源）
 ├── tools/                     # 工具层：Agent 可以调用的所有外部能力
 │   ├── __init__.py
 │   └── hr_tools.py            # 档案查询 / 假期余额 / 证明开具
+├── mcp_server/                # 工具层 MCP 化：stdio server（复用 hr_tools 原始逻辑）
+│   └── hr_tools_server.py
+├── mcp_client/                # MCP vs 直连双路径 A/B 一致性校验
+│   └── ab_check.py
 ├── agent/                     # 核心逻辑层
 │   ├── __init__.py
 │   ├── constants.py           # 前后端共享的协议常量（隐藏指令/敏感工具/转人工词表）
 │   ├── state.py               # AgentState 状态定义
 │   ├── nodes.py               # 节点实现：执行者 / 人工审批 / 事实审计
 │   ├── routers.py             # 条件路由
+│   ├── chunking.py            # 知识库切分：标题层切分 + Markdown 表格结构化提取
 │   ├── rag_pipeline.py        # RAG：查询扩写 + HyDE + 混合检索 + 重排
 │   └── graph_builder.py       # LangGraph 装配入口（导出 hr_agent_app）
+├── api/                       # 服务层
+│   └── server.py              # FastAPI：/health + /chat/stream(SSE) + /chat/resume
 ├── eval/                      # 评测层
-│   ├── dataset.py             # 检索/端到端评测集（ground truth）
-│   ├── evaluate.py            # Hit@3 + 端到端事实准确率
+│   ├── dataset.py             # 评测集（ground truth，DATASET_VERSION 管理版本）
+│   ├── tool_cases.py          # 工具调用轨迹（transcript）级用例与断言
+│   ├── evaluate.py            # Hit@3 + 端到端 + 拒答 + 审批 + 轨迹
+│   ├── weight_sweep.py        # 混合权重扫参
+│   ├── baseline.json          # 检索质量门禁基线（test_eval_gate 消费）
 │   └── benchmark.py           # token / 延迟 / 成本基准
-├── test/                      # 测试层：各 milestone 验证脚本
+├── test/                      # 测试层：各 milestone 验证脚本 + 评测门禁
 ├── .env                       # 配置文件：存放 API Keys (绝对不能提交到 Git)
 ├── .gitignore                 # Git 忽略文件配置
 └── requirements.txt           # 依赖清单
 ```
+
+### 6. 当前技术口径（2026.09-v4）
+
+- **知识库切分**：Markdown 标题层级切分 + 表格结构化提取（2.2 报销标准表逐行转为
+  带表头语义的独立切片，metadata 含 `table_row` / `table_kv`，引用可精确到「表格第 N 行」），
+  共 72 个 chunk（69 小节切片 + 3 表格行切片）。
+- **混合召回**：向量(BGE bge-small-zh-v1.5) + BM25，EnsembleRetriever 加权 RRF，
+  线上默认权重 **向量 0.6 / BM25 0.4**（709 题扫参依据见 `eval/weight_sweep_result.json`）；
+  CrossEncoder(bge-reranker-base) 精排取 Top-3。
+- **评测集**：`2026.09-v4`，741 题（政策 709 + 工具 16 + 超纲拒答 10 + 敏感审批 6）。
+- **实体库**：80 人花名册（`db/employees.db`，与 `build_roster()` 同源；不在版本库内）。
+
+### 7. 容器化运行
+
+```bash
+docker build -t hr-agent .
+
+docker run -d --name hr-agent -p 8000:8000 \
+  --env-file .env \
+  -v "<模型目录>/BAAI/bge-small-zh-v1.5:/models/bge-small-zh-v1.5:ro" \
+  -v "<模型目录>/BAAI/bge-reranker-base:/models/bge-reranker-base:ro" \
+  hr-agent
+
+curl http://localhost:8000/health   # {"status":"ok"}
+```
+
+员工库 `employees.db` 不打入镜像，容器首次启动按固定种子自动生成（与评测集同源）。
+
 

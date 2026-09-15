@@ -1,0 +1,29 @@
+# 版本库与本地状态
+.git/
+.gitignore
+
+# 数据库文件（容器内首次启动自动生成 employees.db）
+db/
+*.db
+*.db-shm
+*.db-wal
+
+# 本地模型缓存（经挂载卷注入，不打进镜像/上下文）
+.local_models/
+.cache/
+
+# Python 产物
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 评测报告与临时产物（容器运行时不需要）
+eval/report.json
+eval/weight_sweep_result.json
+logs/
+*.log
+
+# 环境变量与 IDE
+.env
+.idea/
+.vscode/

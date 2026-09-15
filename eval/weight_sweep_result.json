@@ -1,62 +1,61 @@
 {
-  "chunks": 69,
-  "md_sections": 69,
+  "chunks": 72,
   "results": {
     "向量0.1 / BM25 0.9": {
-      "hit3": 69,
+      "hit3": 66,
       "total": 709,
-      "hit3_rate": 0.0973,
-      "hit5": 69,
-      "hit5_rate": 0.0973
+      "hit3_rate": 0.0931,
+      "hit5": 66,
+      "hit5_rate": 0.0931
     },
     "向量0.15 / BM25 0.85": {
-      "hit3": 69,
+      "hit3": 66,
       "total": 709,
-      "hit3_rate": 0.0973,
-      "hit5": 69,
-      "hit5_rate": 0.0973
+      "hit3_rate": 0.0931,
+      "hit5": 66,
+      "hit5_rate": 0.0931
     },
     "向量0.4 / BM25 0.6（旧默认，扩库后失效）": {
-      "hit3": 69,
+      "hit3": 66,
       "total": 709,
-      "hit3_rate": 0.0973,
-      "hit5": 69,
-      "hit5_rate": 0.0973
+      "hit3_rate": 0.0931,
+      "hit5": 66,
+      "hit5_rate": 0.0931
     },
     "向量0.5 / BM25 0.5": {
-      "hit3": 561,
+      "hit3": 557,
       "total": 709,
-      "hit3_rate": 0.7913,
-      "hit5": 603,
-      "hit5_rate": 0.8505
+      "hit3_rate": 0.7856,
+      "hit5": 604,
+      "hit5_rate": 0.8519
     },
     "向量0.6 / BM25 0.4": {
-      "hit3": 602,
+      "hit3": 603,
       "total": 709,
-      "hit3_rate": 0.8491,
+      "hit3_rate": 0.8505,
       "hit5": 628,
       "hit5_rate": 0.8858
     },
     "向量0.85 / BM25 0.15": {
-      "hit3": 602,
+      "hit3": 603,
       "total": 709,
-      "hit3_rate": 0.8491,
+      "hit3_rate": 0.8505,
       "hit5": 628,
       "hit5_rate": 0.8858
     },
     "纯向量": {
-      "hit3": 604,
+      "hit3": 605,
       "total": 709,
-      "hit3_rate": 0.8519,
+      "hit3_rate": 0.8533,
       "hit5": 628,
       "hit5_rate": 0.8858
     },
     "纯 BM25": {
-      "hit3": 61,
+      "hit3": 57,
       "total": 709,
-      "hit3_rate": 0.086,
-      "hit5": 69,
-      "hit5_rate": 0.0973
+      "hit3_rate": 0.0804,
+      "hit5": 66,
+      "hit5_rate": 0.0931
     }
   },
   "detail": {
@@ -137,7 +136,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -171,9 +170,9 @@
       },
       {
         "question": "员工请 12 天长假，还需要谁审批？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 8
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -215,7 +214,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -227,7 +226,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -239,13 +238,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -293,7 +292,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -653,7 +652,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -707,7 +706,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -737,7 +736,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -779,7 +778,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -1001,7 +1000,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -2603,7 +2602,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -2615,31 +2614,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -2669,13 +2668,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -2687,25 +2686,25 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
@@ -2717,7 +2716,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -2729,25 +2728,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -2771,31 +2770,31 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
@@ -2807,7 +2806,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -2819,7 +2818,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -2831,7 +2830,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -2843,19 +2842,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -2885,25 +2884,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -2915,7 +2914,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -2927,7 +2926,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -2939,31 +2938,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -2987,37 +2986,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -3035,7 +3034,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -3053,7 +3052,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -3065,7 +3064,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -3101,7 +3100,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -3143,43 +3142,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -3197,7 +3196,7 @@
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -3209,43 +3208,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -3317,7 +3316,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -3329,7 +3328,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -3575,13 +3574,13 @@
         "question": "请 6 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -3599,19 +3598,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -3645,27 +3644,27 @@
       },
       {
         "question": "请 12 天假需要几级审批？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 9
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 9
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 10
       },
       {
         "question": "请 14 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 14 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -3683,7 +3682,7 @@
         "question": "请 20 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
@@ -3713,13 +3712,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -3731,7 +3730,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -3761,7 +3760,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -3803,7 +3802,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -3815,7 +3814,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -4211,7 +4210,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",
@@ -4393,7 +4392,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -4427,9 +4426,9 @@
       },
       {
         "question": "员工请 12 天长假，还需要谁审批？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 8
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -4471,7 +4470,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -4483,7 +4482,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -4495,13 +4494,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -4549,7 +4548,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -4909,7 +4908,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -4963,7 +4962,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -4993,7 +4992,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -5035,7 +5034,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -5257,7 +5256,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -6859,7 +6858,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -6871,31 +6870,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -6925,13 +6924,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -6943,25 +6942,25 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
@@ -6973,7 +6972,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -6985,25 +6984,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -7027,31 +7026,31 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
@@ -7063,7 +7062,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -7075,7 +7074,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -7087,7 +7086,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -7099,19 +7098,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -7141,25 +7140,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -7171,7 +7170,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -7183,7 +7182,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -7195,31 +7194,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -7243,37 +7242,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -7291,7 +7290,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -7309,7 +7308,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -7321,7 +7320,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -7357,7 +7356,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -7399,43 +7398,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -7453,7 +7452,7 @@
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -7465,43 +7464,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -7573,7 +7572,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -7585,7 +7584,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -7831,13 +7830,13 @@
         "question": "请 6 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -7855,19 +7854,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -7901,27 +7900,27 @@
       },
       {
         "question": "请 12 天假需要几级审批？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 9
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 9
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 10
       },
       {
         "question": "请 14 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 14 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -7939,7 +7938,7 @@
         "question": "请 20 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
@@ -7969,13 +7968,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -7987,7 +7986,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -8017,7 +8016,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -8059,7 +8058,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -8071,7 +8070,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -8467,7 +8466,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",
@@ -8649,7 +8648,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -8683,9 +8682,9 @@
       },
       {
         "question": "员工请 12 天长假，还需要谁审批？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 8
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -8727,7 +8726,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -8739,7 +8738,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -8751,13 +8750,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -8805,7 +8804,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -9165,7 +9164,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -9219,7 +9218,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -9249,7 +9248,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -9291,7 +9290,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -9513,7 +9512,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -11115,7 +11114,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -11127,31 +11126,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -11181,13 +11180,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -11199,25 +11198,25 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
@@ -11229,7 +11228,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -11241,25 +11240,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -11283,31 +11282,31 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
@@ -11319,7 +11318,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -11331,7 +11330,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -11343,7 +11342,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -11355,19 +11354,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -11397,25 +11396,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -11427,7 +11426,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -11439,7 +11438,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -11451,31 +11450,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -11499,37 +11498,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -11547,7 +11546,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -11565,7 +11564,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -11577,7 +11576,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -11613,7 +11612,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -11655,43 +11654,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -11709,7 +11708,7 @@
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -11721,43 +11720,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -11829,7 +11828,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -11841,7 +11840,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -12087,13 +12086,13 @@
         "question": "请 6 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -12111,19 +12110,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -12157,27 +12156,27 @@
       },
       {
         "question": "请 12 天假需要几级审批？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 9
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 9
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 10
       },
       {
         "question": "请 14 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 14 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -12195,7 +12194,7 @@
         "question": "请 20 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
@@ -12225,13 +12224,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -12243,7 +12242,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -12273,7 +12272,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -12315,7 +12314,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -12327,7 +12326,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -12723,7 +12722,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",
@@ -12905,7 +12904,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": false,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -12941,7 +12940,7 @@
         "question": "员工请 12 天长假，还需要谁审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -12983,7 +12982,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -12995,7 +12994,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -13007,13 +13006,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
-        "hit3": false,
+        "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -13053,7 +13052,7 @@
       },
       {
         "question": "P5 职级的市内交通补贴标准是多少？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
         "n_docs": 9
       },
@@ -13061,7 +13060,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -13071,8 +13070,8 @@
       },
       {
         "question": "P8 及以上高管的市内交通费用怎么报销？",
-        "hit3": false,
-        "hit5": false,
+        "hit3": true,
+        "hit5": true,
         "n_docs": 10
       },
       {
@@ -13421,7 +13420,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -13475,7 +13474,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -13505,7 +13504,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -13547,7 +13546,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -13769,7 +13768,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -15371,7 +15370,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -15383,31 +15382,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -15437,13 +15436,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -15455,29 +15454,29 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
         "n_docs": 10
       },
@@ -15485,7 +15484,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -15497,25 +15496,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -15539,35 +15538,35 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
         "n_docs": 10
       },
@@ -15575,7 +15574,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -15587,7 +15586,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -15599,7 +15598,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -15611,19 +15610,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -15653,25 +15652,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -15683,7 +15682,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -15695,7 +15694,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -15707,31 +15706,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -15755,37 +15754,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -15803,7 +15802,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -15821,7 +15820,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -15833,7 +15832,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -15869,7 +15868,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -15911,43 +15910,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -15963,9 +15962,9 @@
       },
       {
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
-        "hit3": false,
+        "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -15977,43 +15976,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
-        "hit3": false,
+        "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
-        "hit3": false,
+        "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -16023,7 +16022,7 @@
       },
       {
         "question": "P3 职级员工市内交通费怎么报？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
         "n_docs": 9
       },
@@ -16047,7 +16046,7 @@
       },
       {
         "question": "P5 职级员工市内交通费怎么报？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
         "n_docs": 9
       },
@@ -16085,7 +16084,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -16097,7 +16096,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -16341,15 +16340,15 @@
       },
       {
         "question": "请 6 天假需要几级审批？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -16367,19 +16366,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -16415,25 +16414,25 @@
         "question": "请 12 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 14 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 14 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -16451,7 +16450,7 @@
         "question": "请 20 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
@@ -16481,13 +16480,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -16499,7 +16498,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -16529,7 +16528,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -16571,7 +16570,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -16583,7 +16582,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -16979,7 +16978,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",
@@ -17161,7 +17160,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -17197,7 +17196,7 @@
         "question": "员工请 12 天长假，还需要谁审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -17239,7 +17238,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -17251,7 +17250,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -17263,13 +17262,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -17317,7 +17316,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -17327,7 +17326,7 @@
       },
       {
         "question": "P8 及以上高管的市内交通费用怎么报销？",
-        "hit3": false,
+        "hit3": true,
         "hit5": true,
         "n_docs": 10
       },
@@ -17677,7 +17676,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -17731,7 +17730,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -17761,7 +17760,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -17803,7 +17802,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -18025,7 +18024,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -19627,7 +19626,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -19639,31 +19638,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -19693,13 +19692,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -19711,25 +19710,25 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
@@ -19741,7 +19740,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -19753,25 +19752,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -19795,31 +19794,31 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
@@ -19831,7 +19830,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -19843,7 +19842,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -19855,7 +19854,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -19867,19 +19866,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -19909,25 +19908,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -19939,7 +19938,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -19951,7 +19950,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -19963,31 +19962,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -20011,37 +20010,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -20059,7 +20058,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -20077,7 +20076,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -20089,7 +20088,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -20125,7 +20124,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -20167,43 +20166,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -20221,7 +20220,7 @@
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -20233,43 +20232,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -20341,7 +20340,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -20353,7 +20352,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -20599,13 +20598,13 @@
         "question": "请 6 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -20623,19 +20622,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -20671,25 +20670,25 @@
         "question": "请 12 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 14 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 14 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -20707,7 +20706,7 @@
         "question": "请 20 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
@@ -20737,13 +20736,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -20755,7 +20754,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -20785,7 +20784,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -20827,7 +20826,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -20839,7 +20838,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -21235,7 +21234,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",
@@ -21417,7 +21416,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -21453,7 +21452,7 @@
         "question": "员工请 12 天长假，还需要谁审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -21495,7 +21494,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -21507,7 +21506,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -21519,13 +21518,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -21573,7 +21572,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -21583,7 +21582,7 @@
       },
       {
         "question": "P8 及以上高管的市内交通费用怎么报销？",
-        "hit3": false,
+        "hit3": true,
         "hit5": true,
         "n_docs": 10
       },
@@ -21933,7 +21932,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -21987,7 +21986,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -22017,7 +22016,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -22059,7 +22058,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -22281,7 +22280,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -23883,7 +23882,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -23895,31 +23894,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -23949,13 +23948,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -23967,25 +23966,25 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
@@ -23997,7 +23996,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -24009,25 +24008,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -24051,31 +24050,31 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
@@ -24087,7 +24086,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -24099,7 +24098,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -24111,7 +24110,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -24123,19 +24122,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -24165,25 +24164,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -24195,7 +24194,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -24207,7 +24206,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -24219,31 +24218,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -24267,37 +24266,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -24315,7 +24314,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -24333,7 +24332,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -24345,7 +24344,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -24381,7 +24380,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -24423,43 +24422,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -24477,7 +24476,7 @@
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -24489,43 +24488,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -24597,7 +24596,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -24609,7 +24608,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -24855,13 +24854,13 @@
         "question": "请 6 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -24879,19 +24878,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -24927,25 +24926,25 @@
         "question": "请 12 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 14 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 14 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -24963,7 +24962,7 @@
         "question": "请 20 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
@@ -24993,13 +24992,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -25011,7 +25010,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -25041,7 +25040,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -25083,7 +25082,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -25095,7 +25094,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -25491,7 +25490,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",
@@ -25673,7 +25672,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -25709,7 +25708,7 @@
         "question": "员工请 12 天长假，还需要谁审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -25751,7 +25750,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -25763,7 +25762,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -25775,13 +25774,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -25829,7 +25828,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -25839,7 +25838,7 @@
       },
       {
         "question": "P8 及以上高管的市内交通费用怎么报销？",
-        "hit3": false,
+        "hit3": true,
         "hit5": true,
         "n_docs": 10
       },
@@ -26189,7 +26188,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -26243,7 +26242,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -26273,7 +26272,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -26315,7 +26314,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -26537,7 +26536,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -28139,7 +28138,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -28151,31 +28150,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -28205,13 +28204,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -28223,25 +28222,25 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
@@ -28253,7 +28252,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -28265,25 +28264,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -28307,31 +28306,31 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
@@ -28343,7 +28342,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -28355,7 +28354,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -28367,7 +28366,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -28379,19 +28378,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -28421,25 +28420,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -28451,7 +28450,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -28463,7 +28462,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -28475,31 +28474,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -28523,37 +28522,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -28571,7 +28570,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -28589,7 +28588,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -28601,7 +28600,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -28637,7 +28636,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -28679,43 +28678,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -28733,7 +28732,7 @@
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -28745,43 +28744,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -28853,7 +28852,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -28865,7 +28864,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -29111,13 +29110,13 @@
         "question": "请 6 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -29135,19 +29134,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -29183,25 +29182,25 @@
         "question": "请 12 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 14 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 14 天假，审批要走哪几级？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -29219,7 +29218,7 @@
         "question": "请 20 天假需要几级审批？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
@@ -29249,13 +29248,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -29267,7 +29266,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -29297,7 +29296,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -29339,7 +29338,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -29351,7 +29350,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -29747,7 +29746,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",
@@ -29929,7 +29928,7 @@
         "question": "入职 8 个月的新员工，法定年假怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "员工请 2 天事假，需要谁来审批？",
@@ -29964,8 +29963,8 @@
       {
         "question": "员工请 12 天长假，还需要谁审批？",
         "hit3": false,
-        "hit5": true,
-        "n_docs": 8
+        "hit5": false,
+        "n_docs": 9
       },
       {
         "question": "员工申请假期需要提前在哪里提交？",
@@ -30007,7 +30006,7 @@
         "question": "P4 员工去上海出差，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 去成都出差，住宿每天上限多少？",
@@ -30019,7 +30018,7 @@
         "question": "P4 去杭州出差住宿能报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 职级去广州出差，住宿报销上限是多少？",
@@ -30031,13 +30030,13 @@
         "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 去武汉出差，每天住宿最多报多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 去深圳出差住宿标准是多少？",
@@ -30085,7 +30084,7 @@
         "question": "P6 职级员工每天市内交通补贴是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 出差市内交通怎么补贴？",
@@ -30445,7 +30444,7 @@
         "question": "绩效等级 S 的比例上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "考核结果什么时候会反馈给我？",
@@ -30499,7 +30498,7 @@
         "question": "每年的学习基金额度是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报课程超过多少钱需要提前申请？",
@@ -30529,7 +30528,7 @@
         "question": "考出高级认证有补贴吗？多少钱？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "报销大额培训要不要签服务期？",
@@ -30571,7 +30570,7 @@
         "question": "结婚和生育的贺金是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
@@ -30793,7 +30792,7 @@
         "question": "实习生的津贴标准大概是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "劳务协议最长能签多久？",
@@ -32395,7 +32394,7 @@
         "question": "P4 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到北京，住宿报销上限是多少？",
@@ -32407,31 +32406,31 @@
         "question": "P4 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
@@ -32461,13 +32460,13 @@
         "question": "P4 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到武汉，住宿报销上限是多少？",
@@ -32479,25 +32478,25 @@
         "question": "P4 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P4 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到北京，住宿报销上限是多少？",
@@ -32509,7 +32508,7 @@
         "question": "P5 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到上海，住宿报销上限是多少？",
@@ -32521,25 +32520,25 @@
         "question": "P5 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
@@ -32563,31 +32562,31 @@
         "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到西安，住宿报销上限是多少？",
@@ -32599,7 +32598,7 @@
         "question": "P5 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P5 国内出差到南京，住宿报销上限是多少？",
@@ -32611,7 +32610,7 @@
         "question": "P6 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到北京，住宿报销上限是多少？",
@@ -32623,7 +32622,7 @@
         "question": "P6 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到上海，住宿报销上限是多少？",
@@ -32635,19 +32634,19 @@
         "question": "P6 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
@@ -32677,25 +32676,25 @@
         "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到西安，住宿报销上限是多少？",
@@ -32707,7 +32706,7 @@
         "question": "P6 员工去南京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P6 国内出差到南京，住宿报销上限是多少？",
@@ -32719,7 +32718,7 @@
         "question": "P7 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到北京，住宿报销上限是多少？",
@@ -32731,31 +32730,31 @@
         "question": "P7 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
@@ -32779,37 +32778,37 @@
         "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到杭州，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到武汉，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去西安出差，住宿每天最多报销多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 国内出差到西安，住宿报销上限是多少？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P7 员工去南京出差，住宿每天最多报销多少？",
@@ -32827,7 +32826,7 @@
         "question": "P8 员工去北京出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到北京，住宿报销上限是多少？",
@@ -32845,7 +32844,7 @@
         "question": "P8 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到广州，住宿报销上限是多少？",
@@ -32857,7 +32856,7 @@
         "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到深圳，住宿报销上限是多少？",
@@ -32893,7 +32892,7 @@
         "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P8 国内出差到杭州，住宿报销上限是多少？",
@@ -32935,43 +32934,43 @@
         "question": "P9 国内出差到北京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去上海出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到上海，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去广州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到广州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到深圳，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
@@ -32989,7 +32988,7 @@
         "question": "P9 员工去成都出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到成都，住宿报销上限是多少？",
@@ -33001,43 +33000,43 @@
         "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到杭州，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到武汉，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 员工去西安出差，住宿每天最多报销多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到西安，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 国内出差到南京，住宿报销上限是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P3 出差每天的市内交通补贴是多少？",
@@ -33109,7 +33108,7 @@
         "question": "P8 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "P9 出差每天的市内交通补贴是多少？",
@@ -33121,7 +33120,7 @@
         "question": "P9 职级员工市内交通费怎么报？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "去北京出差按几类城市执行住宿标准？",
@@ -33367,13 +33366,13 @@
         "question": "请 6 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "我打算请 6 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "请 7 天假需要几级审批？",
@@ -33391,19 +33390,19 @@
         "question": "请 8 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "我打算请 8 天假，审批要走哪几级？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "请 9 天假需要几级审批？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 9 天假，审批要走哪几级？",
@@ -33438,26 +33437,26 @@
       {
         "question": "请 12 天假需要几级审批？",
         "hit3": false,
-        "hit5": true,
-        "n_docs": 9
+        "hit5": false,
+        "n_docs": 10
       },
       {
         "question": "我打算请 12 天假，审批要走哪几级？",
+        "hit3": false,
+        "hit5": false,
+        "n_docs": 10
+      },
+      {
+        "question": "请 14 天假需要几级审批？",
         "hit3": false,
         "hit5": true,
         "n_docs": 9
       },
       {
-        "question": "请 14 天假需要几级审批？",
-        "hit3": true,
-        "hit5": true,
-        "n_docs": 8
-      },
-      {
         "question": "我打算请 14 天假，审批要走哪几级？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "请 15 天假需要几级审批？",
@@ -33473,13 +33472,13 @@
       },
       {
         "question": "请 20 天假需要几级审批？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 9
       },
       {
         "question": "我打算请 20 天假，审批要走哪几级？",
-        "hit3": true,
+        "hit3": false,
         "hit5": true,
         "n_docs": 9
       },
@@ -33505,13 +33504,13 @@
         "question": "P4 员工的年度体检是什么套餐？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P5 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工的年度体检是什么套餐？",
@@ -33523,7 +33522,7 @@
         "question": "P7 员工的年度体检是什么套餐？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "P8 员工的年度体检是什么套餐？",
@@ -33553,7 +33552,7 @@
         "question": "P5 员工每季度弹性福利积分是多少？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 10
+        "n_docs": 9
       },
       {
         "question": "P6 员工每季度弹性福利积分是多少？",
@@ -33595,7 +33594,7 @@
         "question": "派驻期间住宿标准怎么算？",
         "hit3": false,
         "hit5": false,
-        "n_docs": 9
+        "n_docs": 10
       },
       {
         "question": "派驻满 3 个月有什么探亲政策？",
@@ -33607,7 +33606,7 @@
         "question": "派驻超过 3 个月租房有补贴吗？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 9
+        "n_docs": 8
       },
       {
         "question": "派驻的租房补贴和生活补贴能同时领吗？",
@@ -34003,7 +34002,7 @@
         "question": "AI 工具能用哪些？",
         "hit3": true,
         "hit5": true,
-        "n_docs": 8
+        "n_docs": 7
       },
       {
         "question": "AI 生成的方案能直接发给客户吗？",

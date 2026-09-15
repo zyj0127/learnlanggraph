@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """RAG 检索管线：查询扩写 + HyDE + 混合检索（BM25 + 向量）+ CrossEncoder 重排。
 
-向量库使用内存版（不落盘）：本项目知识库只有个位数 chunk，进程启动时现场
-embedding 不到 2 秒，彻底规避 ChromaDB 持久化 SQLite 在 Windows 上
+向量库使用内存版（不落盘）：知识库规模小（个位数章节、不到百个 chunk），
+进程启动时现场 embedding 不到 2 秒，彻底规避 ChromaDB 持久化 SQLite 在 Windows 上
 「unable to open database file / 单写者锁 / 进程强杀损坏」这一整类问题。
 """
 import os
@@ -15,10 +15,10 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from pydantic import BaseModel, Field
 from sentence_transformers import CrossEncoder
 
+from agent.chunking import split_handbook
 from config import DOC_PATH, get_chat_llm
 from logging_config import get_logger
 
@@ -96,17 +96,16 @@ def build_ensemble_retriever():
     with open(DOC_PATH, "r", encoding="utf-8") as f:
         markdown_text = f.read()
 
-    # 第一层：基于 Markdown 层级进行切分
-    headers_to_split_on = [
-        ("##", "Chapter"),
-        ("###", "Section"),
-    ]
-    markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
-    md_header_splits = markdown_splitter.split_text(markdown_text)
-
-    # 为防止某个章节依然过长，再叠加一个字符级滑动窗口切分
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50, separators=["\n\n", "\n"])
-    splits = text_splitter.split_documents(md_header_splits)
+    # 结构感知切分 + 表格结构化提取（与 eval/weight_sweep.py 共用同一实现，
+    # 详见 agent/chunking.py）：
+    # 1. 先按 Markdown 标题层级（## / ###）切分，让一个条款/小节成为一个完整语义单元；
+    # 2. 小节内的 Markdown 表格解析为「一行一条记录」的独立切片（自带表头语义、
+    #    KV 元数据与行号，引用可精确到「表格第 N 行」）；
+    # 3. 仅当某切片仍超过 500 字符时，才用 RecursiveCharacterTextSplitter 按段落、
+    #    换行两级分隔符降级切分，块长 500、重叠 50（约 10%），降低条件句被切断的概率；
+    #    重叠会带来重复召回与索引膨胀，检索侧用内容级去重对冲（见 search_hr_policy）。
+    # 元数据保留 Chapter / Section 路径（表格切片另有 table_row / table_kv），用于引用溯源。
+    splits = split_handbook(markdown_text)
 
     logger.info("文档切分完毕，共生成 %d 个 chunk", len(splits))
 
