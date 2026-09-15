@@ -27,3 +27,16 @@ logs/
 .env
 .idea/
 .vscode/
+
+# 仅在宿主机使用的辅助脚本（评测、预下载 wheel），不需要进镜像
+scripts/
+eval/
+
+# 容器化调试留下的临时脚本与输出
+_*.py
+_*.txt
+_*.log
+
+# 说明：build_wheels/ 刻意不排除 —— Dockerfile 用
+# RUN --mount=type=bind,source=build_wheels 从构建上下文读取它做离线安装。
+# 该目录以只读 bind mount 挂载，不会写进镜像层。

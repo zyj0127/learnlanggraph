@@ -4,6 +4,8 @@ langchain-openai>=0.2.0
 langchain-huggingface>=0.1.0
 langchain-chroma>=0.2.0
 langchain-community>=0.3.0
+# BM25Retriever 的可选依赖：langchain 不会自动装，缺了会在构建 BM25 检索器时 ImportError
+rank_bm25>=0.2.2
 langchain-classic>=0.1.0
 langgraph>=0.2.0
 langgraph-checkpoint-sqlite>=2.0.0

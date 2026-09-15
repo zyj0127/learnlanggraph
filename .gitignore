@@ -88,3 +88,12 @@ Thumbs.db
 *.tar.gz
 *.zip
 *.whl
+
+# 容器构建用预下载 wheel：体积约 1GB，不入库，
+# 由 scripts/fetch_wheels.py 生成（Dockerfile 会自动检测并离线安装）；
+# build_wheels/constraints.txt 故意保留入库，用于钉住镜像内依赖版本
+build_wheels/*.whl
+
+# 容器化调试留下的临时脚本与输出
+_*.py
+_*.txt

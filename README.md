@@ -72,6 +72,8 @@ hr_agent_project/
 ├── streamlit_app.py           # Streamlit 前端（仅展示层）
 ├── Dockerfile                 # 容器化：FastAPI 服务 + 健康检查（模型权重经挂载卷注入）
 ├── .dockerignore
+├── scripts/                   # 宿主机构建辅助：fetch_wheels.py 预下载 Linux wheel
+├── build_wheels/              # 预下载 wheel 缓存（*.whl 不入库）+ constraints.txt 版本钉扎
 ├── data/                      # 数据层：存放非结构化知识和静态资源
 │   └── company_handbook.md    # 《员工手册》知识库（16509 字符，12 章 68 小节）
 ├── db/                        # 落盘产物：员工库 / checkpoint / 埋点库（向量库为内存版，不落盘）
@@ -124,17 +126,61 @@ hr_agent_project/
 ### 7. 容器化运行
 
 ```bash
+# 可选：预下载 Linux wheel，让 docker build 转为完全离线（仅 WSL / Linux 可用）
+python scripts/fetch_wheels.py
+
 docker build -t hr-agent .
 
 docker run -d --name hr-agent -p 8000:8000 \
   --env-file .env \
-  -v "<模型目录>/BAAI/bge-small-zh-v1.5:/models/bge-small-zh-v1.5:ro" \
-  -v "<模型目录>/BAAI/bge-reranker-base:/models/bge-reranker-base:ro" \
+  -e EMBEDDING_MODEL=/models/bge-small-zh-v1.5 \
+  -e RERANK_MODEL=/models/bge-reranker-base \
+  -v "E:\code\py\learnlanggraph\.local_models\BAAI\bge-small-zh-v1___5:/models/bge-small-zh-v1.5:ro" \
+  -v "C:\Users\<你>\.cache\modelscope\hub\models\BAAI\bge-reranker-base:/models/bge-reranker-base:ro" \
   hr-agent
 
 curl http://localhost:8000/health   # {"status":"ok"}
 ```
 
-员工库 `employees.db` 不打入镜像，容器首次启动按固定种子自动生成（与评测集同源）。
+两个 BGE 权重共约 3.4GB，**不打进镜像**，运行时经只读卷挂载到 `/models`。
+员工库 `employees.db` 同理不入镜像，容器首次启动按固定种子自动生成
+（与评测集 `build_roster()` 严格同源）。
+
+上面两个 `-e` 不能省。`docker run` 的 `-e` / `--env-file` 优先级**高于**镜像内的 `ENV`，
+而本项目的 `.env` 里也有 `EMBEDDING_MODEL` / `RERANK_MODEL` 且指向宿主机 Windows 路径
+（本地直跑需要）。只给 `--env-file` 的话，镜像里设好的 `/models/...` 会被覆盖，容器启动即报
+`OSError: Repo id must use alphanumeric chars ... E:\code\...`。实测对照过：仅 `--env-file`
+取到 Windows 路径，`--env-file` 与 `-e` 同时给则 `-e` 胜出。
+
+实测验收（2026-09-15，Windows + Docker 29.6.1）：
+
+- `docker build` 成功，镜像 `hr-agent:latest` 3.05GB（含 CPU 版 torch，无任何 CUDA 组件）
+- `docker run` 后 **20 秒** `/health` 返回 `{"status":"ok"}`，`/docs` 返回 Swagger UI，
+  容器自报 `(healthy)`，常驻内存约 970MB
+- 容器日志与 v4 口径逐条对齐：`72 个 chunk`、`混合检索权重（向量, BM25）= [0.6, 0.4]`、
+  `生成内存向量库（不落盘）`、`db/employees.db 初始化成功`
+- 端到端 SSE 冒烟：问「P5 员工去深圳出差，住宿费上限」，正确答出 `450 元/天`
+  （命中 2.2 表格的 P4–P5 行），token 级流式推送正常
+
+构建层面有三个已踩过的坑，都在 Dockerfile 里做了处理：
+
+1. **torch 走 CPU 专用索引**。Linux 平台 PyPI 上的 torch wheel 会连带拉入
+   `nvidia-cu12-*` / `triton` 等数 GB 的 CUDA 运行时依赖，纯 CPU 推理场景下既拖垮
+   构建时间又让镜像虚胖一倍以上，弱网下还会直接把 `docker build` 挂死。PEP 440 中
+   `2.13.0+cpu > 2.13.0`，因此两个索引同时给出时 pip 会优先选中 CPU 版。
+2. **不写 `# syntax=docker/dockerfile:1`**。该指令会去 `docker.io` 拉 frontend 镜像，
+   本机网络下拉不到会直接构建失败；而 BuildKit 内置的 frontend 其实已支持
+   `RUN --mount`，够用。依赖层用 `type=cache` 复用 pip 下载缓存（大包中断后无需从零
+   重下）、用 `type=bind` 把 `build_wheels/` 只读挂入（离线 wheel 不进镜像层）。
+   实测 cache mount 的效果：torch 191.8MB 首次下载花了 13 分钟，第二次构建命中缓存只用 15 秒。
+3. **依赖层必须带 `-c constraints.txt`**。否则容器内会装成 `langchain 1.4.0` /
+   `mcp 2.2.0` / `sentence-transformers 6.0.1`（`mcp` 直接跨了大版本），
+   而评测基线同源的是 `1.3.12` / `1.28.1` / `5.6.0` —— 「容器里跑的就是评测过的那套」
+   这句话就不成立了。
+
+> `scripts/fetch_wheels.py` 只能在 WSL / Linux 下跑：pip 的 `--platform` 只影响 wheel
+> 选择、**不影响 environment marker 求值**，Windows 宿主上 `mcp` 的
+> `pywin32>=310; sys_platform == "win32"` 仍会被判定为真而无解。Windows 上跳过这一步即可，
+> Dockerfile 会自动走在线安装分支，且 cache mount 已保证重复构建很快。
 
 
