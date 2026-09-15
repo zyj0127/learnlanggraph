@@ -1,8 +1,417 @@
 {
-  "generated_at": "2026-09-15T14:20:36",
+  "generated_at": "2026-09-15T15:03:54",
   "dataset_version": "2026.09-v4",
-  "git_commit": "9af09f7",
+  "git_commit": "a35bddc",
   "hybrid_weights_env": "默认 (0.6, 0.4)",
+  "trajectory": {
+    "metric": "工具调用轨迹（该调的调了/不该调的没调/步数与绕圈）",
+    "total": 18,
+    "passed": 17,
+    "tool_selection_accuracy": 0.9444444444444444,
+    "avg_steps": 2.0555555555555554,
+    "loop_rate": 0.0,
+    "rows": [
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1001",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1001"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1005",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1005"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1012",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1012"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1018",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1018"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1024",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1024"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1031",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1031"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1037",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1037"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1045",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1045"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1002",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1002"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1002"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1009",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1009"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1009"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1016",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1016"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1016"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1022",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1022"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1022"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1033",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1033"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1033"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1041",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1041"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1041"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1058",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1058"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1058"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1070",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1070"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1070"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "公司公积金缴纳比例是多少？",
+        "uid": "1001",
+        "tool_calls": [
+          {
+            "name": "search_hr_policy",
+            "args": {
+              "query": "公司公积金缴纳比例是多少？"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 6,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": false,
+        "failures": [
+          "预期转人工但未触发"
+        ]
+      },
+      {
+        "question": "帮我生成一份薪资收入证明",
+        "uid": "1003",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1003"
+            }
+          },
+          {
+            "name": "generate_employment_certification",
+            "args": {
+              "uid": "1003",
+              "cer_type": "income"
+            }
+          }
+        ],
+        "steps": 3,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": true,
+        "pass": true,
+        "failures": []
+      }
+    ]
+  },
   "retrieval": {
     "metric": "Hit@3 / Hit@5 / MRR（正确 chunk 的召回与排名质量）",
     "total": 709,
