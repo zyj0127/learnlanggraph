@@ -1,0 +1,5398 @@
+{
+  "generated_at": "2026-09-15T15:03:54",
+  "dataset_version": "2026.09-v4",
+  "git_commit": "a35bddc",
+  "hybrid_weights_env": "默认 (0.6, 0.4)",
+  "trajectory": {
+    "metric": "工具调用轨迹（该调的调了/不该调的没调/步数与绕圈）",
+    "total": 18,
+    "passed": 17,
+    "tool_selection_accuracy": 0.9444444444444444,
+    "avg_steps": 2.0555555555555554,
+    "loop_rate": 0.0,
+    "rows": [
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1001",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1001"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1005",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1005"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1012",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1012"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1018",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1018"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1024",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1024"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1031",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1031"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1037",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1037"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "帮我查一下我的档案信息",
+        "uid": "1045",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1045"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1002",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1002"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1002"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1009",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1009"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1009"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1016",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1016"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1016"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1022",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1022"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1022"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1033",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1033"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1033"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1041",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1041"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1041"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1058",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1058"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1058"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "我还剩多少天年假？",
+        "uid": "1070",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1070"
+            }
+          },
+          {
+            "name": "get_leave_balance",
+            "args": {
+              "uid": "1070"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": true,
+        "failures": []
+      },
+      {
+        "question": "公司公积金缴纳比例是多少？",
+        "uid": "1001",
+        "tool_calls": [
+          {
+            "name": "search_hr_policy",
+            "args": {
+              "query": "公司公积金缴纳比例是多少？"
+            }
+          }
+        ],
+        "steps": 2,
+        "max_steps": 6,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": false,
+        "pass": false,
+        "failures": [
+          "预期转人工但未触发"
+        ]
+      },
+      {
+        "question": "帮我生成一份薪资收入证明",
+        "uid": "1003",
+        "tool_calls": [
+          {
+            "name": "get_employee_profile",
+            "args": {
+              "uid": "1003"
+            }
+          },
+          {
+            "name": "generate_employment_certification",
+            "args": {
+              "uid": "1003",
+              "cer_type": "income"
+            }
+          }
+        ],
+        "steps": 3,
+        "max_steps": 4,
+        "over_limit": false,
+        "handoff": false,
+        "interrupted": true,
+        "pass": true,
+        "failures": []
+      }
+    ]
+  },
+  "retrieval": {
+    "metric": "Hit@3 / Hit@5 / MRR（正确 chunk 的召回与排名质量）",
+    "total": 709,
+    "baseline_hits": 603,
+    "baseline_hit_rate": 0.8504936530324401,
+    "pipeline_hits": 701,
+    "pipeline_hit_rate": 0.9887165021156559,
+    "baseline_hit5_rate": 0.8857545839210155,
+    "pipeline_hit5_rate": null,
+    "pipeline_hit5_note": "全管线按设计只输出 Top-3 上下文，故不统计 Hit@5",
+    "baseline_mrr": 0.6447,
+    "pipeline_mrr": 0.9629,
+    "note": "基线=纯混合检索(BM25+向量)；全管线=基线+LLM查询扩写+HyDE+CrossEncoder重排",
+    "hybrid_weights": [
+      0.6,
+      0.4
+    ],
+    "rows": [
+      {
+        "question": "P4 职级、入职满两年的员工，企业福利年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职满五年的老员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职两年的员工，能休几天年假？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职刚满一年的员工，年假几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 入职两年的员工有多少天年假？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职一年半，年假怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职满三年，年假涨到几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 入职四年的老员工，年假多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职四年的员工，年假有多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 及以上高管每年有多少天福利年假？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 总监入职满两年，福利年假多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "刚入职 6 个月的新员工有年假吗？怎么折算？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职 8 个月的新员工，法定年假怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "员工请 2 天事假，需要谁来审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 3 天年假，审批流程是怎样的？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "员工请 5 天假，审批流程是什么？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 7 天病假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "员工请 10 天假，最终要谁加签？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "员工请 12 天长假，还需要谁审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "员工申请假期需要提前在哪里提交？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去北京出差，住宿标准按哪类城市执行？",
+        "baseline_hit": true,
+        "pipeline_hit": false,
+        "baseline_rank": 2,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "杭州属于一线城市还是二线城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "深圳出差按什么城市类别报销？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "西安出差的住宿标准按哪类城市算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "P5 职级员工去北京出差，住宿每天最多能报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去上海出差，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 去成都出差，住宿每天上限多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 去杭州出差住宿能报多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级去广州出差，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级员工去成都出差，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 去武汉出差，每天住宿最多报多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 去深圳出差住宿标准是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 高管去上海出差，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 去西安出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 高管去北京出差住宿上限多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 去南京出差，住宿报销标准是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "P4 员工出差每天市内交通补贴多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级的市内交通补贴标准是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级员工每天市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 出差市内交通怎么补贴？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 及以上高管的市内交通费用怎么报销？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "出差住宿超过报销标准的部分怎么办？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "P4 员工能自助开具薪资收入证明吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "在职证明哪些员工可以自助办理？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工想开薪资收入证明，可以直接在系统里办吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "为什么 P4 以下员工不能直接线上开薪资证明？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "员工要开在职证明或收入证明，可以通过什么渠道发起？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "公司上班打卡的弹性时间是几点到几点？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "弹性工作制下每天的有效工时要求是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "迟到早退超过几次会扣钱？扣多少？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "忘记打卡每月可以补几次？需要谁确认？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "事假一天扣多少钱？怎么算的？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "事假单次最多能请几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "病假期间工资怎么发？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "公司的医疗期最长可以到多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "连续病假很久之后回来上班要交什么材料？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "婚假有几天？什么时候必须用完？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "女员工产假是多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "男员工陪产假有多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "孩子不满 3 岁，每年可以休多少天育儿假？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "加班调休的有效期是多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "法定节假日加班工资是几倍？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "单月加班时长有上限吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职多久之后可以申请居家办公？每月几次？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "当年的年假可以留到第二年用吗？最晚什么时候？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职时没用完的年假会折算成钱吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "国内出差要提前几天提交申请？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "国际出差需要提前多久申请？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "机票和酒店可以在外面自己订吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "因为个人原因改签产生的费用谁承担？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去二线城市出差的餐补是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "出差补贴怎么发？需要单独走报销吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "报销最晚要在费用发生后多久提交？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "报销审批打款一般要几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "财务会抽查报销单据吗？抽查比例多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "部门团建的人均预算是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "业务招待人均标准是多少？超了怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "对外送商务礼品单件最多多少钱？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "酒店住超标了，多出来的钱谁出？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "发票丢了还能报销吗？需要什么材料？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "工牌丢了补办要多少钱？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "有客人来访需要提前多久预约？",
+        "baseline_hit": false,
+        "pipeline_hit": false,
+        "baseline_rank": 0,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "离职时不交回工牌会怎样？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "领用显示器这类资产需要在系统登记吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "研发岗位的电脑配置可以申请什么标准？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "IT 工单多久会响应？系统故障呢？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "申请生产环境权限需要几级审批？多久复核一次？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "会议室一次最多能订多久？没签到会怎样？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "设备报修一般多久处理完？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "个人快递公司可以代收吗？滞留多久会被清理？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "公司有几种印章？可以混着用吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "公司每个月几号发工资？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "对工资有疑问要怎么提？有时间限制吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "工资单能自助查多久的记录？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我的薪酬数据公司会对外提供吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "公司一年调几次薪？分别在几月？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "晋升对绩效有什么要求？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "调薪审批通过后什么时候生效？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "绩效等级 S 的比例上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "考核结果什么时候会反馈给我？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "连续表现不好会有什么流程？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "试用期考核什么时候做？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "社保缴纳基数什么时候调整？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "商业保险什么时候开始生效？试用期有吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "家属想加保商业保险，什么时候确认？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "新人入职培训要几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "新员工有导师吗？带多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "每年的学习基金额度是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "报课程超过多少钱需要提前申请？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "报销课程费对完成率有要求吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "当内部讲师的课时费是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "内部分享的材料要保留多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "考出高级认证有补贴吗？多少钱？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "报销大额培训要不要签服务期？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "申请内部转岗需要在现岗位待多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "公司有免费体检吗？多久一次？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "试用期员工什么时候可以参加体检？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "节日福利标准是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "生日有什么福利？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "结婚和生育的贺金是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "每季度能拿多少弹性福利积分？积分会过期吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 以上员工的福利积分标准有区别吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "通勤补贴每个月多少钱？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "加班到很晚可以申请餐费吗？标准多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "EAP 心理咨询一年可以用几次？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "提交员工申诉后多久会有答复？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "利益冲突申报多久更新一次？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "供应商送的礼品可以收吗？超过多少要登记？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "举报的邮箱是什么？有奖励吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "举报属实避免公司损失能拿多少奖励？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "竞业限制最长多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "正式员工离职要提前多久提出？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "试用期离职提前几天说就行？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职交接一般要多久？关键岗位呢？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职时工资和年假什么时候结清？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职后已经发的奖金会被追回吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职证明多久能拿到？上面写什么？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职之后还能再回公司吗？要等多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "公司账号密码有什么要求？多久换一次？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "新密码可以跟以前用过的重复吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "公司数据分几级？最敏感的是哪一级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "机密数据能用个人网盘传吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "办公电脑多久自动锁屏？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "电脑丢了要多久上报？会怎么处理？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "可以把源代码贴给外部大模型吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "用公司账号和内部模型做出来的东西归谁？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "收集我的健康信息需要我同意吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "查我的个人信息多久会回复？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "开证明走工单一般多久能出？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "薪资查询工单多久答复？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "政策变更会提前多久公示？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "助理的回答会标明来源吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "发现助理回答跟制度不一致，反馈后多久处理？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "转正考核什么时候启动？没通过怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "在外地办公多久算派驻？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "派驻期间每月有生活补贴吗？多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "实习生的津贴标准大概是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "劳务协议最长能签多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "发生工伤要多久上报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "重大疾病互助基金最高能申请多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "期权是几年归属完？首年归属多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "海外出差的住宿标准是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "境外出差保险保额是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "高管的费用审批权限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "同一件事反复特批会怎么样？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "涉及合规和举报的问题最后谁来处理？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "手册里有没有年假天数怎么算的速查入口？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "P3 新员工入职两个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职两个月的 P3 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 新员工入职四个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职四个月的 P3 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 新员工入职五个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职五个月的 P3 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 新员工入职七个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职七个月的 P3 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 新员工入职九个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职九个月的 P3 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 新员工入职十一个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职十一个月的 P3 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职刚满一年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职刚满一年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职一年两个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职一年两个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职一年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职一年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职一年八个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职一年八个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职两年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职两年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职两年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职三年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职三年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职三年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职三年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职四年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职四年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职四年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职四年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职五年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职五年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职七年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职七年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级、入职十年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P3，入职十年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 新员工入职两个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职两个月的 P4 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 新员工入职四个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职四个月的 P4 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 新员工入职五个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职五个月的 P4 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 新员工入职七个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职七个月的 P4 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 新员工入职九个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职九个月的 P4 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 新员工入职十一个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职十一个月的 P4 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职刚满一年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职刚满一年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职一年两个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职一年两个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职一年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职一年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职一年八个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职一年八个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职两年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职两年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职两年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职三年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职三年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职三年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职三年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职四年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职四年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职四年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职四年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职五年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职七年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职七年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级、入职十年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P4，入职十年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 新员工入职两个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职两个月的 P5 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 新员工入职四个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职四个月的 P5 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 新员工入职五个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职五个月的 P5 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 新员工入职七个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职七个月的 P5 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 新员工入职九个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职九个月的 P5 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 新员工入职十一个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职十一个月的 P5 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职刚满一年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职一年两个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职一年两个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职一年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职一年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职一年八个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职一年八个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职两年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职两年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职两年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职两年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "我是 P5，入职三年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职三年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职三年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职四年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职四年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职四年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职四年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职五年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职五年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职七年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职七年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级、入职十年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P5，入职十年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 新员工入职两个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职两个月的 P6 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 新员工入职四个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职四个月的 P6 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 新员工入职五个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职五个月的 P6 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 新员工入职七个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职七个月的 P6 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 新员工入职九个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职九个月的 P6 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 新员工入职十一个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职十一个月的 P6 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职刚满一年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职刚满一年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职一年两个月的员工，年假有几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职一年两个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职一年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职一年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职一年八个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职一年八个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职两年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": false,
+        "baseline_rank": 0,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "P6 职级、入职两年半的员工，年假有几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职两年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职三年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职三年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职三年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职三年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职四年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职四年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职四年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职五年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职五年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职七年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职七年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级、入职十年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P6，入职十年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 新员工入职两个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职两个月的 P7 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 新员工入职四个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职四个月的 P7 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 新员工入职五个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职五个月的 P7 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 新员工入职七个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职七个月的 P7 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 新员工入职九个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职九个月的 P7 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 新员工入职十一个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职十一个月的 P7 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职刚满一年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职刚满一年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职一年两个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职一年两个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职一年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职一年八个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职一年八个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职两年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职两年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职两年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职两年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职三年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职三年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职三年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职三年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职四年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职四年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职四年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职五年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职五年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职七年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职七年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级、入职十年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P7，入职十年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 新员工入职两个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职两个月的 P8 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 新员工入职四个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职四个月的 P8 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 新员工入职五个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职五个月的 P8 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 新员工入职七个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职七个月的 P8 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 新员工入职九个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职九个月的 P8 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 新员工入职十一个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职十一个月的 P8 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职刚满一年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职刚满一年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职一年两个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职一年两个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职一年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职一年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职一年八个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职一年八个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职两年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职两年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职两年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职两年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职三年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职三年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职三年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职三年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职四年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职四年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职四年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职四年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职五年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职五年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职七年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职七年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级、入职十年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P8，入职十年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 新员工入职两个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职两个月的 P9 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 新员工入职四个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职四个月的 P9 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 新员工入职五个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职五个月的 P9 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 新员工入职七个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职七个月的 P9 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 新员工入职九个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职九个月的 P9 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 新员工入职十一个月，法定年假折算多少天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职十一个月的 P9 员工有年假吗？怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职刚满一年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职刚满一年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职一年两个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职一年两个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职一年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职一年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职一年八个月的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职一年八个月了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职两年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职两年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职两年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职三年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职三年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职三年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职三年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职四年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职四年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职四年半的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职四年半了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 0,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职五年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职五年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职七年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职七年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级、入职十年的员工，年假有几天？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我是 P9，入职十年了，今年年假能休几天？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 5,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去北京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到北京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到上海，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去广州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到广州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去深圳出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到深圳，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去中国香港出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到中国香港，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去成都出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到成都，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到杭州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去武汉出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到武汉，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去西安出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到西安，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工去南京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 国内出差到南京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到北京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去上海出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到上海，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去广州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到广州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去深圳出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到深圳，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去中国香港出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到中国香港，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到成都，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去杭州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到杭州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去武汉出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到武汉，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去西安出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到西安，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工去南京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 国内出差到南京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去北京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到北京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去上海出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到上海，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到广州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去深圳出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到深圳，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去中国香港出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到中国香港，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去成都出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到成都，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去杭州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到杭州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到武汉，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去西安出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到西安，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工去南京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 国内出差到南京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去北京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到北京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去上海出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到上海，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去广州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到广州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到深圳，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去中国香港出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到中国香港，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到成都，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去杭州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到杭州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去武汉出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到武汉，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去西安出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到西安，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工去南京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 国内出差到南京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去北京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到北京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到上海，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去广州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到广州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去深圳出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到深圳，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去中国香港出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到中国香港，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去成都出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到成都，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去杭州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到杭州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去武汉出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到武汉，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到西安，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工去南京出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 国内出差到南京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到北京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去上海出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到上海，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去广州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到广州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去深圳出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到深圳，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去中国香港出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到中国香港，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去成都出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到成都，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去杭州出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到杭州，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去武汉出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到武汉，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工去西安出差，住宿每天最多报销多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到西安，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 国内出差到南京，住宿报销上限是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 出差每天的市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 职级员工市内交通费怎么报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 出差每天的市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 职级员工市内交通费怎么报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 出差每天的市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 职级员工市内交通费怎么报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 出差每天的市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 职级员工市内交通费怎么报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 出差每天的市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 职级员工市内交通费怎么报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 出差每天的市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 职级员工市内交通费怎么报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 出差每天的市内交通补贴是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 职级员工市内交通费怎么报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去北京出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": false,
+        "baseline_rank": 1,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "北京属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去上海出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": false,
+        "baseline_rank": 2,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "上海属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去广州出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "广州属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去深圳出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "深圳属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去中国香港出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "中国香港属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去成都出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "成都属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去杭州出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "杭州属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去武汉出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "武汉属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去西安出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": false,
+        "baseline_rank": 1,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "西安属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去南京出差按几类城市执行住宿标准？",
+        "baseline_hit": true,
+        "pipeline_hit": false,
+        "baseline_rank": 1,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "南京属于公司差旅的几类城市？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去北京出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去上海出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去广州出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去深圳出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去中国香港出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去成都出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去杭州出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去武汉出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去西安出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "去南京出差餐补每天多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 1 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "我打算请 1 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "请 2 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 2 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "请 3 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 3 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 4 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "我打算请 4 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "请 5 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "我打算请 5 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "请 6 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "我打算请 6 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "请 7 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 7 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 8 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "我打算请 8 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "请 9 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 9 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "请 10 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 10 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 11 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 11 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 12 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 12 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 14 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 14 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 15 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 15 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 20 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 20 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请 30 天假需要几级审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我打算请 30 天假，审批要走哪几级？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 员工的年度体检是什么套餐？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工的年度体检是什么套餐？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工的年度体检是什么套餐？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工的年度体检是什么套餐？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工的年度体检是什么套餐？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工的年度体检是什么套餐？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工的年度体检是什么套餐？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P3 员工每季度弹性福利积分是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P4 员工每季度弹性福利积分是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P5 员工每季度弹性福利积分是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P6 员工每季度弹性福利积分是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P7 员工每季度弹性福利积分是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P8 员工每季度弹性福利积分是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "P9 员工每季度弹性福利积分是多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "连续在外地办公 25 天，算派驻还是出差？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "在外地办公 45 天算派驻吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "派驻期间住宿标准怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "派驻满 3 个月有什么探亲政策？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "派驻超过 3 个月租房有补贴吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "派驻的租房补贴和生活补贴能同时领吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "病假工资按什么标准发？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请病假一个月以上工资怎么发？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "请病假需要什么证明？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "忘打卡了怎么补救？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "这个月第三次忘打卡，要谁审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "迟到几次开始扣钱？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "迟到扣钱有上限吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "加班没批就不算加班吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "调休半年没用会怎样？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "周六加班工资怎么算？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "单月最多能加班多少小时？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "试用期内能申请居家办公吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "居家办公需要提前多久报备？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "年假没休完能折现吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "离职时调休余额会折算吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "酒店机票能自己在携程订吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "出差改签费能报吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "出差当天来回有补贴吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "跨年的差旅费什么时候必须报？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "报销发票有什么要求？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "部门团建超预算了要谁批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "客户招待超过人均标准怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "展会期间酒店涨价超标怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "个人垫付的差旅费超过 60 天还能报吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "工牌第一次补办收费吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "访客可以自己在办公区走吗？",
+        "baseline_hit": false,
+        "pipeline_hit": false,
+        "baseline_rank": 0,
+        "pipeline_rank": 0
+      },
+      {
+        "question": "领个机械键盘要审批吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "标准办公电脑是什么配置？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "转岗时领用的资产要归还吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "账号类 IT 问题多久响应？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "申请数据库权限要谁批？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "会议室能订一整天吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "个人快递能寄到公司吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "电子章能盖对外合同吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "15 号遇到周末工资什么时候发？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "工资可以让家人代收到别的卡吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "晋升评估看什么？占比多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "跨级晋升需要什么条件？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "绩效 C 会怎么样？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "社保在哪里缴？异地办公怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "补充医疗理赔多久到账？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "入职培训的测评没过怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "学习基金能用来买书吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "认证考试报名费能报多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "内部转岗后薪资会降吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "转岗交接要多久？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "体检报告公司能看到吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "慰问金什么情况下可以领？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "弹性福利积分能转给同事吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "加班餐几点以后可以申请？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "部门下午茶经费多少？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "EAP 咨询内容公司会知道吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "对绩效结果不服怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "申诉会影响之后的工作评价吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "家属在公司供应商上班要申报吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "收了供应商 300 元的礼品怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "匿名举报会有反馈吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "保密义务离职后还有效吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职申请提交后能撤回吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "离职交接没完成会怎样？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "被辞退的员工能返聘吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "再次入职司龄累计吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "办公电脑系统补丁多久内要打？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "私人 U 盘能拷公司资料吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "AI 工具能用哪些？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "AI 生成的方案能直接发给客户吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "我的个人信息谁能看？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "政策有疑问找谁确认？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "制度改了什么时候生效？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 2
+      },
+      {
+        "question": "试用期没通过能延期吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "实习生能转正吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "正式员工能做兼职吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "工伤认定谁去办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 2,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "出差途中受伤算工伤吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "期权离职时怎么处理？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "国际出差要谁审批？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 3,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "境外出差每天要向公司报备吗？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "哪些地方出差不能去？",
+        "baseline_hit": false,
+        "pipeline_hit": true,
+        "baseline_rank": 4,
+        "pipeline_rank": 3
+      },
+      {
+        "question": "高管离职前要做什么审计？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "特批的费用怎么留痕？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "没走特批就超标消费了怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      },
+      {
+        "question": "助理答不了的问题怎么办？",
+        "baseline_hit": true,
+        "pipeline_hit": true,
+        "baseline_rank": 1,
+        "pipeline_rank": 1
+      }
+    ]
+  }
+}

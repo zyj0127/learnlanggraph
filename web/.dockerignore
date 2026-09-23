@@ -1,0 +1,5 @@
+# docker build 上下文排除：依赖与构建产物在镜像内重新生成
+node_modules
+dist
+.env
+.env.local

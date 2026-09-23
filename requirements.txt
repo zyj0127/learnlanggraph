@@ -1,0 +1,35 @@
+# 由 pyproject.toml [project.dependencies] 同步钉扎（== 版本与 build_wheels/constraints.txt 同源）。
+# 修改依赖请先改 pyproject.toml，再同步本文件；禁止改回无上限的 >=（已知会装出不兼容的 langchain 1.4.0）。
+langchain==1.3.12
+langchain-core==1.4.9
+langchain-openai==1.3.0
+langchain-huggingface==1.2.2
+# BM25Retriever 的可选依赖：langchain 不会自动装，缺了会在构建 BM25 检索器时 ImportError
+rank_bm25==0.2.2
+langchain-classic==1.0.8
+langchain-community==0.4.2
+langgraph==1.2.8
+langgraph-checkpoint-sqlite==3.1.0
+# 企业化第一阶段：PostgreSQL checkpointer（psycopg3 版 saver）
+langgraph-checkpoint-postgres==3.1.0
+# PostgreSQL / pgvector 数据栈
+psycopg[binary]==3.2.3
+sqlalchemy==2.0.36
+alembic==1.14.0
+pgvector==0.3.6
+# Langfuse 可观测性（未配置时静默降级）
+langfuse==2.60.5
+# 企业化第二阶段：JWT 认证（HS256；接企业 SSO 时切 RS256）
+PyJWT==2.10.1
+fastapi==0.137.1
+uvicorn==0.49.0
+mcp==1.28.1
+langchain-mcp-adapters==0.3.0
+sentence-transformers==5.6.0
+pydantic==2.13.4
+pydantic-settings>=2.0,<3.0
+python-dotenv>=1.0,<2.0
+streamlit==1.58.0
+# torch 不在此列出：Docker 构建走 PyTorch CPU 专用索引单独安装（见 Dockerfile 头部注释）。
+# 可选依赖（模型管理/向量库持久化/图片）：pip install -e .[models]
+#   chromadb==1.5.9 / pillow==12.2.0 / modelscope==1.37.1
