@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+"""SQLite 模拟花名册：数据库初始化、确定性数据生成与通用查询。"""
 import random
 import sqlite3
 from pathlib import Path
+from typing import Dict, List, Tuple
 
 from config import EMPLOYEES_DB
 from logging_config import get_logger
@@ -46,7 +49,7 @@ _SALARY_RANGE = {
 COMPANY_SIZE = 80
 
 
-def build_roster():
+def build_roster() -> Tuple[List[tuple], List[tuple]]:
     """确定性生成 80 名员工花名册（前 4 名固定，1005-1080 由种子生成）。
 
     返回 (employees, balances)：employees 为 (uid,name,level,city,tenure,salary)，
@@ -133,7 +136,7 @@ def init_db(db_path: Path = DB_PATH) -> sqlite3.Connection:
     return conn
 
 
-def query_db(conn: sqlite3.Connection, sql: str, params: tuple = ()):
+def query_db(conn: sqlite3.Connection, sql: str, params: tuple = ()) -> List[Dict]:
     """通用查询函数，返回字典列表"""
     cursor = conn.cursor()
     cursor.execute(sql, params)
@@ -141,7 +144,7 @@ def query_db(conn: sqlite3.Connection, sql: str, params: tuple = ()):
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
-def close_db(conn: sqlite3.Connection):
+def close_db(conn: sqlite3.Connection) -> None:
     """安全关闭数据库连接"""
     if conn:
         conn.close()

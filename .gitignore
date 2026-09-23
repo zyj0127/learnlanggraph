@@ -97,3 +97,6 @@ build_wheels/*.whl
 # 容器化调试留下的临时脚本与输出
 _*.py
 _*.txt
+# 前端与测试缓存
+node_modules/
+.pytest_cache/

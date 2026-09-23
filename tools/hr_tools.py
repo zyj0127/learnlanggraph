@@ -1,22 +1,21 @@
-from contextlib import contextmanager
+# -*- coding: utf-8 -*-
+"""HR 实体查询工具：员工档案查询 / 假期余额查询 / 证明开具（LangChain @tool）。
 
+数据访问统一走 database/repository.py（SQLite / PostgreSQL 双后端，
+由 Settings.use_sqlite_fallback 切换），工具签名与返回文案保持不变。
+三个工具同时被 mcp_server/hr_tools_server.py 以「逻辑零复制」方式复用
+对外暴露为 MCP 工具。
+"""
 from langchain_core.tools import tool
 
-from database.mock_db import get_connection, query_db
-
-
-@contextmanager
-def _open_db():
-    """每次调用工具时新建独立 SQLite 连接，避免长生命周期进程下
-    模块级连接因重载/线程切换而失效。"""
-    conn = get_connection()
-    try:
-        yield conn
-    finally:
-        try:
-            conn.close()
-        except Exception:
-            pass
+from auth.guard import (
+    ACTION_ISSUE_CERT,
+    ACTION_VIEW_LEAVE,
+    ACTION_VIEW_PROFILE,
+    audit_cert_issued,
+    check_tool_permission,
+)
+from database.repository import run_query
 
 
 @tool
@@ -25,9 +24,16 @@ def get_employee_profile(uid: str) -> str:
     根据员工uid查询员工的完整人事档案，包括姓名，职级，工作城市，入职年限，基本薪资。
     当需要获取当前对话的员工的属性时，必须调用此工具
     """
-    sql = "select uid,name,level,city,tenure,salary from employees where uid=?"
-    with _open_db() as conn:
-        res = query_db(conn=conn, sql=sql, params=(uid,))
+    # RBAC：越权时返回固定拒答文案（AUTH_ENABLED=false 时旁路，行为不变）
+    denial = check_tool_permission(ACTION_VIEW_PROFILE, uid)
+    if denial is not None:
+        return denial
+
+    res = run_query(
+        sql_pg="select uid,name,level,city,tenure,salary from employees where uid=:0",
+        sql_sqlite="select uid,name,level,city,tenure,salary from employees where uid=?",
+        params=(uid,),
+    )
 
     if not res:
         return f"未找到uid为{uid}的员工信息"
@@ -45,11 +51,20 @@ def get_leave_balance(uid: str) -> str:
     根据员工uid 查询剩余假期余额（年假和病假）
     当员工明确提问"我还有几天假"或我的余额时调用
     """
-    sql = """SELECT a.name, b.annual_leave_remaining, b.sick_leave_remaining
+    # RBAC：越权时返回固定拒答文案（AUTH_ENABLED=false 时旁路，行为不变）
+    denial = check_tool_permission(ACTION_VIEW_LEAVE, uid)
+    if denial is not None:
+        return denial
+
+    res = run_query(
+        sql_pg="""SELECT a.name, b.annual_leave_remaining, b.sick_leave_remaining
             from employees a LEFT JOIN leave_balances b on a.uid = b.uid
-            where a.uid = ?"""
-    with _open_db() as conn:
-        res = query_db(conn=conn, sql=sql, params=(uid,))
+            where a.uid = :0""",
+        sql_sqlite="""SELECT a.name, b.annual_leave_remaining, b.sick_leave_remaining
+            from employees a LEFT JOIN leave_balances b on a.uid = b.uid
+            where a.uid = ?""",
+        params=(uid,),
+    )
     if not res:
         return f"无法获得uid为{uid}的假期"
     data = res[0]
@@ -64,12 +79,16 @@ def generate_employment_certification(uid: str, cer_type: str) -> str:
     -'employment'：仅开具在职证明
     -'income'：开具包含薪资的在职收入证明（有职级权限限制）
     """
-    sql = """
-    select name,level,city,salary from employees where uid=?
-    """
+    # RBAC：越权时返回固定拒答文案（AUTH_ENABLED=false 时旁路，行为不变）
+    denial = check_tool_permission(ACTION_ISSUE_CERT, uid)
+    if denial is not None:
+        return denial
 
-    with _open_db() as conn:
-        emp_res = query_db(conn=conn, sql=sql, params=(uid,))
+    emp_res = run_query(
+        sql_pg="select name,level,city,salary from employees where uid=:0",
+        sql_sqlite="select name,level,city,salary from employees where uid=?",
+        params=(uid,),
+    )
     if not emp_res:
         return f"因无法核实员工身份（uid：{uid}）证明失效"
 
@@ -87,6 +106,10 @@ def generate_employment_certification(uid: str, cer_type: str) -> str:
 
         content = f"《薪资收入证明》\n兹证明我公司员工 {employee['name']}，职级为 {employee['level']}。\n该员工基本薪资为人民币 {employee['salary']} 元。\n特此证明（公章）"
 
+        # 审计留痕：证明开具成功（只记 uid/角色/证明类型，不落薪资等 PII 值）
+        from auth.context import get_current_identity
+
+        audit_cert_issued(get_current_identity(), uid, cer_type)
         return (f"[系统成功]已为你自动生成收入证明：\n=============="
                 f"{content}"
                 f"\n===================="
@@ -96,6 +119,10 @@ def generate_employment_certification(uid: str, cer_type: str) -> str:
             f"《在职证明》\n证明 {employee['name']} 现为我公司在职员工，职级为 {employee['level']}，"
             f"基本薪资为人民币 {employee['salary']} 元。特此证明。\n（公章）")
 
+        # 审计留痕：证明开具成功（只记 uid/角色/证明类型，不落薪资等 PII 值）
+        from auth.context import get_current_identity
+
+        audit_cert_issued(get_current_identity(), uid, cer_type)
         return (f"「系统成功」已自动为您生成在职证明：\n---\n"
                 f"{content}\n---")
     return "错误：不支持的证明类型。可选类型为'employment'或'income'"

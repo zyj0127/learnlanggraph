@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
-"""LangGraph 节点实现：执行者 / 人工审批 / 事实审计。"""
+"""LangGraph 节点实现：执行者 / 人工审批 / 事实审计。
+
+懒加载约定：import 本模块不创建任何 LLM 客户端、不加载模型、不联网；
+所有 LLM 实例由 lru_cache 工厂在节点首次执行时创建并缓存。
+"""
 import uuid
-from typing import List
+from functools import lru_cache
+from typing import List, Optional
 
 from langchain_core.messages import (
     AIMessage,
@@ -39,22 +44,34 @@ from tools.hr_tools import (
 
 logger = get_logger(__name__)
 
-# ---- LLM 与工具绑定 ----
-# 执行者 LLM：低温保证工具调用与作答的确定性
-llm = get_chat_llm(temperature=0.0)
+# ---- LLM 与工具绑定（懒加载工厂，import 时不创建客户端）----
 ALL_TOOLS = [
     get_employee_profile,
     get_leave_balance,
     generate_employment_certification,
     search_hr_policy,
 ]
-llm_with_tools = llm.bind_tools(ALL_TOOLS)
-
-# 审计者 LLM：独立实例，与执行者解耦
-checker_llm = get_chat_llm(temperature=0.0)
 
 
-def detect_handoff_reason(messages: List[BaseMessage]):
+@lru_cache(maxsize=1)
+def get_executor_llm():
+    """执行者 LLM：低温（0.0）保证工具调用与作答的确定性。"""
+    return get_chat_llm(temperature=0.0)
+
+
+@lru_cache(maxsize=1)
+def get_llm_with_tools():
+    """执行者 LLM + 全量工具绑定（首次节点执行时构建并缓存）。"""
+    return get_executor_llm().bind_tools(ALL_TOOLS)
+
+
+@lru_cache(maxsize=1)
+def get_checker_llm():
+    """审计者 LLM：独立实例，与执行者解耦。"""
+    return get_chat_llm(temperature=0.0)
+
+
+def detect_handoff_reason(messages: List[BaseMessage]) -> Optional[str]:
     """判断当前轮是否应转人工，返回转接原因；无需转接返回 None。
 
     仅在「当前轮真实用户输入」范围内检测：
@@ -90,7 +107,7 @@ def detect_handoff_reason(messages: List[BaseMessage]):
     return None
 
 
-def chatbot_node(state: AgentState):
+def chatbot_node(state: AgentState) -> dict:
     """执行者节点：意图理解、工具调用与内容生成。"""
     messages = state.get("messages", [])
 
@@ -127,11 +144,11 @@ def chatbot_node(state: AgentState):
                     f"必须基于工具的返回事实，绝不能编造数字或条件")
         messages = [system_msg] + messages
 
-    response = llm_with_tools.invoke(messages)
+    response = get_llm_with_tools().invoke(messages)
     return {"messages": [response], "loop_state": state.get("loop_state", 0) + 1}
 
 
-def human_review_node(state: AgentState):
+def human_review_node(state: AgentState) -> dict:
     """人工介入节点：敏感工具调用挂起，等待 approve / reject。"""
     last_message = state["messages"][-1]
     # 检查大模型是否调用敏感工具
@@ -143,7 +160,19 @@ def human_review_node(state: AgentState):
                 break
     if sensitive_tool_call:
         logger.warning("系统挂起，检测到敏感操作：%s 准备生成证明文件", sensitive_tool_call["name"])
-        user_decision = interrupt("Agent 正在尝试生成包含薪资证明的文件，是否授权执行？（输入approve或者reject）")
+        interrupt_message = "Agent 正在尝试生成包含薪资证明的文件，是否授权执行？（输入approve或者reject）"
+        # 企业化第二阶段：开启鉴权时负载记录申请人 uid（供 /chat/resume 校验审批人 ≠ 申请人）；
+        # AUTH_ENABLED=false 时保持旧的纯字符串负载，行为完全不变
+        from auth.guard import build_interrupt_payload, is_auth_enabled
+
+        if is_auth_enabled():
+            from auth.context import get_current_identity
+
+            applicant_uid = get_current_identity().uid or state.get("current_uid", "") or ""
+            payload = build_interrupt_payload(interrupt_message, applicant_uid)
+        else:
+            payload = interrupt_message
+        user_decision = interrupt(payload)
         if user_decision == "reject":
             reject_msg = ToolMessage(
                 content="system:人工审批未通过，操作已被拒绝，请安抚用户并告知由于安全问题无法生成",
@@ -176,7 +205,7 @@ def _audit_reject_message(feedback: str) -> HumanMessage:
         content=f"{AUDIT_FAIL_PREFIX} 事实错误反馈 {feedback}  请根据知识库原文重写，绝不包含虚假数据")
 
 
-def fact_check_node(state: AgentState):
+def fact_check_node(state: AgentState) -> dict:
     """审计者节点：后置事实检验（self-Reflection）。
 
     两层防线 + 一条兜底：
@@ -203,7 +232,7 @@ def fact_check_node(state: AgentState):
     answer = last_message.content or ""
     question = _last_real_user_text(messages)
     loop_state = state.get("loop_state", 0)
-    AUDIT_COUNTERS.checked += 1
+    AUDIT_COUNTERS.record_checked()
 
     # ---- 第一层：规则层 ----
     violations = check_numbers(answer, rag_context, question)
@@ -212,7 +241,7 @@ def fact_check_node(state: AgentState):
         AUDIT_COUNTERS.record_block("rule", reason)
         logger.warning("规则层拦截数字类幻觉：%s", reason)
         if loop_state > MAX_REFLECTION_LOOPS:
-            AUDIT_COUNTERS.fallback_handoff += 1
+            AUDIT_COUNTERS.record_fallback_handoff()
             logger.warning("熔断：规则层拦截后重写次数超限，转人工兜底")
             return {"messages": [AIMessage(content=AUDIT_FALLBACK_MESSAGE)]}
         return {"messages": [_audit_reject_message(f"[规则层] {reason}")]}
@@ -230,30 +259,30 @@ def fact_check_node(state: AgentState):
     )
 
     try:
-        response = checker_llm.invoke(check_prompt)
+        response = get_checker_llm().invoke(check_prompt)
         result = parser.invoke(response)
         is_pass = bool(result.get("is_pass", True))
         feedback = str(result.get("feedback", "Pass"))
     except Exception as e:
         # fail-safe：解析失败不放行。先打回重写，超过容忍次数转人工兜底。
-        AUDIT_COUNTERS.parse_errors += 1
+        AUDIT_COUNTERS.record_parse_error()
         logger.warning("审计输出解析失败（fail-safe 生效，不放行）：%s", e)
         if loop_state > MAX_REFLECTION_LOOPS + AUDIT_PARSE_RETRY_LIMIT:
-            AUDIT_COUNTERS.fallback_handoff += 1
+            AUDIT_COUNTERS.record_fallback_handoff()
             return {"messages": [AIMessage(content=AUDIT_FALLBACK_MESSAGE)]}
         return {"messages": [_audit_reject_message(
             "[校验未完成] 审计结果无法解析，请严格依据知识库原文重写：只使用原文中出现过的数字、"
             "职级门槛与时间条件，不要外推。")]}
 
     if is_pass:
-        AUDIT_COUNTERS.passed += 1
+        AUDIT_COUNTERS.record_passed()
         logger.info("审计通过：规则层与模型层均未发现问题")
         return {"messages": []}
 
     AUDIT_COUNTERS.record_block("llm", feedback)
     logger.warning("发现幻觉，拦截并生成审计意见：%s", feedback)
     if loop_state > MAX_REFLECTION_LOOPS:
-        AUDIT_COUNTERS.fallback_handoff += 1
+        AUDIT_COUNTERS.record_fallback_handoff()
         logger.warning("熔断：模型层拦截后重写次数超限，转人工兜底")
         return {"messages": [AIMessage(content=AUDIT_FALLBACK_MESSAGE)]}
     return {"messages": [_audit_reject_message(feedback)]}

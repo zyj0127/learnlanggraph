@@ -8,11 +8,10 @@ from logging_config import get_logger
 
 logger = get_logger(__name__)
 
-# 反思重写次数上限统一在 agent/constants.py 定义（此处对外保留同名符号，兼容旧引用）
-__all__ = ["MAX_REFLECTION_LOOPS", "router_after_chatbot", "router_after_review", "router_after_fact_check"]
+__all__ = ["router_after_chatbot", "router_after_review", "router_after_fact_check"]
 
 
-def router_after_chatbot(state: AgentState):
+def router_after_chatbot(state: AgentState) -> str:
     """Chatbot 输出后的路由判断。"""
     last_message = state["messages"][-1]
 
@@ -33,7 +32,7 @@ def router_after_review(state: AgentState) -> str:
     return "tools"
 
 
-def router_after_fact_check(state: AgentState):
+def router_after_fact_check(state: AgentState) -> str:
     """审计完成后的路由判断。"""
     last_message = state["messages"][-1]
     if isinstance(last_message, HumanMessage):

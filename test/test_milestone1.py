@@ -1,9 +1,4 @@
-import sys
-from pathlib import Path
-from  tools.hr_tools import get_employee_profile,get_leave_balance,generate_employment_certification
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.append(PROJECT_ROOT)
+from tools.hr_tools import get_employee_profile, get_leave_balance, generate_employment_certification
 
 
 def test_get_employee_profile():

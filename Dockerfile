@@ -9,7 +9,7 @@
 #     --env-file .env \
 #     -e EMBEDDING_MODEL=/models/bge-small-zh-v1.5 \
 #     -e RERANK_MODEL=/models/bge-reranker-base \
-#     -v "E:\code\py\learnlanggraph\.local_models\BAAI\bge-small-zh-v1___5:/models/bge-small-zh-v1.5:ro" \
+#     -v "<项目目录>\.local_models\BAAI\bge-small-zh-v1___5:/models/bge-small-zh-v1.5:ro" \
 #     -v "C:\Users\<你>\.cache\modelscope\hub\models\BAAI\bge-reranker-base:/models/bge-reranker-base:ro" \
 #     hr-agent
 #
@@ -69,7 +69,9 @@ RUN --mount=type=bind,source=build_wheels,target=/wheels,ro \
     fi
 
 # ---- 应用代码与知识库 ----
-COPY config.py logging_config.py observability.py telemetry.py streamlit_app.py ./
+COPY config.py logging_config.py streamlit_app.py ./
+COPY observability/ observability/
+COPY telemetry/ telemetry/
 COPY agent/ agent/
 COPY api/ api/
 COPY database/ database/

@@ -1,4 +1,7 @@
 # learnlanggraph
+
+<!-- CI 徽章：推送到 GitHub 后把 <owner>/<repo> 替换为实际仓库路径 -->
+[![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/ci.yml)
 learnlanggraph
 ### 1. 业务价值与背景
 
@@ -65,11 +68,18 @@ HR 文档中充斥着复杂的表格（如不同职级/城市的差旅报销标�
 
 ```
 hr_agent_project/
-├── config.py                  # 全局配置：路径、环境变量、LLM 工厂
+├── pyproject.toml             # 项目元数据 + 依赖钉扎（唯一真源，== 版本）+ 可选 extras
+├── config.py                  # 统一配置：Settings（pydantic-settings）+ 路径常量 + LLM 工厂
 ├── logging_config.py          # 统一日志（控制台 + 滚动落盘）
-├── observability.py           # 本地可观测性：token 用量 / 延迟 / 成本
-├── telemetry.py               # 会话埋点：每轮问答落库 telemetry.db
-├── streamlit_app.py           # Streamlit 前端（仅展示层）
+├── observability/             # 本地可观测性包
+│   ├── usage.py               #   UsageTracker：token 用量 / 延迟 / 成本（LangChain callback）
+│   └── audit.py               #   AuditCounters：幻觉审计指标（threading.Lock 线程安全）
+├── telemetry/                 # 会话埋点包（每轮问答落库 telemetry.db）
+│   ├── sink.py                #   埋点写入：schema / 意图分类 / log_turn（指标口径唯一真源）
+│   ├── metrics.py             #   统计聚合：weekly_report
+│   ├── report.py              #   Markdown 周报渲染
+│   └── cli.py                 #   命令行：python -m telemetry [--days N] [--json] [--init]
+├── streamlit_app.py           # Streamlit 前端（仅展示层，Graph 驱动走 session_runner）
 ├── Dockerfile                 # 容器化：FastAPI 服务 + 健康检查（模型权重经挂载卷注入）
 ├── .dockerignore
 ├── scripts/                   # 宿主机构建辅助：fetch_wheels.py 预下载 Linux wheel
@@ -88,14 +98,15 @@ hr_agent_project/
 │   └── hr_tools_server.py
 ├── mcp_client/                # MCP vs 直连双路径 A/B 一致性校验
 │   └── ab_check.py
-├── agent/                     # 核心逻辑层
+├── agent/                     # 核心逻辑层（import 全程轻量，重资源一律懒加载）
 │   ├── __init__.py
 │   ├── constants.py           # 前后端共享的协议常量（隐藏指令/敏感工具/转人工词表）
 │   ├── state.py               # AgentState 状态定义
-│   ├── nodes.py               # 节点实现：执行者 / 人工审批 / 事实审计
+│   ├── nodes.py               # 节点实现：执行者 / 人工审批 / 事实审计（LLM 懒加载工厂）
 │   ├── routers.py             # 条件路由
 │   ├── chunking.py            # 知识库切分：标题层切分 + Markdown 表格结构化提取
-│   ├── rag_pipeline.py        # RAG：查询扩写 + HyDE + 混合检索 + 重排
+│   ├── rag_pipeline.py        # RAG：查询扩写 + HyDE + 混合检索 + 重排（模型/向量库懒加载）
+│   ├── session_runner.py      # 公共会话执行层：API 与 Streamlit 共用流式驱动 + 统一埋点
 │   └── graph_builder.py       # LangGraph 装配入口（导出 hr_agent_app）
 ├── api/                       # 服务层
 │   └── server.py              # FastAPI：/health + /chat/stream(SSE) + /chat/resume
@@ -106,11 +117,36 @@ hr_agent_project/
 │   ├── weight_sweep.py        # 混合权重扫参
 │   ├── baseline.json          # 检索质量门禁基线（test_eval_gate 消费）
 │   └── benchmark.py           # token / 延迟 / 成本基准
-├── test/                      # 测试层：各 milestone 验证脚本 + 评测门禁
+├── test/                      # 测试层：conftest.py 统一处理导入路径 + 各 milestone 验证 + 评测门禁
 ├── .env                       # 配置文件：存放 API Keys (绝对不能提交到 Git)
 ├── .gitignore                 # Git 忽略文件配置
-└── requirements.txt           # 依赖清单
+└── requirements.txt           # 依赖清单（由 pyproject.toml 同步钉扎，供 Docker 构建使用）
 ```
+
+### 5.1 本地安装与运行
+
+```bash
+# 核心依赖（版本已钉扎，与评测基线及 Docker 镜像同源）
+pip install -e .
+
+# 可选 extras：
+pip install -e .[models]   # chromadb / pillow / modelscope（模型下载、Chroma 持久化、测试绘图）
+pip install -e .[dev]      # pytest 等测试工具
+
+# 或传统方式（与 pyproject.toml 同步钉扎）：
+pip install -r requirements.txt
+
+# 运行
+python database/mock_db.py                          # 首次：初始化 80 人花名册
+uvicorn api.server:app --host 0.0.0.0 --port 8000   # FastAPI 服务
+streamlit run streamlit_app.py                      # Streamlit 前端
+python -m telemetry --days 7                        # 会话埋点周报
+
+# 测试（pytest 自动经 test/conftest.py 处理导入路径）
+python -m pytest test/ -v
+python -m unittest test.test_fact_rules -v          # 纯规则单测：不加载模型、不调 LLM
+```
+
 
 ### 6. 当前技术口径（2026.09-v4）
 
@@ -135,7 +171,7 @@ docker run -d --name hr-agent -p 8000:8000 \
   --env-file .env \
   -e EMBEDDING_MODEL=/models/bge-small-zh-v1.5 \
   -e RERANK_MODEL=/models/bge-reranker-base \
-  -v "E:\code\py\learnlanggraph\.local_models\BAAI\bge-small-zh-v1___5:/models/bge-small-zh-v1.5:ro" \
+  -v "<项目目录>\.local_models\BAAI\bge-small-zh-v1___5:/models/bge-small-zh-v1.5:ro" \
   -v "C:\Users\<你>\.cache\modelscope\hub\models\BAAI\bge-reranker-base:/models/bge-reranker-base:ro" \
   hr-agent
 
@@ -184,3 +220,226 @@ curl http://localhost:8000/health   # {"status":"ok"}
 > Dockerfile 会自动走在线安装分支，且 cache mount 已保证重复构建很快。
 
 
+
+### 8. 企业部署（第一阶段）
+
+第一阶段把「单容器 + SQLite + 内存向量库」升级为「PostgreSQL 主库 + pgvector +
+LangGraph Postgres checkpointer + LLM 网关 + Langfuse 可观测性」，
+所有新组件均有 Settings 开关可回退（默认回退态 = 原行为）。
+
+#### 8.1 启动基础设施
+
+```bash
+# 最小集：只起 PostgreSQL 16 + pgvector 主库
+docker compose up -d postgres
+
+# 可选：LLM 网关（LiteLLM，DeepSeek 主 + 备用 failover）
+docker compose --profile litellm up -d
+
+# 可选：Langfuse 可观测性（复用主库，Web 控制台 http://localhost:3000）
+docker compose --profile langfuse up -d
+```
+
+#### 8.2 迁移与种子数据
+
+```bash
+# 建表（employees / leave_balances / certifications / kb_chunks + vector 扩展）
+alembic upgrade head
+
+# 灌入 80 人花名册（与 build_roster() / 评测集同源，幂等）
+python -m database.seed            # 已灌过则跳过
+python -m database.seed --force    # 清空重灌
+
+# 离线验证 DDL（无 pg 实例也可检查 SQL 语法）
+alembic upgrade head --sql
+```
+
+应用首次以 pgvector 模式启动时，若 `kb_chunks` 为空会自动从
+`data/company_handbook.md` 切块重建索引（幂等，`content` 唯一约束去重）。
+
+#### 8.3 环境变量清单（新增，详见 .env.sample）
+
+| 变量 | 默认 | 说明 |
+|------|------|------|
+| `DATABASE_URL` | `postgresql+psycopg://hr:hr@localhost:5432/hr_agent` | 主库连接串 |
+| `USE_SQLITE_FALLBACK` | `true` | true=实体库走 SQLite（原行为）；false=走 PostgreSQL |
+| `VECTOR_STORE` | `memory` | `memory`=内存向量库（原行为）；`pgvector`=kb_chunks 表 |
+| `LANGGRAPH_CHECKPOINTER` | `sqlite` | `sqlite`（原行为）/ `postgres` / `memory` |
+| `EMBEDDING_DIM` | `512` | kb_chunks.embedding 向量维度 |
+| `LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL` | 空 | LLM 网关（OpenAI 兼容）；空则回退 `DEEPSEEK_*` 旧口径 |
+| `LANGFUSE_ENABLED` | `false` | 开启 Langfuse trace；密钥缺失/包未装时静默降级 |
+| `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_HOST` | 空 / 空 / `http://localhost:3000` | Langfuse 凭据与地址 |
+
+回退矩阵（无 pg 环境仍可全量跑通）：`USE_SQLITE_FALLBACK=true` +
+`VECTOR_STORE=memory` + `LANGGRAPH_CHECKPOINTER=sqlite` 即为重构前的完整行为，
+`test_fact_rules` 等纯逻辑测试不依赖任何 pg 组件（重依赖全部延迟导入）。
+
+#### 8.4 全栈编排：app（FastAPI）+ web（Vue/nginx）
+
+compose 已补全 `app` 与 `web` 两个服务（完整运维手册见根目录 `DEPLOY.md`）：
+
+```bash
+# 首次部署顺序（详见 DEPLOY.md）
+cp .env.sample .env                        # app 的 env_file 指向它，必填
+docker compose up -d postgres              # 1. 主库（健康检查通过后再下一步）
+alembic upgrade head && python -m database.seed   # 2. 迁移 + 种子（宿主机执行）
+python download_model.py                   # 3. 模型权重（已备则跳过），并解开
+                                           #    compose 中 app.volumes 挂载注释
+docker compose up -d --build app web       # 4. 构建并启动后端 + 前端
+
+curl http://localhost:8000/health          # 后端直连
+curl http://localhost:8080/api/health      # 经 nginx 反代
+# 浏览器打开 http://localhost:8080
+```
+
+- **app**：build 根 Dockerfile；`environment` 显式覆盖 `DATABASE_URL` /
+  `EMBEDDING_MODEL` / `RERANK_MODEL` 等（compose environment 优先级高于
+  env_file，避免 `.env` 里的 localhost / Windows 路径泄漏进容器）；
+  依赖 postgres 健康检查；模型权重只读挂载 `/models`（两种策略见 compose 注释）。
+- **web**：build `web/Dockerfile`（node:20-alpine 构建 dist → nginx:alpine），
+  构建参数 `VITE_API_BASE=/api`、`VITE_MOCK=false`；nginx 托管 SPA 并把
+  `/api/*` 反代到 `app:8000`（SSE：关缓冲、读超时 1h，见 `web/nginx.conf`）；
+  对外端口 `8080:80`。
+- litellm / langfuse profile 不受影响，可与 app/web 任意组合：
+  `docker compose --profile litellm up -d app web`。
+- 离线构建：后端走 `scripts/fetch_wheels.py` 预下载 wheel（WSL/Linux）；
+  前端弱网把 compose `web.build.args.NPM_REGISTRY` 切到 npmmirror。
+
+### 9. 认证授权（第二阶段）
+
+第二阶段在「行为不变优先」前提下加入身份模型与 RBAC：FastAPI 入口 JWT 认证、
+工具层强制越权拦截、审批人角色校验、全链路审计留痕。
+`AUTH_ENABLED=false` 时所有鉴权逻辑完全旁路，回到第一阶段行为。
+
+#### 9.1 角色权限矩阵
+
+| 动作 \ 角色 | 匿名 | 员工（EMPLOYEE） | HR | 管理员（ADMIN） |
+|------------|------|----------------|----|----------------|
+| 政策问答（RAG） | ✓ | ✓ | ✓ | ✓ |
+| 查员工档案 | × | 仅本人 | ✓ | ✓ |
+| 查假期余额 | × | 仅本人 | ✓ | ✓ |
+| 开具证明 | × | 仅本人 | ✓ | ✓ |
+| 人工审批（approve/reject） | × | × | ✓ | ✓ |
+
+规则纯函数见 `auth/permissions.py`（可独立单测）；越权时工具返回固定礼貌拒答文案
+（不抛异常、不打断 Graph），并记审计计数器与 `auth_events` 埋点各一笔；
+`python -m telemetry` 周报的「安全与审计」小节已聚合授权事件（按类型/角色/时间窗计数，含越权 Top 动作）。
+
+#### 9.2 获取 token（开发模式）
+
+```bash
+# .env 中设置 JWT_SECRET=... 与 AUTH_DEV_MODE=true（生产必须关闭本端点）
+curl -X POST http://localhost:8000/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{"uid": "1001", "role": "employee"}'
+```
+
+#### 9.3 调用方式
+
+```bash
+curl -N -X POST http://localhost:8000/chat/stream \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"uid": "1001", "question": "我还有几天年假？", "thread_id": "t1"}'
+```
+
+- 无 `Authorization` 头：匿名身份（政策问答可用，个人数据工具被 RBAC 拦下）。
+- token 无效/过期：401；`/chat/resume` 审批：非 HR/ADMIN 一律 403，审批人与申请人同 uid（自审自批）同样 403 并留痕；升级前挂起的旧会话负载无申请人 uid 时按安全默认处理（HR 拒绝、ADMIN 放行）。
+- SSE 事件契约不变（`token` / `approval_required` / `done`）。
+
+#### 9.4 接企业 SSO（扩展点）
+
+当前为 HS256 对称签名（`JWT_SECRET`）。接企业 SSO/OIDC 时：将
+`JWT_ALGORITHM` 切为 RS256，把 `auth/jwt_tokens.py` 中 `decode_token` 的密钥
+替换为从 IdP JWKS endpoint 拉取的公钥（推荐 `jwt.PyJWKClient`），并补充
+`iss` / `aud` 校验；payload → Identity 的字段映射与下游 RBAC 口径不变。
+届时 `/auth/token` 开发端点应整体下线。
+
+#### 9.5 环境变量清单（新增，详见 .env.sample）
+
+| 变量 | 默认 | 说明 |
+|------|------|------|
+| `AUTH_ENABLED` | `true` | 鉴权总开关；false 时完全旁路（旧行为） |
+| `AUTH_DEV_MODE` | `false` | true 时启用 `POST /auth/token` 本地签发（生产必须 false） |
+| `JWT_SECRET` | 空 | HS256 校验密钥；未配置时不放行任何 token |
+| `JWT_ALGORITHM` | `HS256` | 签名算法（预留 RS256/OIDC JWKS 扩展） |
+| `JWT_EXPIRE_MINUTES` | `120` | 开发签发 token 有效期（分钟） |
+
+### 10. Vue 前端（`web/`，hr-assistant-web）
+
+Vue 3 + TypeScript + Vite 5 + Pinia 的 Web 前端，替换 Streamlit 作为面向员工的
+主交互界面，对接 `api/server.py` 的 FastAPI 后端（HTTP 协议层，不动 Python 侧逻辑）。
+
+#### 10.1 启动
+
+```bash
+cd web
+npm install        # 首次
+npm run dev        # 开发模式，默认 http://localhost:5173
+npm run build      # 生产构建（含 vue-tsc 类型检查，输出 web/dist）
+npm run preview    # 预览构建产物
+```
+
+dev server 已配置 proxy：`/api/*` → `http://localhost:8000/*`（前缀重写），
+目标可用 `VITE_PROXY_TARGET` 覆盖。后端需先启动
+（`uvicorn api.server:app --host 0.0.0.0 --port 8000`，并开启
+`AUTH_ENABLED=true` + `AUTH_DEV_MODE=true` + `JWT_SECRET=...` 以启用登录签发）。
+
+#### 10.2 环境变量（见 `web/.env.example`）
+
+| 变量 | 默认 | 说明 |
+|------|------|------|
+| `VITE_API_BASE` | `/api` | API 基础路径（经 dev proxy 时保持 `/api`） |
+| `VITE_MOCK` | `false` | true 时进入 Mock 演示模式，完全不依赖后端 |
+| `VITE_PROXY_TARGET` | `http://localhost:8000` | dev proxy 目标（仅开发期生效） |
+
+#### 10.3 Mock 演示模式
+
+`VITE_MOCK=true`，或后端不可达时点击横幅「切换到 Mock 演示模式」。Mock 模式
+内置：伪 JWT 签发（uid+role）、按字符切片模拟流式输出、敏感操作关键词
+（证明/在职证明/收入证明）触发审批挂起、复刻 `auth/guard.py` 的审批人校验
+（员工审批 403、自审自批 403）。SSE 事件序列与后端契约一致
+（token / approval_required / done），可无后端完整预览登录、流式问答与审批流。
+
+#### 10.4 功能口径（与 Streamlit 对齐）
+
+- 登录（uid+角色换 JWT，Bearer 头，localStorage 持久化）、退出登录；
+  未登录匿名可政策问答。
+- POST 型 SSE 流式对话（fetch + ReadableStream 手动解析 `data: {json}\n\n` 帧），
+  token 级渲染。
+- interrupt → `approval_required` 事件渲染审批卡片；approve/reject 调
+  `/chat/resume`；前端预校验（仅 HR/ADMIN、审批人 ≠ 申请人）禁用按钮，
+  后端 403 拒答文案直接落入聊天记录。
+- 「⏱️ 生成闲置会话总结」：发送 `__SYS_IDLE_TIMEOUT__` 指令（不上屏），
+  与 Streamlit 侧栏按钮口径一致。
+- 开启新会话（新 thread_id：`session_{uid}_{8hex}`）、清空显示。
+
+与 Streamlit 的关系：两者均为纯展示层，共用同一 FastAPI 后端 / session_runner
+实现；Streamlit 版（`streamlit run streamlit_app.py`）保留用于本地调试与
+工具调用轨迹查看，Vue 版面向正式演示与部署。SSE 契约字段与后端逐一对齐，
+未改动任何后端 Python 代码。
+
+
+### 11. CI 流水线（GitHub Actions，`.github/workflows/ci.yml`）
+
+push / PR 触发五个 job，schedule（每日 18:17 UTC）与手动触发追加完整评测门禁：
+
+| Job | 触发 | 内容 | 门禁级别 |
+|-----|------|------|----------|
+| `python-test` | push/PR | Python 3.11/3.12 矩阵；compileall 语法门禁 → `scripts/check_import_cycles.py` 循环 import 检查 → `pytest test/ -v` | 阻塞 |
+| `eval-gate` | push/PR | 评测门禁离线切片：GT 可定位 + 熔断/权重配置契约（不加载模型） | 阻塞 |
+| `eval-nightly` | 定时/手动 | 下载 BGE 权重跑 741 题检索门禁（Hit@3/Hit@5/MRR 与 `eval/baseline.json` 比对，回归即红；不调 LLM 零 token 成本） | 阻塞 |
+| `security` | push/PR | `pip-audit`（钉版依赖通报制，报告落 artifact）+ `npm audit --omit=dev`（高危阻塞） | npm 阻塞 / pip 通报 |
+| `web-build` | push/PR | node 20：`npm ci` + `npm run build`（含 vue-tsc 类型门禁），dist 落 artifact | 阻塞 |
+| `docker-check` | push/PR | `docker compose config -q` 校验 + hadolint（通报制） | compose 阻塞 |
+
+测试分层约定（`test/conftest.py` + `pyproject.toml` markers）：
+
+- `needs_models`（BGE 权重，~3.4GB）/ `needs_pg`（PostgreSQL）/ `needs_llm`
+  （真实 LLM Key，消耗 token）三个 marker **默认跳过**，分别由
+  `CI_MODEL_TESTS=1` / `CI_PG_TESTS=1` / `CI_LLM_TESTS=1` 显式开启；
+- 缺 langchain/fastapi 等重依赖时，对应测试模块整体跳过（collect_ignore），
+  纯逻辑套件（fact_rules / permissions / auth_rbac / auth_metrics /
+  eval_gate 的 GT 与契约）保持零依赖可跑；
+- CI 安装口径与 Docker 同源：torch 走 PyTorch CPU 专用索引，
+  `-c build_wheels/constraints.txt` 钉版，「流水线里跑的就是评测过的那套」。

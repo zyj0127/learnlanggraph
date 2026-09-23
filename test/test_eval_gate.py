@@ -14,19 +14,36 @@
 """
 import json
 import os
-import sys
 import unittest
 from datetime import datetime
 from pathlib import Path
 
+try:
+    import pytest
+except ImportError:  # unittest 直跑 / 零依赖环境兜底：marker 退化为 unittest.skipUnless
+    class _MarkShim:
+        @staticmethod
+        def needs_models(cls):
+            return unittest.skipUnless(
+                os.environ.get("CI_MODEL_TESTS") == "1",
+                "需要 BGE 模型权重（CI_MODEL_TESTS=1 开启）",
+            )(cls)
+
+    class _PytestShim:
+        mark = _MarkShim()
+
+    pytest = _PytestShim()
+
 os.environ.setdefault("LANGGRAPH_CHECKPOINTER", "memory")
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 
-from config import DOC_PATH  # noqa: E402
-from eval.dataset import DATASET_VERSION, POLICY_EVAL_SET  # noqa: E402
+import importlib.util as _ilu
+
+_HAS_LANGCHAIN = _ilu.find_spec("langchain_core") is not None
+
+from config import DOC_PATH
+from eval.dataset import DATASET_VERSION, POLICY_EVAL_SET
 
 BASELINE_PATH = PROJECT_ROOT / "eval" / "baseline.json"
 # 允许的回归容差：低于基线超过该幅度即判定回归（0.02 = 2 个百分点）
@@ -44,6 +61,10 @@ class TestGroundTruth(unittest.TestCase):
         self.assertTrue(DATASET_VERSION, "评测集必须带版本号，报告才能落盘追溯")
 
 
+import pytest
+
+
+@pytest.mark.needs_models  # 加载 BGE 向量/重排模型（约 3.4GB）；CI 默认跳过，CI_MODEL_TESTS=1 开启
 class TestRetrievalGate(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -136,6 +157,7 @@ class TestPolicyContracts(unittest.TestCase):
 
         self.assertTrue(AUDIT_FALLBACK_MESSAGE.startswith(HANDOFF_PREFIX))
 
+    @unittest.skipUnless(_HAS_LANGCHAIN, "缺少 langchain_core，跳过权重解析契约测试")
     def test_hybrid_weights_resolvable_and_safe(self):
         from agent.rag_pipeline import DEFAULT_HYBRID_WEIGHTS, _resolve_weights
 

@@ -1,0 +1,146 @@
+# 企业化编排：PostgreSQL(pgvector) 主库 + 应用(app) + Web 前端(web)
+#              + 可选 LLM 网关(litellm profile) + 可选 Langfuse(langfuse profile)
+#
+# 常用命令：
+#   docker compose up -d postgres                       # 只起主库（最小集）
+#   docker compose up -d app web                        # 主库 + 后端 + 前端（标准部署）
+#   docker compose --profile litellm up -d app web      # 追加 LLM 网关
+#   docker compose --profile langfuse up -d app web     # 追加 Langfuse 可观测性
+#   docker compose --profile litellm --profile langfuse up -d   # 全开
+#
+# 首次部署顺序详见 DEPLOY.md：postgres（健康）→ alembic migrate + seed → app → web。
+
+services:
+  # ---- 主库：PostgreSQL 16 + pgvector ----
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: hr-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hr}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hr}
+      POSTGRES_DB: ${POSTGRES_DB:-hr_agent}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-hr} -d $${POSTGRES_DB:-hr_agent}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---- 可选：LiteLLM 统一 LLM 网关（OpenAI 兼容协议）----
+  # 启用：docker compose --profile litellm up -d
+  # 应用侧把 LLM_BASE_URL 指向 http://localhost:4000 即可；
+  # deepseek 主模型 + 备用模型 failover 见 docker/litellm/config.yaml。
+  litellm:
+    profiles: ["litellm"]
+    image: ghcr.io/berriai/litellm:main-stable
+    container_name: hr-litellm
+    restart: unless-stopped
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    volumes:
+      - ./docker/litellm/config.yaml:/app/config.yaml:ro
+    ports:
+      - "4000:4000"
+    environment:
+      # 网关侧持有真实上游密钥（应用侧只需网关 master key）
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-litellm-dev}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:4000/health/liveliness', timeout=3).status==200 else 1)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ---- 可选：Langfuse 可观测性（官方 compose 精简版，复用主库）----
+  # 启用：docker compose --profile langfuse up -d
+  # Web 控制台 http://localhost:3000；应用侧配 LANGFUSE_* 即可接入。
+  langfuse:
+    profiles: ["langfuse"]
+    image: langfuse/langfuse:2
+    container_name: hr-langfuse
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      # 复用主库，独立 database（首次启动自动建库迁移）
+      DATABASE_URL: postgresql://${POSTGRES_USER:-hr}:${POSTGRES_PASSWORD:-hr}@postgres:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: ${LANGFUSE_NEXTAUTH_SECRET:-changeme-nextauth-secret}
+      SALT: ${LANGFUSE_SALT:-changeme-salt}
+      # 首次启动后在 Web 控制台创建 Project 拿 PK/SK 填回 .env
+      LANGFUSE_INIT_PROJECT_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_INIT_PROJECT_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/public/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ---- 应用服务：FastAPI 后端（uvicorn api.server:app）----
+  # 构建见根 Dockerfile（python:3.13-slim，torch CPU 专用索引，离线 wheel 可选）。
+  # 启动命令已在镜像 CMD 中：初始化 db/ 兜底目录后 uvicorn 拉起 :8000。
+  app:
+    build: .
+    container_name: hr-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      # compose 的 environment 优先级高于 env_file —— 这三处必须显式指向
+      # compose 内部服务，.env 里的 localhost 口径在容器网络内不可达
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-hr}:${POSTGRES_PASSWORD:-hr}@postgres:5432/${POSTGRES_DB:-hr_agent}
+      USE_SQLITE_FALLBACK: "false"
+      VECTOR_STORE: pgvector
+      LANGGRAPH_CHECKPOINTER: postgres
+      # 同理必须覆盖：.env 里的 EMBEDDING_MODEL / RERANK_MODEL 指向宿主机
+      # Windows 路径（本地直跑需要），容器内统一走 /models 只读挂载
+      EMBEDDING_MODEL: /models/bge-small-zh-v1.5
+      RERANK_MODEL: /models/bge-reranker-base
+      # 走 litellm 网关时把 LLM_BASE_URL 指向 compose 内部地址（.env 覆盖即可）：
+      #   LLM_BASE_URL=http://litellm:4000  LLM_API_KEY=${LITELLM_MASTER_KEY}
+      # 走 langfuse 时：LANGFUSE_HOST=http://langfuse:3000
+    ports:
+      - "8000:8000"
+    # BGE 权重（约 3.4GB）不打进镜像，运行时只读挂载到 /models：
+    # 策略一（推荐）：挂载宿主机已下载的模型目录（本地直跑时已就绪，路径与
+    #   根 Dockerfile 文件头示例一致，注意 compose 里路径用正斜杠或 ${PWD}）：
+    #   - ./.local_models/BAAI/bge-small-zh-v1___5:/models/bge-small-zh-v1.5:ro
+    #   - C:/Users/<你>/.cache/modelscope/hub/models/BAAI/bge-reranker-base:/models/bge-reranker-base:ro
+    # 策略二：在空环境首次部署时，先执行 python download_model.py 把两个模型
+    #   下载到上述宿主目录，再带挂载启动 app。
+    # volumes:
+    #   - ./.local_models/BAAI/bge-small-zh-v1___5:/models/bge-small-zh-v1.5:ro
+    #   - /path/to/bge-reranker-base:/models/bge-reranker-base:ro
+    # 健康检查沿用镜像 HEALTHCHECK（start-period 120s，首次需加载权重建索引）。
+
+  # ---- Web 前端：Vue 3 静态产物（nginx 托管 + /api 反代）----
+  # 构建见 web/Dockerfile（node:20-alpine 构建 dist → nginx:alpine 托管）。
+  # /api/* 由 nginx 反代到 app:8000（含 SSE 关缓冲/长超时，见 web/nginx.conf）。
+  web:
+    build:
+      context: ./web
+      args:
+        # 生产口径：/api 走同源反代，Mock 关闭；VITE_* 编译进静态产物
+        VITE_API_BASE: /api
+        VITE_MOCK: "false"
+        # 弱网/离线构建可切 npm 镜像源：
+        # NPM_REGISTRY: https://registry.npmmirror.com
+    container_name: hr-web
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:

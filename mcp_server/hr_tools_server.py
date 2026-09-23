@@ -13,12 +13,14 @@ Agent 经 langchain-mcp-adapters 等）都可以即插即用地调用这 3 个�
     python mcp_server/hr_tools_server.py
 
 客户端接入示例（LangGraph 侧）：
+    import sys
     from langchain_mcp_adapters.client import MultiServerMCPClient
     client = MultiServerMCPClient({
         "hr_tools": {
-            "command": r"E:\\File\\virtualenv\\test_py02\\Scripts\\python.exe",
-            "args": [r"E:\\code\\py\\learnlanggraph\\mcp_server\\hr_tools_server.py"],
+            "command": sys.executable,  # 当前解释器即可，勿硬编码个人机器绝对路径
+            "args": ["mcp_server/hr_tools_server.py"],
             "transport": "stdio",
+            "cwd": "<项目根目录>",
         }
     })
     tools = await client.get_tools()

@@ -2,38 +2,25 @@
 """
 飞羽科技 HR 智能助理 —— Streamlit 前端
 ======================================
-仅做前端展示层，不修改任何后端代码。
+仅做前端展示层：Graph 驱动、首轮状态构造、审批恢复与埋点统一走
+agent/session_runner.py（与 FastAPI 服务共用同一实现与埋点口径）。
 直接复用 agent.graph_builder 中编译好的 hr_agent_app（LangGraph）。
 
 运行方式（务必在项目根目录下启动）：
     streamlit run streamlit_app.py
 """
-import os
-import sys
 import uuid
-from pathlib import Path
 
 import streamlit as st
 
-# ---------------------------------------------------------------------------
-# 0. 环境准备：保证 .env 与包导入路径与后端脚本一致
-# ---------------------------------------------------------------------------
-PROJECT_ROOT = Path(__file__).resolve().parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
-from dotenv import load_dotenv
-
-load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
-
-from logging_config import get_logger  # noqa: E402
+from logging_config import get_logger
 
 logger = get_logger(__name__)
 
-from langchain_core.messages import AIMessageChunk, HumanMessage, ToolMessage  # noqa: E402
-from langgraph.types import Command  # noqa: E402
+from langgraph.types import Command
 
-from agent.constants import IDLE_TIMEOUT_CMD  # noqa: E402
+from agent.constants import IDLE_TIMEOUT_CMD
+from agent.session_runner import build_turn_state, stream_turn
 
 # ---------------------------------------------------------------------------
 # 1. 加载 LangGraph 应用（重量级：加载 embedding / reranker / 编译图，缓存一次）
@@ -60,6 +47,10 @@ def init_session_state():
     # 展示层消息列表：[{"role": "user"/"assistant"/"tool", ...}]
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
+    # 登录身份（auth.models.Identity）；None = 匿名（仅政策问答可用，
+    # 涉及个人数据的工具会被 RBAC 拦下）；AUTH_ENABLED=false 时恒为 None（旁路）
+    if "identity" not in st.session_state:
+        st.session_state.identity = None
 
 
 def reset_conversation(uid: str):
@@ -88,11 +79,18 @@ def render_tool_result(name: str, content: str, container):
             st.text(content)
 
 
-def _stream_agent(payload, config: dict, show_trace: bool, label: str):
+def _stream_agent(payload, config: dict, show_trace: bool, label: str, meta: dict = None,
+                  identity=None):
     """
     驱动后端 Graph 执行（首轮输入或审批恢复指令），并以 token 级流式渲染。
 
-    payload: 首轮为 state dict，审批恢复为 Command(resume=...)。
+    Graph 驱动与埋点由 agent/session_runner.py 统一实现；本函数只负责
+    把统一事件流渲染成 Streamlit 组件（工具调用轨迹 + 流式答案）。
+
+    payload:  首轮为 state dict，审批恢复为 Command(resume=...)。
+    meta:     埋点字段（question / uid / channel），统一落 db/telemetry.db。
+    identity: 当前登录身份（auth.models.Identity），由 session_runner 设置进
+              contextvars 供工具层 RBAC 校验；None 表示匿名/旁路。
     返回 (final_text, interrupted_info)；interrupted_info 非空表示 Graph
     在 human_review 节点被 interrupt 挂起。
     """
@@ -106,43 +104,36 @@ def _stream_agent(payload, config: dict, show_trace: bool, label: str):
         current_answer = ""
         seen_tool_ids = set()
 
-        for chunk, metadata in app.stream(payload, config, stream_mode="messages"):
-            node = metadata.get("langgraph_node", "")
+        for event in stream_turn(app, payload, config, meta=meta, identity=identity):
+            event_type = event["type"]
 
-            if isinstance(chunk, AIMessageChunk):
+            if event_type == "tool_call":
                 # 工具调用阶段：属于「思考/决策」，清空此前流出的叙事文本
-                if chunk.tool_calls:
+                current_answer = ""
+                answer_placeholder.empty()
+                tool_call = event["tool_call"]
+                tc_id = tool_call.get("id")
+                if tc_id not in seen_tool_ids:
+                    seen_tool_ids.add(tc_id)
+                    render_tool_call(tool_call, status)
+                    status.update(
+                        label=f"🔧 正在调用工具 `{tool_call.get('name', '')}` …"
+                    )
+
+            elif event_type == "tool_result":
+                render_tool_result(event["name"], event["content"], status)
+
+            elif event_type == "token":
+                # 最终答案 token：chatbot 节点内容（已在公共层过滤）
+                if event["msg_id"] != current_msg_id:
+                    current_msg_id = event["msg_id"]
                     current_answer = ""
-                    answer_placeholder.empty()
-                    for tc in chunk.tool_calls:
-                        tc_id = tc.get("id")
-                        if tc_id not in seen_tool_ids:
-                            seen_tool_ids.add(tc_id)
-                            render_tool_call(tc, status)
-                            status.update(
-                                label=f"🔧 正在调用工具 `{tc.get('name', '')}` …"
-                            )
-                    continue
+                current_answer += event["content"]
+                final_text = current_answer
+                answer_placeholder.markdown(current_answer + " ▌")
 
-                # 最终答案 token：仅 chatbot 节点、非工具调用的内容
-                if node == "chatbot" and chunk.content:
-                    if chunk.id != current_msg_id:
-                        current_msg_id = chunk.id
-                        current_answer = ""
-                    current_answer += chunk.content
-                    final_text = current_answer
-                    answer_placeholder.markdown(current_answer + " ▌")
-
-            elif isinstance(chunk, ToolMessage):
-                render_tool_result(chunk.name or "tool", str(chunk.content), status)
-
-        # 兜底：messages 流不直接透出 interrupt，改查图状态
-        snapshot = app.get_state(config)
-        if snapshot.next:
-            for task in snapshot.tasks:
-                if task.interrupts:
-                    interrupted_info = task.interrupts[0].value
-                    break
+            elif event_type == "approval_required":
+                interrupted_info = event["interrupt_value"]
 
         if interrupted_info is not None:
             status.update(label="⏸️ 敏感操作等待人工审批…", state="complete", expanded=False)
@@ -166,20 +157,22 @@ def run_agent(user_input: str, uid: str, thread_id: str, show_trace: bool):
     st.session_state.pending_approval 并返回空字符串。
     """
     config = {"configurable": {"thread_id": thread_id}}
-    state = {
-        "messages": [HumanMessage(content=user_input)],
-        "current_uid": uid,
-        "loop_state": 0,
-    }
+    app = load_hr_agent()
+    # 首轮/后续轮状态构造统一走公共层（首轮注入 uid 与熔断计数 loop_state）
+    state = build_turn_state(app, config, uid, user_input)
 
     final_text, interrupted_info = _stream_agent(
-        state, config, show_trace, "🤖 HR 助理思考中…"
+        state, config, show_trace, "🤖 HR 助理思考中…",
+        meta={"question": user_input, "uid": uid, "channel": "streamlit"},
+        identity=st.session_state.get("identity"),
     )
 
     if interrupted_info is not None:
         st.session_state.pending_approval = {
             "thread_id": thread_id,
             "info": interrupted_info,
+            # 申请人 uid（审批恢复时校验审批人 ≠ 申请人）
+            "applicant_uid": uid,
         }
 
     return final_text
@@ -192,7 +185,17 @@ def resume_agent(decision: str, thread_id: str, show_trace: bool):
     """
     config = {"configurable": {"thread_id": thread_id}}
     label = "✅ 已批准，继续执行…" if decision == "approve" else "❌ 已拒绝，继续执行…"
-    final_text, _ = _stream_agent(Command(resume=decision), config, show_trace, label)
+    identity = st.session_state.get("identity")
+    # 审批留痕：审批人身份与申请人身份分离（只记 uid/角色/决定，不落 PII）
+    if identity is not None:
+        from auth.guard import audit_approval
+
+        audit_approval(decision, identity, target_uid=st.session_state.uid)
+    final_text, _ = _stream_agent(
+        Command(resume=decision), config, show_trace, label,
+        meta={"question": f"[人工审批恢复] {decision}", "channel": "streamlit"},
+        identity=identity,
+    )
     return final_text
 
 
@@ -206,23 +209,60 @@ with st.sidebar:
     st.title("🪶 飞羽科技 HR 助理")
     st.caption("基于 LangGraph · RAG · 事实审计")
 
-    st.subheader("员工身份")
     uid_options = {
         "1001": "1001 · 张三（P5 北京）",
         "1002": "1002 · 李四（P4 成都）",
         "1003": "1003 · 王五（P7 上海）",
         "1004": "1004 · 赵六（P3 深圳）",
     }
-    selected_uid = st.selectbox(
-        "当前登录员工",
-        options=list(uid_options.keys()),
-        format_func=lambda u: uid_options[u],
-        index=list(uid_options.keys()).index(st.session_state.uid),
-    )
-    if selected_uid != st.session_state.uid:
-        st.session_state.uid = selected_uid
-        reset_conversation(selected_uid)
-        st.rerun()
+
+    # ---- 登录身份（企业化第二阶段：RBAC；AUTH_ENABLED=false 时旁路）----
+    from auth.models import Identity, Role
+    from config import get_settings
+
+    _auth_enabled = get_settings().auth_enabled
+    _role_labels = {Role.EMPLOYEE: "员工", Role.HR: "HR 专员", Role.ADMIN: "管理员"}
+
+    st.subheader("登录身份")
+    if not _auth_enabled:
+        # 鉴权旁路：保持旧的「员工身份」切换行为
+        selected_uid = st.selectbox(
+            "当前登录员工",
+            options=list(uid_options.keys()),
+            format_func=lambda u: uid_options[u],
+            index=list(uid_options.keys()).index(st.session_state.uid),
+        )
+        if selected_uid != st.session_state.uid:
+            st.session_state.uid = selected_uid
+            reset_conversation(selected_uid)
+            st.rerun()
+    elif st.session_state.identity is None:
+        st.caption("未登录（匿名）：仅可咨询政策类问题，个人数据功能需登录")
+        login_uid = st.selectbox(
+            "员工账号",
+            options=list(uid_options.keys()),
+            format_func=lambda u: uid_options[u],
+        )
+        login_role = st.selectbox(
+            "角色",
+            options=list(_role_labels.keys()),
+            format_func=lambda r: _role_labels[r],
+        )
+        if st.button("🔑 登录", use_container_width=True):
+            st.session_state.identity = Identity(
+                uid=login_uid, name=uid_options[login_uid].split("·")[1].strip().split("（")[0],
+                role=login_role,
+            )
+            st.session_state.uid = login_uid
+            reset_conversation(login_uid)
+            st.rerun()
+    else:
+        identity = st.session_state.identity
+        st.success(f"已登录：{identity.name or identity.uid}（{_role_labels.get(identity.role, identity.role.value)}）")
+        if st.button("🚪 退出登录", use_container_width=True):
+            st.session_state.identity = None
+            reset_conversation(st.session_state.uid)
+            st.rerun()
 
     st.subheader("会话")
     st.text(f"thread_id: {st.session_state.thread_id}")
@@ -259,8 +299,13 @@ with st.sidebar:
     st.caption("💡 能力：员工档案查询 / 假期余额 / 在职·收入证明 / 员工手册政策问答")
 
 st.title("HR 智能助理")
+_identity = st.session_state.get("identity")
+_identity_label = (
+    f"**{_identity.name or _identity.uid}**（{_role_labels.get(_identity.role, '')}）"
+    if _identity else "**匿名访客**（仅政策问答）"
+)
 st.caption(
-    f"当前员工：**{uid_options[st.session_state.uid]}** ｜ "
+    f"当前身份：{_identity_label} ｜ "
     "可咨询考勤假期、差旅报销等政策，或查询个人档案、假期余额、开具证明"
 )
 
@@ -277,12 +322,32 @@ for item in st.session_state.chat_history:
 pending = st.session_state.get("pending_approval")
 if pending and pending.get("thread_id") == st.session_state.thread_id:
     with st.chat_message("assistant"):
-        st.warning(f"🔒 **敏感操作需要人工审批**\n\n{pending['info']}")
+        # 开启鉴权后 interrupt 负载为 dict（message + applicant_uid），旧会话为纯字符串
+        _info = pending["info"]
+        _info_text = _info.get("message", "") if isinstance(_info, dict) else str(_info)
+        st.warning(f"🔒 **敏感操作需要人工审批**\n\n{_info_text}")
+        # 审批人校验：角色 + 审批人 ≠ 申请人 + 旧负载兜底（旁路模式不校验）
+        from auth.guard import check_approval_allowed, extract_applicant_uid
+
+        _applicant_uid = (
+            extract_applicant_uid(_info) or pending.get("applicant_uid", "")
+        )
+        _approval_denial = None
+        if _auth_enabled:
+            _approval_denial = (
+                check_approval_allowed(_identity, _applicant_uid)
+                if _identity is not None else "权限提示：请先以 HR 或管理员身份登录后再审批。"
+            )
+        _can_approve = _approval_denial is None
+        if not _can_approve:
+            st.info(_approval_denial)
         col1, col2 = st.columns(2)
         with col1:
-            approve_clicked = st.button("✅ 批准执行", use_container_width=True)
+            approve_clicked = st.button("✅ 批准执行", use_container_width=True,
+                                        disabled=not _can_approve)
         with col2:
-            reject_clicked = st.button("❌ 拒绝执行", use_container_width=True)
+            reject_clicked = st.button("❌ 拒绝执行", use_container_width=True,
+                                       disabled=not _can_approve)
 
         if approve_clicked or reject_clicked:
             decision = "approve" if approve_clicked else "reject"

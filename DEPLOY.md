@@ -1,0 +1,134 @@
+# 生产部署手册（DEPLOY）
+
+适用：企业化编排（docker-compose.yml）全栈部署 HR 智能助理 ——
+PostgreSQL(pgvector) 主库 + FastAPI 后端（app）+ Vue 前端（web，nginx 托管）
++ 可选 LiteLLM 网关 / Langfuse 可观测性。
+
+## 1. 架构（文字版）
+
+```
+                        浏览器
+                          │  http://<host>:8080
+                          ▼
+                ┌───────────────────┐
+                │  web (nginx:80)   │  Vue 静态产物 + SPA fallback
+                │  /api/* ──────────┼──┐ 反代（SSE：proxy_buffering off，读超时 1h）
+                └───────────────────┘  │
+                                       ▼
+                              ┌─────────────────┐
+                              │ app (uvicorn    │  FastAPI：/auth/token
+                              │  :8000)         │  /chat/stream /chat/resume（SSE）
+                              └───────┬─────────┘
+              ┌───────────────────────┼────────────────────────┐
+              ▼                       ▼                        ▼
+   ┌────────────────────┐  ┌────────────────────┐   ┌────────────────────┐
+   │ postgres:16        │  │ litellm (可选      │   │ langfuse (可选     │
+   │ +pgvector :5432    │  │  profile, :4000)   │   │  profile, :3000)   │
+   │ 实体库/向量/checkpoint│  │ LLM 网关+failover  │   │ trace 可观测性     │
+   └────────────────────┘  └────────────────────┘   └────────────────────┘
+              ▲                                              │
+              └────────────── langfuse 复用主库（独立 database）─┘
+```
+
+- 外部只暴露 web(8080)；app 的 8000、postgres 的 5432 可按需在 compose 中
+  去掉 `ports` 映射改为纯内部网络（生产建议）。
+- BGE 模型权重（约 3.4GB）不打进镜像，只读挂载进 app 容器的 `/models`。
+
+## 2. 首次部署顺序
+
+```bash
+# 0. 准备环境变量（app 服务的 env_file 指向它，缺失会让 compose 报错）
+cp .env.sample .env
+#    至少填：DEEPSEEK_API_KEY（或走 litellm 网关）、JWT_SECRET、
+#    AUTH_ENABLED=true、AUTH_DEV_MODE 按需要（生产应 false）
+
+# 1. 主库
+docker compose up -d postgres
+
+# 2. 迁移 + 种子（在宿主机执行；DATABASE_URL 指向 localhost:5432）
+alembic upgrade head
+python -m database.seed
+
+# 3. 模型权重（若宿主机 .local_models 已就绪则跳过）
+python download_model.py
+#    然后把 docker-compose.yml 中 app 服务的 volumes 注释解开、路径改对
+
+# 4. 构建并启动后端 + 前端
+docker compose up -d --build app web
+
+# 5. 验收
+curl http://localhost:8000/health          # {"status":"ok"}
+curl http://localhost:8080/                # index.html
+curl http://localhost:8080/api/health      # 经 nginx 反代 -> {"status":"ok"}
+# 浏览器打开 http://localhost:8080，登录后提问验证 SSE 流式
+```
+
+可选组件：
+
+```bash
+docker compose --profile litellm up -d     # LLM 网关；.env 设 LLM_BASE_URL=http://litellm:4000
+docker compose --profile langfuse up -d    # 观测台 http://localhost:3000；建 Project 拿 PK/SK 填回 .env
+```
+
+## 3. 环境变量清单（部署相关）
+
+compose 层（根 `.env`，同时被 `${VAR}` 插值与 app 的 `env_file` 消费）：
+
+| 变量 | 默认 | 说明 |
+|------|------|------|
+| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | hr / hr / hr_agent | 主库凭据；app 的 `DATABASE_URL` 由 compose 显式拼装覆盖 |
+| `DEEPSEEK_API_KEY` | 空 | 直连 DeepSeek 时必填（或改用 litellm） |
+| `JWT_SECRET` | 空 | JWT 验签密钥，生产必填 |
+| `AUTH_ENABLED` / `AUTH_DEV_MODE` | true / false | 鉴权开关 / 开发签发端点（生产必须 false） |
+| `LITELLM_MASTER_KEY` | sk-litellm-dev | 网关 master key |
+| `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` | 空 | 观测性凭据 |
+
+web 构建期参数（compose `web.build.args`，编译进静态产物）：
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `VITE_API_BASE` | `/api` | 经 nginx 同源反代，勿改；仅直连外部后端时覆盖为完整 URL |
+| `VITE_MOCK` | `false` | Mock 演示模式，生产必须 false |
+| `NPM_REGISTRY` | npm 官方源 | 弱网切 `https://registry.npmmirror.com` |
+
+完整应用级变量见 README「8.3」「9.5」与 `.env.sample`。
+
+## 4. 常用运维命令
+
+```bash
+docker compose ps                          # 状态与健康度
+docker compose logs -f app                 # 后端日志（SSE/审批留痕在其中）
+docker compose logs -f web                 # nginx 访问/错误日志
+docker compose up -d --build web           # 前端发版（只重建 web）
+docker compose up -d --build app           # 后端发版
+docker compose restart app                 # 改 .env 后重启生效
+docker compose down                        # 停全部（pgdata 卷保留）
+docker compose down -v                     # 危险：连数据卷一起删
+# 备份主库：
+docker compose exec postgres pg_dump -U hr hr_agent > backup.sql
+```
+
+## 5. 离线 / 弱网构建注意
+
+- **后端镜像**：先在 WSL/Linux 跑 `python scripts/fetch_wheels.py` 预下载全部
+  Linux wheel 到 `build_wheels/`，Dockerfile 检测到非空即走 `--no-index`
+  完全离线安装；为空则回退阿里云镜像（torch 走 CPU 专用索引）。
+  Windows 宿主跑不了 fetch_wheels.py（pip environment marker 限制），
+  直接在线构建即可，pip cache mount 保证重复构建很快。
+- **前端镜像**：`npm ci` 是唯一网络依赖；弱网在 compose 的
+  `web.build.args` 里把 `NPM_REGISTRY` 切到 npmmirror。完全离线环境可在
+  有网机器 `docker save hr-agent-web | gzip > hr-agent-web.tar.gz` 搬运镜像。
+- **基础镜像**：`python:3.13-slim`、`node:20-alpine`、`nginx:alpine`、
+  `pgvector/pgvector:pg16` 需能拉取；离线环境提前 `docker pull` + `docker save`。
+- **模型权重**：约 3.4GB，务必提前用 `download_model.py` 备好并挂载，
+  不要在容器内现场下载。
+
+## 6. 故障速查
+
+| 现象 | 排查 |
+|------|------|
+| app 启动报 `Repo id must use alphanumeric` | `.env` 的 Windows 模型路径泄漏进容器：确认 compose `environment` 里 `EMBEDDING_MODEL`/`RERANK_MODEL` 覆盖为 `/models/...` 且 volumes 已挂载 |
+| web 打开但提问无响应/整段返回 | 确认经 8080 访问（nginx 已关 SSE 缓冲）；若绕开 nginx 直连 8000 属预期外用法 |
+| `/api/*` 502 | `docker compose ps` 看 app 是否 healthy；app 首次启动建索引需 1–2 分钟 |
+| 审批恢复 403 | 预期行为：仅 HR/ADMIN 可审批，且审批人不能是申请人本人 |
+| compose 报 env_file 缺失 | 根目录必须有 `.env`（`cp .env.sample .env`） |

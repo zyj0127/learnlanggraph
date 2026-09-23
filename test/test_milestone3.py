@@ -1,12 +1,8 @@
-import sys
-import  io
+import io
+
 from PIL import Image as PILImage
-from pathlib import Path
 
 from langchain_core.messages import HumanMessage
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.append(str(PROJECT_ROOT))
 
 from agent.graph_builder import hr_agent_app
 

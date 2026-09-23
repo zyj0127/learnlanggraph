@@ -4,15 +4,9 @@
 运行：python -m unittest test.test_fact_rules -v
 （纯规则单测，不加载模型、不调用 LLM，秒级完成，适合放进 CI 冒烟）
 """
-import sys
 import unittest
-from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
-from agent.fact_rules import check_numbers, extract_facts  # noqa: E402
+from agent.fact_rules import check_numbers, extract_facts
 
 
 class TestExtractFacts(unittest.TestCase):

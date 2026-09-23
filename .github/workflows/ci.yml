@@ -1,0 +1,210 @@
+# HR 智能助理 CI 流水线
+# ----------------------------------------------------------------------------
+# 触发：
+#   push / pull_request（main、feat/** 分支）→ python-test / eval-gate /
+#     security / web-build / docker-check 五个 job
+#   schedule（每日 18:17 UTC，避开整点/半点拥堵）+ workflow_dispatch →
+#     eval-nightly：完整 741 题检索质量门禁（下载 BGE 权重，不调用 LLM，
+#     零 token 成本），基线回归即红
+#
+# marker 门禁约定（test/conftest.py + pyproject.toml）：
+#   needs_models / needs_pg / needs_llm 默认跳过，分别由
+#   CI_MODEL_TESTS=1 / CI_PG_TESTS=1 / CI_LLM_TESTS=1 开启。
+#   主测试 job 不开启任何门禁：纯逻辑套件全绿即可合入。
+# ----------------------------------------------------------------------------
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "17 18 * * *"   # 每日 18:17 UTC（北京 02:17）跑完整评测门禁
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ---- Python 语法门禁 + 循环 import + 单元测试（矩阵 3.11/3.12）----
+  python-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            pyproject.toml
+
+      # torch 走 PyTorch CPU 专用索引：PyPI 的 Linux torch 会连带数 GB
+      # CUDA 运行时（nvidia-cu12-*/triton），既拖垮 CI 又让缓存失效。
+      # PEP 440 中 2.13.0+cpu > 2.13.0，两索引并存时优先 CPU 版（与 Dockerfile 同口径）。
+      - name: 安装依赖（torch CPU + 钉版 requirements + dev extras）
+        run: |
+          python -m pip install --upgrade pip
+          pip install -c build_wheels/constraints.txt \
+            --find-links https://download.pytorch.org/whl/cpu "torch==2.13.0"
+          pip install -e .[dev]
+
+      - name: 语法门禁（compileall）
+        run: python -m compileall -q .
+
+      - name: 循环 import 静态检查
+        run: python scripts/check_import_cycles.py
+
+      # 未开启 CI_MODEL_TESTS / CI_PG_TESTS / CI_LLM_TESTS：
+      # 纯逻辑套件（fact_rules/permissions/auth_rbac/auth_metrics/api/eval_gate
+      # 的 GT 与契约部分）必须全绿；needs_* 用例自动 skip。
+      - name: pytest 单元测试
+        run: python -m pytest test/ -v
+
+  # ---- 评测门禁（离线切片）：GT 可定位 + 配置契约，push/PR 阻塞级 ----
+  # 完整检索质量门禁（Hit@3/Hit@5/MRR 基线比对）需 BGE 权重，见 eval-nightly。
+  eval-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -c build_wheels/constraints.txt \
+            --find-links https://download.pytorch.org/whl/cpu "torch==2.13.0"
+          pip install -e .[dev]
+      # 离线切片：TestGroundTruth（GT 必须在知识库可定位）+
+      # TestPolicyContracts（熔断/权重契约）；TestRetrievalGate 无模型自动 skip
+      - name: 评测门禁（离线切片）
+        run: python -m pytest test/test_eval_gate.py -v -k "GroundTruth or PolicyContracts"
+
+  # ---- 完整评测门禁（nightly + 手动）：下载 BGE 权重跑 741 题基线比对 ----
+  eval-nightly:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      CI_MODEL_TESTS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: 安装依赖（含 modelscope 用于拉权重）
+        run: |
+          python -m pip install --upgrade pip
+          pip install -c build_wheels/constraints.txt \
+            --find-links https://download.pytorch.org/whl/cpu "torch==2.13.0"
+          pip install -e .[dev,models]
+      - name: 下载 BGE 权重（embedding + reranker）
+        run: |
+          python - <<'PY'
+          from modelscope import snapshot_download
+          snapshot_download('BAAI/bge-small-zh-v1.5', cache_dir='.local_models', revision='master')
+          snapshot_download('BAAI/bge-reranker-base', cache_dir='.local_models', revision='master')
+          PY
+      - name: 检索质量门禁（741 题，与 eval/baseline.json 比对，回归即红）
+        run: python -m pytest test/test_eval_gate.py -v
+      - name: 上传基线/报告产物
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-gate-report
+          path: |
+            eval/baseline.json
+            eval/report.json
+          retention-days: 30
+
+  # ---- 依赖漏洞扫描：pip 钉版依赖为通报制（continue-on-error），npm 高危阻塞 ----
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 钉版依赖难免挂历史 CVE；pip-audit 作为通报（报告落 artifact），
+      # 是否升级版本走人工评审（升版需与评测基线同源验证，不能自动升）
+      - name: pip-audit（通报制）
+        continue-on-error: true
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt --output pip-audit-report.txt || true
+          cat pip-audit-report.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      # 前端依赖少而新，高危即失败
+      - name: npm audit（高危阻塞）
+        working-directory: web
+        run: npm audit --omit=dev --audit-level=high
+      - name: 上传 pip-audit 报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-audit-report
+          path: pip-audit-report.txt
+          retention-days: 14
+
+  # ---- Web 前端：类型检查 + 构建，dist 落 artifact ----
+  web-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: npm ci
+        run: npm ci
+      # npm run build = vue-tsc --noEmit（类型门禁）+ vite build
+      - name: 构建（含 vue-tsc 类型检查）
+        run: npm run build
+        env:
+          VITE_API_BASE: /api
+          VITE_MOCK: "false"
+      - name: 上传 dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: web/dist
+          retention-days: 14
+
+  # ---- 部署编排静态校验：compose config + hadolint（通报制）----
+  docker-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # compose 的 app 服务声明了 env_file: .env，仓库不含该文件，先造空文件兜底
+      - name: 准备空 .env（config 校验用）
+        run: touch .env
+      - name: docker compose 配置校验
+        run: docker compose -f docker-compose.yml config -q
+      - name: hadolint（Dockerfile 静态检查，通报制）
+        continue-on-error: true
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+      - name: hadolint（web/Dockerfile，通报制）
+        continue-on-error: true
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: web/Dockerfile
