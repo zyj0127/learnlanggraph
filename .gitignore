@@ -100,3 +100,6 @@ _*.txt
 # 前端与测试缓存
 node_modules/
 .pytest_cache/
+
+# 修正：__init__.py 必须入库；知识库文件入库
+!__init__.py
