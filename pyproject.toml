@@ -29,6 +29,8 @@ dependencies = [
     "langchain-core==1.4.9",
     "langchain-openai==1.3.0",
     "langchain-huggingface==1.2.2",
+    # 内存向量库（默认检索路径）依赖：Chroma 的 LangChain 适配层
+    "langchain-chroma==1.1.0",
     # BM25Retriever 的可选依赖：langchain 不会自动装，缺了会在构建 BM25 检索器时 ImportError
     "rank_bm25==0.2.2",
     "langchain-classic==1.0.8",
