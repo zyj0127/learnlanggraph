@@ -45,15 +45,15 @@ jobs:
             requirements.txt
             pyproject.toml
 
-      # torch 走 PyTorch CPU 专用索引：PyPI 的 Linux torch 会连带数 GB
-      # CUDA 运行时（nvidia-cu12-*/triton），既拖垮 CI 又让缓存失效。
-      # PEP 440 中 2.13.0+cpu > 2.13.0，两索引并存时优先 CPU 版（与 Dockerfile 同口径）。
+      # torch 走 PyTorch CPU 专用索引替换默认源：PyPI 的 Linux torch 会连带数 GB
+      # CUDA 运行时（nvidia-cu12-*/triton），既拖垮 CI 又打爆 runner 磁盘。
+      # --index-url 而非 --find-links：让 torch 及其依赖全部只从 CPU 源解析。
       - name: 安装依赖（torch CPU + 钉版 requirements + dev extras）
         run: |
           python -m pip install --upgrade pip
-          pip install -c build_wheels/constraints.txt \
-            --find-links https://download.pytorch.org/whl/cpu "torch==2.13.0"
-          pip install -e .[dev]
+          pip install --no-cache-dir -c build_wheels/constraints.txt \
+            --index-url https://download.pytorch.org/whl/cpu "torch==2.13.0"
+          pip install --no-cache-dir -e .[dev]
 
       - name: 语法门禁（compileall）
         run: python -m compileall -q .
@@ -81,9 +81,9 @@ jobs:
       - name: 安装依赖
         run: |
           python -m pip install --upgrade pip
-          pip install -c build_wheels/constraints.txt \
-            --find-links https://download.pytorch.org/whl/cpu "torch==2.13.0"
-          pip install -e .[dev]
+          pip install --no-cache-dir -c build_wheels/constraints.txt \
+            --index-url https://download.pytorch.org/whl/cpu "torch==2.13.0"
+          pip install --no-cache-dir -e .[dev]
       # 离线切片：TestGroundTruth（GT 必须在知识库可定位）+
       # TestPolicyContracts（熔断/权重契约）；TestRetrievalGate 无模型自动 skip
       - name: 评测门禁（离线切片）
@@ -105,9 +105,9 @@ jobs:
       - name: 安装依赖（含 modelscope 用于拉权重）
         run: |
           python -m pip install --upgrade pip
-          pip install -c build_wheels/constraints.txt \
-            --find-links https://download.pytorch.org/whl/cpu "torch==2.13.0"
-          pip install -e .[dev,models]
+          pip install --no-cache-dir -c build_wheels/constraints.txt \
+            --index-url https://download.pytorch.org/whl/cpu "torch==2.13.0"
+          pip install --no-cache-dir -e .[dev,models]
       - name: 下载 BGE 权重（embedding + reranker）
         run: |
           python - <<'PY'
