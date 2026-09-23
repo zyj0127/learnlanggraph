@@ -105,7 +105,27 @@ class ApiServerTest(unittest.TestCase):
     def test_resume_streams_after_approve(self):
         stub = _StubGraph(interrupted=True)
         client = self._client(stub)
-        resp = client.post("/chat/resume", json={"thread_id": "t5", "decision": "approve"})
+        # RBAC：人工审批仅 HR/管理员可执行。测试注入 JWT 密钥并签发 HR token，
+        # 验证审批通过后的恢复流式输出（而非匿名被 403 拦截的路径）。
+        import api.server as server
+        from auth.jwt_tokens import encode_token
+        from auth.models import Identity, Role
+
+        fake_settings = SimpleNamespace(
+            auth_enabled=True, jwt_secret="test-secret", jwt_algorithm="HS256",
+        )
+        patcher = patch.object(server, "get_settings", lambda: fake_settings)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        # stub 的 get_state 无申请人信息（历史会话兜底分支），仅管理员可审批
+        token = encode_token(Identity(uid="admin", name="管理员", role=Role.ADMIN),
+                             secret="test-secret")
+        resp = client.post(
+            "/chat/resume",
+            json={"thread_id": "t5", "decision": "approve"},
+            headers={"Authorization": f"Bearer {token}"},
+        )
         self.assertEqual(resp.status_code, 200)
         events = _parse_sse(resp.text)
         self.assertEqual([e["type"] for e in events], ["token", "token", "done"])

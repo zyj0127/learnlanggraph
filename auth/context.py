@@ -25,8 +25,17 @@ def set_current_identity(identity: Optional[Identity]) -> Token:
 
 
 def reset_current_identity(token: Token) -> None:
-    """按 Token 复位身份上下文（与 set_current_identity 配对使用）。"""
-    _CURRENT_IDENTITY.reset(token)
+    """按 Token 复位身份上下文（与 set_current_identity 配对使用）。
+
+    容错：FastAPI/Starlette 的 SSE 场景下，同步生成器可能在 anyio 的
+    另一个 Context 里被关闭（close/GC），此时 Token 跨 Context 复位会抛
+    ValueError。回落为在当前 Context 显式置 None（匿名语义），身份绝不
+    滞留为上一个请求的值——安全语义不变。
+    """
+    try:
+        _CURRENT_IDENTITY.reset(token)
+    except ValueError:
+        _CURRENT_IDENTITY.set(None)
 
 
 def get_current_identity() -> Identity:
