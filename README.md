@@ -1,7 +1,7 @@
 # learnlanggraph
 
-<!-- CI 徽章：推送到 GitHub 后把 <owner>/<repo> 替换为实际仓库路径 -->
-[![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/ci.yml)
+<!-- CI 徽章：推送到 GitHub 后把 zyj0127/learnlanggraph 替换为实际仓库路径 -->
+[![CI](https://github.com/zyj0127/learnlanggraph/actions/workflows/ci.yml/badge.svg)](https://github.com/zyj0127/learnlanggraph/actions/workflows/ci.yml)
 learnlanggraph
 ### 1. 业务价值与背景
 
