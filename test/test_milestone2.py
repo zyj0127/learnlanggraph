@@ -2,6 +2,10 @@ import pytest
 
 from agent.rag_pipeline import search_hr_policy
 
+# RAG 检索依赖 BGE 模型权重（约 3.4GB）：CI 门禁无模型文件，默认跳过；
+# 由 eval-nightly（下载模型后，CI_MODEL_TESTS=1）或有模型的本地环境执行。
+pytestmark = pytest.mark.needs_models
+
 QUESTIONS = [
     'P5员工去成都出差，一天住宿报销多少',
     '入职半年的新人公司有什么福利',
