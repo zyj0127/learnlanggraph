@@ -1,0 +1,7 @@
+# 企业化第三阶段：Kubernetes 命名空间
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hr-agent
+  labels:
+    app.kubernetes.io/part-of: hr-agent

@@ -202,6 +202,14 @@ jobs:
         run: touch .env
       - name: docker compose 配置校验
         run: docker compose -f docker-compose.yml config -q
+      # k8s/ 清单静态校验（kubeconform 钉版容器，阻塞级）：
+      # -strict 禁止重复键/未知字段；-ignore-missing-schemas 放行
+      # kustomization.yaml（kind: Kustomization 无公开 schema）
+      - name: kubeconform（k8s 清单 schema 校验）
+        run: >
+          docker run --rm -v "$PWD:/work" -w /work
+          ghcr.io/yannh/kubeconform:v0.7.0
+          -strict -ignore-missing-schemas k8s/
       - name: hadolint（Dockerfile 静态检查，通报制）
         continue-on-error: true
         uses: hadolint/hadolint-action@v3.1.0

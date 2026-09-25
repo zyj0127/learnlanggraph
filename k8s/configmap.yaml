@@ -1,0 +1,34 @@
+# 非敏感配置：与 config.py Settings 字段一一对应（大小写不敏感）。
+# 敏感项（DATABASE_URL / API Key / JWT_SECRET / LANGFUSE 密钥）一律进 Secret，
+# 见 secret.example.yaml。
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hr-agent-config
+  namespace: hr-agent
+data:
+  # ---- 运行策略（集群内口径）----
+  USE_SQLITE_FALLBACK: "false"
+  VECTOR_STORE: pgvector
+  LANGGRAPH_CHECKPOINTER: postgres
+  LOG_LEVEL: INFO
+  # ---- 推理后端：local=进程内 BGE（挂 /models 卷）；tei=独立推理服务 ----
+  EMBEDDING_BACKEND: local
+  EMBEDDING_MODEL: /models/bge-small-zh-v1.5
+  RERANK_MODEL: /models/bge-reranker-base
+  # TEI_EMBEDDING_URL: http://tei-embedding:80
+  # TEI_RERANKER_URL: http://tei-reranker:80
+  # ---- 认证授权 ----
+  AUTH_ENABLED: "true"
+  AUTH_DEV_MODE: "false"   # 生产必须 false，token 由企业 SSO 签发
+  JWT_ALGORITHM: HS256
+  JWT_EXPIRE_MINUTES: "120"
+  # ---- 可观测性 ----
+  LANGFUSE_ENABLED: "false"
+  # LANGFUSE_HOST: http://langfuse:3000
+  OTEL_SERVICE_NAME: hr-agent
+  # OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+  # ---- LLM 网关（OpenAI 兼容；走 LiteLLM/OneAPI 时指向网关服务）----
+  DEEPSEEK_BASE_URL: https://api.deepseek.com
+  DEEPSEEK_MODEL_NAME_CHAT: deepseek-chat
+  # LLM_BASE_URL: http://litellm:4000

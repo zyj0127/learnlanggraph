@@ -1,0 +1,91 @@
+# Web 前端（nginx 托管 Vue dist + /api 反代 app:8000）：Deployment + Service + Ingress
+# 对应 compose 的 web 服务。镜像由 web/Dockerfile 构建推送：
+#   docker build -t <registry>/hr-agent-web:<tag> ./web && docker push ...
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: hr-agent
+  labels:
+    app: hr-agent-web
+spec:
+  selector:
+    app: hr-agent-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: hr-agent
+  labels:
+    app: hr-agent-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hr-agent-web
+  template:
+    metadata:
+      labels:
+        app: hr-agent-web
+    spec:
+      containers:
+        - name: web
+          image: hr-agent-web:latest   # 部署前替换为 <registry>/hr-agent-web:<tag>
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+# Ingress 示例：nginx ingress class；按实际域名与证书方案调整。
+# SSE 长连接：nginx ingress 默认不缓冲 event-stream 仍需确认
+# proxy-buffering 关闭（web/nginx.conf 已处理容器内反代，Ingress 层若再反代
+# 需加 annotation：nginx.ingress.kubernetes.io/proxy-buffering: "off"）。
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  namespace: hr-agent
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"   # SSE 关缓冲
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    # cert-manager 自动签发示例（可选）：
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  # TLS：证书放 Secret（生产由 cert-manager / Vault 签发，勿手写进仓库）
+  # tls:
+  #   - hosts: ["hr-agent.example.com"]
+  #     secretName: hr-agent-tls
+  rules:
+    - host: hr-agent.example.com   # 替换为实际域名
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80

@@ -1,0 +1,144 @@
+# FastAPI 后端（uvicorn api.server:app :8000）：Deployment + Service + 模型 PVC
+# 对应 compose 的 app 服务。镜像需先由根 Dockerfile 构建并推送到镜像仓库：
+#   docker build -t <registry>/hr-agent-app:<tag> . && docker push ...
+#
+# 探针口径：api/server.py 已有 GET /health（返回 {"status":"ok"}，零依赖轻量），
+# readiness/liveness 均打 /health；/metrics 留给 Prometheus 抓取，不做探针。
+#
+# 模型加载策略（BGE 权重约 3.4GB，不打进镜像）：
+#   策略一（默认，如下）：挂载预置模型的 PVC（models-pvc）。多副本共享需
+#     ReadWriteMany（如 NFS/EFS 类 provisioner）；单副本可用 RWO。
+#     首次部署前把模型灌进 PVC，例如起一个临时 Pod 挂同一 PVC 执行
+#     `python download_model.py`（镜像内含 modelscope）。
+#   策略二：EMBEDDING_BACKEND=tei，嵌入/重排卸载到 TEI 推理服务
+#     （compose tei profile 的 K8s 等价物可按需另行编排），Pod 不再需要模型卷。
+#   策略三（不推荐生产）：initContainer 现场下载（拉长启动时间、依赖外网），
+#     示例见下方注释。
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: models-pvc
+  namespace: hr-agent
+spec:
+  accessModes: ["ReadWriteMany"]   # 无 RWX provisioner 时改 ReadWriteOnce + 单副本
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  namespace: hr-agent
+  labels:
+    app: hr-agent-app
+spec:
+  selector:
+    app: hr-agent-app
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: hr-agent
+  labels:
+    app: hr-agent-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hr-agent-app
+  template:
+    metadata:
+      labels:
+        app: hr-agent-app
+      annotations:
+        # 让 Prometheus 自动发现（若集群用 prometheus.io 注解发现机制）
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: /metrics
+    spec:
+      # 策略三示例（默认关闭）：initContainer 现场下载模型到空卷
+      # initContainers:
+      #   - name: download-models
+      #     image: <registry>/hr-agent-app:latest
+      #     command: ["python", "download_model.py"]
+      #     env:
+      #       - {name: EMBEDDING_MODEL, value: /models/bge-small-zh-v1.5}
+      #       - {name: RERANK_MODEL, value: /models/bge-reranker-base}
+      #     volumeMounts:
+      #       - {name: models, mountPath: /models}
+      containers:
+        - name: app
+          image: hr-agent-app:latest   # 部署前替换为 <registry>/hr-agent-app:<tag>
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: hr-agent-config
+            - secretRef:
+                name: hr-agent-secret
+          env:
+            # 容器内口径必须覆盖：指向集群内服务（compose 同款注意事项）
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hr-agent-secret
+                  key: DATABASE_URL
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            # 首次启动需加载 BGE 权重 + 建索引（local 后端），给足宽限
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 120
+            periodSeconds: 20
+            timeoutSeconds: 5
+          resources:
+            # local 推理后端：torch + BGE 权重常驻内存，requests 必须给足
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          volumeMounts:
+            - name: models
+              mountPath: /models
+              readOnly: true
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: models-pvc
+# ---- 可选：HPA（CPU 口径；嵌入/重排在进程内时建议同时观测内存，或改 tei 后端）----
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: app
+#   namespace: hr-agent
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: app
+#   minReplicas: 2
+#   maxReplicas: 6
+#   metrics:
+#     - type: Resource
+#       resource:
+#         name: cpu
+#         target:
+#           type: Utilization
+#           averageUtilization: 70

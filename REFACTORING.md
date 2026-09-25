@@ -267,3 +267,38 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
   `docker/grafana/provisioning/dashboards/`
 - compose 中 TEI / Prometheus / Grafana 镜像 tag 为浮动/大版本钉版，生产环境
   建议钉到具体 patch 版本
+
+## 十三、企业化第三阶段：Kubernetes 部署清单
+
+> 承接第十二节。本节回答的问题是：compose 单机拓扑如何平移到 K8s 集群。
+> 核心取舍是不引入 helm——plain manifests + kustomize 足够覆盖当前规模，
+> 清单即文档，降低心智负担；密钥管理只给对接方案（ESO/sealed-secrets），
+> 不实际引入 CRD，避免集群侧前置依赖。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | Namespace + postgres（StatefulSet + headless Service + PVC 模板） | `k8s/namespace.yaml`、`k8s/postgres.yaml`（新增） | vector 扩展由 alembic 迁移负责（migrate Job），postStart 备选方案注释说明 |
+| 2 | app（Deployment 2 副本 + Service + models-pvc） | `k8s/app.yaml`（新增） | readiness/liveness 打既有 `GET /health`（零依赖轻量端点，无需新增 /healthz）；resources 按 local 推理后端常驻 BGE 权重给 2Gi/4Gi；HPA 注释示例；模型三策略（RWX PVC / tei 卸载 / initContainer 现场下载）注释说明 |
+| 3 | web（Deployment + Service + Ingress 示例） | `k8s/web.yaml`（新增） | SSE 关缓冲 annotation；TLS/cert-manager 注释示例 |
+| 4 | ConfigMap（非敏感配置）+ Secret 模板（占位符，禁提交真实值） | `k8s/configmap.yaml`、`k8s/secret.example.yaml`（新增） | 与 config.py Settings 字段一一对应；ESO/sealed-secrets 对接点注释说明 |
+| 5 | 初始化 Job：alembic upgrade head + database.seed（均幂等） | `k8s/migrate-job.yaml`（新增） | 独立 Job 显式执行而非启动钩子，失败可重跑；ttlSecondsAfterFinished 自动清理 |
+| 6 | kustomization 串起全部资源（secret 不入 base） | `k8s/kustomization.yaml`（新增） | ESO/sealed-secrets 的 ExternalSecret 建议放 overlays/prod 另管 |
+| 7 | CI 集成 kubeconform（钉版容器 v0.7.0，-strict 阻塞级）校验 k8s/ 全部清单 | `.github/workflows/ci.yml`（docker-check job） | -ignore-missing-schemas 放行 kustomization.yaml |
+| 8 | 文档：DEPLOY「7. Kubernetes 部署」（分步命令 + 与 compose 差异 + 密钥管理三方案指引）、README 9.7 入口 | `DEPLOY.md`、`README.md` | |
+
+### 验证结果（K8s）
+
+- 全部 8 个清单 + ci.yml 通过 python yaml 多文档解析（kind 齐全：
+  Namespace/StatefulSet/Deployment/Service/Ingress/Job/ConfigMap/Secret/Kustomization）
+- 本机无 kubectl/docker：kubeconform 实跑由 CI docker-check job 承担（容器方式）
+- 回归不破：`pytest test/ -q` 默认口径全绿、compileall、check_import_cycles
+  （本阶段未改 Python 业务代码，server.py 探针复用既有 /health，无新增测试）
+
+### 遗留项（K8s）
+
+- 清单未在真实集群 apply 过：storageClassName、镜像仓库地址、Ingress 域名
+  均为占位，首次部署需按集群实际调整
+- TEI / monitoring 的 K8s 等价编排未做（compose profile 已覆盖单机场景；
+  集群化时可把 tei 双服务与 prometheus/grafana 另建 manifests 或复用社区 chart）
+- kubeconform 容器镜像 tag（v0.7.0）若上游变更需跟进；hadolint 同为通报制，
+  镜像 Dockerfile 的 K8s 适配（非 root 运行等）未深入

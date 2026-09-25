@@ -1,0 +1,40 @@
+# 初始化 Job：建表迁移 + 种子数据（幂等，可重复执行）
+# 对应 DEPLOY.md 首次部署的「alembic upgrade head + python -m database.seed」。
+# database.seed 本身幂等（已灌过则跳过，--force 才重灌），Job 重跑安全。
+#
+# 执行顺序：postgres Ready → kubectl apply 本 Job → 等 Completed → 启动 app。
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hr-agent-migrate
+  namespace: hr-agent
+  labels:
+    app: hr-agent-migrate
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 86400   # 完成 24h 后自动清理（可按需调整/删除）
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: hr-agent-app:latest   # 与 app Deployment 同镜像（内置 alembic 与种子脚本）
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -e
+              alembic upgrade head
+              python -m database.seed
+          envFrom:
+            - configMapRef:
+                name: hr-agent-config
+            - secretRef:
+                name: hr-agent-secret
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
