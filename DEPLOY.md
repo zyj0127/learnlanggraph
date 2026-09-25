@@ -170,3 +170,67 @@ docker compose exec postgres pg_dump -U hr hr_agent > backup.sql
 | `/api/*` 502 | `docker compose ps` 看 app 是否 healthy；app 首次启动建索引需 1–2 分钟 |
 | 审批恢复 403 | 预期行为：仅 HR/ADMIN 可审批，且审批人不能是申请人本人 |
 | compose 报 env_file 缺失 | 根目录必须有 `.env`（`cp .env.sample .env`） |
+
+## 7. Kubernetes 部署（企业化第三阶段）
+
+`k8s/` 目录提供 plain manifests + kustomize 编排（不引入 helm），与 compose
+拓扑一一对应：postgres（StatefulSet + headless Service + PVC）、app
+（Deployment 2 副本 + Service）、web（Deployment + Service + Ingress 示例）、
+migrate Job（alembic 迁移 + 种子，幂等）、ConfigMap（非敏感配置）+
+Secret 模板（敏感项）。
+
+### 7.1 首次部署顺序
+
+```bash
+# 0. 构建并推送镜像（tag 同步改到 k8s/app.yaml / web.yaml / migrate-job.yaml）
+docker build -t <registry>/hr-agent-app:<tag> .
+docker build -t <registry>/hr-agent-web:<tag> ./web
+docker push <registry>/hr-agent-app:<tag> && docker push <registry>/hr-agent-web:<tag>
+
+# 1. 密钥：复制 k8s/secret.example.yaml 为 secret.yaml 填真实值（不入库），
+#    或按下节接入 ESO / sealed-secrets
+kubectl apply -f k8s/secret.yaml
+
+# 2. 一键部署（kustomize；secret 由第 1 步先行创建）
+kubectl apply -k k8s/
+
+# 3. 等 postgres Ready 后跑初始化 Job（alembic upgrade head + database.seed，幂等）
+kubectl -n hr-agent wait --for=condition=ready pod -l app=postgres --timeout=180s
+kubectl -n hr-agent apply -f k8s/migrate-job.yaml
+kubectl -n hr-agent wait --for=condition=complete job/hr-agent-migrate --timeout=300s
+
+# 4. 验收
+kubectl -n hr-agent port-forward svc/app 8000:8000
+curl http://localhost:8000/health
+```
+
+### 7.2 关键口径与差异（vs compose）
+
+- **探针**：app readiness/liveness 打 `GET /health`（零依赖轻量端点）；
+  local 推理后端首次启动加载 BGE 权重较慢，readiness 给了 30s×6 宽限。
+- **模型权重**：默认挂 `models-pvc`（RWX，多副本共享；无 RWX provisioner 改
+  RWO + 单副本）。首次部署前用临时 Pod 跑 `python download_model.py` 灌入；
+  或切 `EMBEDDING_BACKEND=tei` 卸载推理（Pod 不再需要模型卷）。
+- **迁移**：不走 initContainer/启动钩子，独立 Job（`migrate-job.yaml`）显式
+  执行，失败可重跑（alembic 与 seed 均幂等）。
+- **HPA**：`app.yaml` 尾部有注释示例（CPU 口径）；local 推理后端内存敏感，
+  生产建议先切 tei 再开自动扩缩。
+
+### 7.3 密钥管理（Vault / ESO / sealed-secrets 接入指引）
+
+`k8s/secret.example.yaml` 只是模板，**禁止提交真实密钥**。生产三选一：
+
+1. **External Secrets Operator（推荐）**：集群装 ESO 后，建 `SecretStore`
+   （指向 Vault / 云厂商 KMS），再建 `ExternalSecret` 把外部 path 映射到
+   同名 `hr-agent-secret` 的各个 key。应用清单（`envFrom: secretRef:
+   hr-agent-secret`）**零改动**——ESO 负责同步出同名 Secret。
+   建议把 ExternalSecret 清单放 `k8s/overlays/prod/` 另建 kustomization 管理，
+   不混进 base。
+2. **sealed-secrets**：装 Bitnami sealed-secrets 控制器，用 `kubeseal` 把
+   secret.yaml 加密为 `SealedSecret` 提交入库（可安全进 git），控制器在
+   集群内解密为同名 Secret。同样清单零改动。
+3. **手工 kubectl apply**：仅适合小规模/临时环境；secret.yaml 务必加进
+   本地忽略，不提交。
+
+CI 侧：`docker-check` job 已集成 kubeconform（钉版容器 `-strict`）静态校验
+`k8s/` 全部清单，schema 不合规即阻塞。

@@ -404,6 +404,20 @@ docker compose --profile monitoring up -d
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | 空 | OTLP HTTP endpoint；空则追踪静默降级 |
 | `OTEL_SERVICE_NAME` | `hr-agent` | trace 的 service.name |
 
+### 9.7 Kubernetes 部署（第三阶段）
+
+`k8s/` 提供 plain manifests + kustomize（不引入 helm）：postgres StatefulSet、
+app Deployment（2 副本，探针打 `/health`）、web Deployment + Ingress 示例、
+migrate Job（alembic + seed，幂等）、ConfigMap + Secret 模板。
+
+```bash
+kubectl apply -f k8s/secret.yaml   # 由 secret.example.yaml 复制填值，或接 ESO/sealed-secrets
+kubectl apply -k k8s/
+```
+
+完整步骤、模型挂载策略（PVC / TEI 卸载）与密钥管理指引见 DEPLOY.md
+「7. Kubernetes 部署」；CI 的 docker-check 已集成 kubeconform 静态校验 k8s/ 清单。
+
 ### 10. Vue 前端（`web/`，hr-assistant-web）
 
 Vue 3 + TypeScript + Vite 5 + Pinia 的 Web 前端，替换 Streamlit 作为面向员工的

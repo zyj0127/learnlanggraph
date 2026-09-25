@@ -1,0 +1,17 @@
+# kustomize 串起全部资源：kubectl apply -k k8s/
+# 注意顺序无关性：kustomize 会按依赖排序输出，但 migrate Job 需在 postgres
+# Ready 之后执行（见 DEPLOY.md「7. Kubernetes 部署」分步命令）。
+# secret.yaml 不纳入 resources（真实密钥不入库）；ESO/sealed-secrets 对接时
+# 把 ExternalSecret / SealedSecret 清单另建 overlays 目录管理。
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: hr-agent
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - postgres.yaml
+  - app.yaml
+  - web.yaml
+  - migrate-job.yaml
+commonLabels:
+  app.kubernetes.io/part-of: hr-agent

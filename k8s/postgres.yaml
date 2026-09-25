@@ -1,0 +1,79 @@
+# PostgreSQL 16 + pgvector：StatefulSet + headless Service + PVC
+# 对应 compose 的 postgres 服务（pgvector/pgvector:pg16）。
+#
+# vector 扩展启用：pgvector 镜像已内置扩展二进制，但每个 database 仍需
+# `CREATE EXTENSION IF NOT EXISTS vector`——本项目由 alembic 迁移负责
+# （migrate-job.yaml 跑 `alembic upgrade head` 时建 kb_chunks 并启用扩展），
+# 因此此处不再挂 postStart。若改成不走 alembic 的手工部署，可解开下面注释：
+#   lifecycle:
+#     postStart:
+#       exec:
+#         command: ["sh","-c","until pg_isready -U $POSTGRES_USER; do sleep 1; done; psql -U $POSTGRES_USER -d $POSTGRES_DB -c 'CREATE EXTENSION IF NOT EXISTS vector;'"]
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: hr-agent
+  labels:
+    app: postgres
+spec:
+  clusterIP: None   # headless：StatefulSet 稳定网络标识
+  selector:
+    app: postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: hr-agent
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: pgvector/pgvector:pg16
+          ports:
+            - containerPort: 5432
+          envFrom:
+            # POSTGRES_USER / POSTGRES_PASSWORD / POSTGRES_DB 由 Secret 注入
+            # （与 app 的 DATABASE_URL 同源，见 secret.example.yaml）
+            - secretRef:
+                name: hr-agent-secret
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        # storageClassName 按集群实际填写（云盘/本地 provisioner）
+        resources:
+          requests:
+            storage: 10Gi
