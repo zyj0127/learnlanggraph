@@ -95,6 +95,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI_MODEL_TESTS: "1"
+      # 权重由下方 modelscope 步骤下载到 .local_models/，此处显式指向本地路径，
+      # 否则 rag_pipeline 读到 None 会在 HuggingFaceEmbeddings 校验处直接报错
+      EMBEDDING_MODEL: ".local_models/BAAI/bge-small-zh-v1.5"
+      RERANK_MODEL: ".local_models/BAAI/bge-reranker-base"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
