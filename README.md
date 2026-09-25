@@ -365,6 +365,45 @@ curl -N -X POST http://localhost:8000/chat/stream \
 | `JWT_ALGORITHM` | `HS256` | 签名算法（预留 RS256/OIDC JWKS 扩展） |
 | `JWT_EXPIRE_MINUTES` | `120` | 开发签发 token 有效期（分钟） |
 
+### 9.6 推理服务化与监控（第二阶段续：TEI + OpenTelemetry + Prometheus）
+
+**嵌入/重排推理服务化（TEI）**：默认 `EMBEDDING_BACKEND=local`（进程内加载 BGE，
+行为不变）；切 `tei` 后嵌入走 TEI 的 OpenAI 兼容 `/v1/embeddings`（复用
+langchain-openai 客户端），重排走 TEI `/rerank`（`agent/tei.py` 零重依赖封装，
+与 CrossEncoder 保持同一 `predict` 调用面），应用容器不再背 torch + 3.4GB 权重。
+compose 提供 `--profile tei`（tei-embedding / tei-reranker 两个 CPU 服务）：
+
+```bash
+docker compose --profile tei up -d
+# app 侧环境变量（compose 里有注释示例）：
+#   EMBEDDING_BACKEND=tei
+#   TEI_EMBEDDING_URL=http://tei-embedding:80
+#   TEI_RERANKER_URL=http://tei-reranker:80
+```
+
+**OpenTelemetry 链路追踪**：配置 `OTEL_EXPORTER_OTLP_ENDPOINT` 后，
+`session_runner.stream_turn` 整轮包一个 span（属性：channel、uid_hash 脱敏、
+thread_id、latency、usage token 数）；未配置或 opentelemetry 包缺失时静默降级
+（`observability/otel.py`，对齐 Langfuse 模式），主链路零感知。
+
+**Prometheus 监控**：`GET /metrics` 暴露请求计数、延迟直方图（`hr_agent_http_*`）
+与审计/RBAC 拦截计数（`hr_agent_audit_*` / `hr_agent_rbac_denied_total`，与
+`observability/audit.py` 同一口径镜像写入，audit 原机制不变）。compose 提供
+`--profile monitoring`（Prometheus 抓取配置在 `docker/prometheus/`，Grafana
+预置数据源在 `docker/grafana/provisioning/`）：
+
+```bash
+docker compose --profile monitoring up -d
+# Prometheus http://localhost:9090 ；Grafana http://localhost:3001
+```
+
+| 变量 | 默认 | 说明 |
+|------|------|------|
+| `EMBEDDING_BACKEND` | `local` | `local`（进程内 BGE）/ `tei`（TEI 推理服务） |
+| `TEI_EMBEDDING_URL` / `TEI_RERANKER_URL` | 空 | TEI 服务根地址（tei 模式必填） |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | 空 | OTLP HTTP endpoint；空则追踪静默降级 |
+| `OTEL_SERVICE_NAME` | `hr-agent` | trace 的 service.name |
+
 ### 10. Vue 前端（`web/`，hr-assistant-web）
 
 Vue 3 + TypeScript + Vite 5 + Pinia 的 Web 前端，替换 Streamlit 作为面向员工的

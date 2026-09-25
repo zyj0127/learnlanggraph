@@ -46,6 +46,11 @@ dependencies = [
     "pgvector==0.3.6",
     # Langfuse 可观测性（未配置时静默降级）
     "langfuse==2.60.5",
+    # OpenTelemetry 链路追踪（OTEL_EXPORTER_OTLP_ENDPOINT 未配置时静默降级）
+    "opentelemetry-sdk==1.44.0",
+    "opentelemetry-exporter-otlp-proto-http==1.44.0",
+    # Prometheus 指标出口（/metrics；未安装时 observability/prom.py 静默降级）
+    "prometheus-client==0.26.0",
     # 企业化第二阶段：JWT 认证（HS256；接企业 SSO 时切 RS256，见 auth/jwt_tokens.py）
     "PyJWT==2.10.1",
     "fastapi==0.137.1",

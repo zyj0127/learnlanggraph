@@ -7,6 +7,8 @@
 #   docker compose --profile litellm up -d app web      # 追加 LLM 网关
 #   docker compose --profile langfuse up -d app web     # 追加 Langfuse 可观测性
 #   docker compose --profile litellm --profile langfuse up -d   # 全开
+#   docker compose --profile tei up -d app web          # 追加 TEI 推理服务（嵌入/重排服务化）
+#   docker compose --profile monitoring up -d app web   # 追加 Prometheus + Grafana 监控
 #
 # 首次部署顺序详见 DEPLOY.md：postgres（健康）→ alembic migrate + seed → app → web。
 
@@ -84,6 +86,83 @@ services:
       retries: 10
       start_period: 30s
 
+  # ---- 可选：TEI 推理服务（嵌入/重排服务化，CPU 版）----
+  # 启用：docker compose --profile tei up -d
+  # 应用侧环境变量：EMBEDDING_BACKEND=tei
+  #   TEI_EMBEDDING_URL=http://tei-embedding:80  TEI_RERANKER_URL=http://tei-reranker:80
+  # 生产建议把 cpu-latest 钉到具体版本 tag（如 cpu-1.8.x）。
+  tei-embedding:
+    profiles: ["tei"]
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    container_name: hr-tei-embedding
+    restart: unless-stopped
+    command: ["--model-id", "BAAI/bge-small-zh-v1.5", "--port", "80"]
+    ports:
+      - "8081:80"
+    volumes:
+      # 模型卷策略：默认挂载命名卷 tei-models（首次启动 TEI 现场下载到卷，重启复用）；
+      # 离线/内网环境改为绑定挂载宿主机已备好的 HF 缓存目录，例如：
+      #   - ./.local_models:/data:ro   （配合 --model-id 指向 /data 下的模型目录）
+      - tei-models:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  tei-reranker:
+    profiles: ["tei"]
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    container_name: hr-tei-reranker
+    restart: unless-stopped
+    command: ["--model-id", "BAAI/bge-reranker-base", "--port", "80"]
+    ports:
+      - "8082:80"
+    volumes:
+      - tei-models:/data   # 与 tei-embedding 共用一个模型卷
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # ---- 可选：Prometheus + Grafana 监控（/metrics 由 app 暴露）----
+  # 启用：docker compose --profile monitoring up -d
+  # Prometheus http://localhost:9090；Grafana http://localhost:3001（admin/admin 可改）。
+  prometheus:
+    profiles: ["monitoring"]
+    image: prom/prometheus:v3.0.0
+    container_name: hr-prometheus
+    restart: unless-stopped
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - app
+
+  grafana:
+    profiles: ["monitoring"]
+    image: grafana/grafana:11.4.0
+    container_name: hr-grafana
+    restart: unless-stopped
+    volumes:
+      # 预置 Prometheus 数据源（compose 内网地址）；dashboard JSON 可按需追加到
+      # docker/grafana/provisioning/dashboards/ 并在此挂载
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+    depends_on:
+      - prometheus
+
   # ---- 应用服务：FastAPI 后端（uvicorn api.server:app）----
   # 构建见根 Dockerfile（python:3.13-slim，torch CPU 专用索引，离线 wheel 可选）。
   # 启动命令已在镜像 CMD 中：初始化 db/ 兜底目录后 uvicorn 拉起 :8000。
@@ -109,6 +188,10 @@ services:
       # 走 litellm 网关时把 LLM_BASE_URL 指向 compose 内部地址（.env 覆盖即可）：
       #   LLM_BASE_URL=http://litellm:4000  LLM_API_KEY=${LITELLM_MASTER_KEY}
       # 走 langfuse 时：LANGFUSE_HOST=http://langfuse:3000
+      # 走 TEI 推理服务（--profile tei）时，嵌入/重排从 app 容器卸载：
+      #   EMBEDDING_BACKEND=tei
+      #   TEI_EMBEDDING_URL=http://tei-embedding:80
+      #   TEI_RERANKER_URL=http://tei-reranker:80
     ports:
       - "8000:8000"
     # BGE 权重（约 3.4GB）不打进镜像，运行时只读挂载到 /models：
@@ -144,3 +227,6 @@ services:
 
 volumes:
   pgdata:
+  tei-models:
+  prometheus-data:
+  grafana-data:

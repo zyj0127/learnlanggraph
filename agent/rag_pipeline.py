@@ -42,9 +42,34 @@ RERANK_MODEL = os.getenv("RERANK_MODEL")
 
 
 # ---- 1. 核心组件懒加载工厂 ----
+def _embedding_backend() -> str:
+    """推理后端开关：local（进程内 BGE，默认）/ tei（独立推理服务）。"""
+    return (get_settings().embedding_backend or "local").strip().lower()
+
+
 @lru_cache(maxsize=1)
 def get_embeddings():
-    """加载并缓存 BGE 嵌入模型（首次调用时加载）。"""
+    """加载并缓存嵌入模型（首次调用时构建）。
+
+    tei 模式：OpenAI 兼容客户端指向 TEI 的 /v1/embeddings（langchain-openai 复用，
+    进程内不再加载 torch/transformers）；local 模式：进程内加载 BGE（默认，行为不变）。
+    """
+    if _embedding_backend() == "tei":
+        from langchain_openai import OpenAIEmbeddings  # 重依赖，延迟导入
+
+        from agent.tei import normalize_tei_base
+
+        base = normalize_tei_base(get_settings().tei_embedding_url)
+        if not base:
+            raise RuntimeError("EMBEDDING_BACKEND=tei 但未配置 TEI_EMBEDDING_URL")
+        logger.info("嵌入推理后端：TEI（%s）", base)
+        return OpenAIEmbeddings(
+            model="bge-small-zh-v1.5",
+            base_url=f"{base}/v1",
+            api_key="tei-no-auth",  # TEI 默认无鉴权，OpenAI 客户端要求非空占位
+            check_embedding_ctx_length=False,  # TEI 侧自管截断，跳过本地 tiktoken
+        )
+
     from langchain_huggingface import HuggingFaceEmbeddings  # 重依赖，延迟导入
 
     logger.info("正在加载 BGE 嵌入模型")
@@ -57,7 +82,17 @@ def get_embeddings():
 
 @lru_cache(maxsize=1)
 def get_reranker():
-    """加载并缓存 BGE Rerank 重排模型（首次调用时加载）。"""
+    """加载并缓存重排模型（首次调用时构建）。
+
+    tei 模式返回 TEIReranker（HTTP 客户端），与 CrossEncoder 保持同一 predict 调用面。
+    """
+    if _embedding_backend() == "tei":
+        from agent.tei import TEIReranker
+
+        base = get_settings().tei_reranker_url
+        logger.info("重排推理后端：TEI（%s）", (base or "").strip())
+        return TEIReranker(base)
+
     from sentence_transformers import CrossEncoder  # 重依赖，延迟导入
 
     logger.info("正在加载 BGE Rerank 重排模型")

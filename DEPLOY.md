@@ -93,6 +93,44 @@ web 构建期参数（compose `web.build.args`，编译进静态产物）：
 
 完整应用级变量见 README「8.3」「9.5」与 `.env.sample`。
 
+## 3.1 可选拓扑：推理服务化（TEI）与监控
+
+默认拓扑下 app 容器进程内加载 BGE 权重（torch + 约 3.4GB 模型）。
+企业化第二阶段提供两个可选 profile，把重资源从应用容器卸载：
+
+```
+                    ┌──────────────────────────────────────────┐
+                    │ app (uvicorn :8000)                      │
+                    │  EMBEDDING_BACKEND=tei 时：              │
+                    └───────┬───────────────────┬──────────────┘
+        /v1/embeddings      │                   │ /rerank
+                            ▼                   ▼
+              ┌────────────────────┐  ┌────────────────────┐
+              │ tei-embedding :80  │  │ tei-reranker :80   │  ← --profile tei
+              │ bge-small-zh-v1.5  │  │ bge-reranker-base  │     (TEI CPU 镜像)
+              └────────────────────┘  └────────────────────┘
+                            │
+                            ▼ /metrics 抓取（15s）
+              ┌────────────────────┐  ┌────────────────────┐
+              │ prometheus :9090   │─→│ grafana :3001      │  ← --profile monitoring
+              └────────────────────┘  └────────────────────┘
+```
+
+- **TEI（`--profile tei`）**：`ghcr.io/huggingface/text-embeddings-inference` CPU 版，
+  embedding / reranker 各一个服务，共用命名卷 `tei-models`（首次启动 TEI 现场下载，
+  重启复用；离线环境改绑定挂载宿主机已备好的 HF 缓存，见 compose 注释）。
+  app 侧配置 `EMBEDDING_BACKEND=tei` + `TEI_EMBEDDING_URL=http://tei-embedding:80` +
+  `TEI_RERANKER_URL=http://tei-reranker:80`（compose 的 app 服务里有注释示例）。
+  切换后 app 容器不再加载 torch/transformers，启动与扩缩容显著变快。
+  生产建议把镜像 tag 从 `cpu-latest` 钉到具体版本。
+- **监控（`--profile monitoring`）**：Prometheus 抓取 app 的 `GET /metrics`
+  （配置 `docker/prometheus/prometheus.yml`）；Grafana 预置 Prometheus 数据源
+  （`docker/grafana/provisioning/`），admin 密码走 `GRAFANA_ADMIN_PASSWORD`。
+  指标口径：HTTP 请求计数/延迟直方图（`hr_agent_http_*`）、审计与 RBAC 拦截计数
+  （`hr_agent_audit_*` / `hr_agent_rbac_denied_total`，与 audit.py 同一口径）。
+- **链路追踪（OTLP）**：配置 `OTEL_EXPORTER_OTLP_ENDPOINT` 指向任意 OTLP HTTP
+  收集器（如 Jaeger/Tempo 的 4318 端口）即开启；未配置静默降级。
+
 ## 4. 常用运维命令
 
 ```bash

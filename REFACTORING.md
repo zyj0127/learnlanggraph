@@ -232,3 +232,38 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
 - eval-nightly 的模型下载依赖 modelscope 可用性；失败时该 job 红但不影响 push/PR 门禁
 - pip-audit 为通报制（continue-on-error），钉版依赖的历史 CVE 需人工评审处置
 - test_api.py 等重依赖模块在本机零依赖环境整模块跳过；全依赖环境下的 pytest 结果建议在 CI 首跑确认
+
+## 十二、企业化第二阶段（续）：推理服务化 + OpenTelemetry/Prometheus 监控
+
+> 承接第八节（认证授权）。本节的两个主题回答的问题是：重推理资源如何从应用
+> 容器卸载（嵌入/重排服务化），以及生产环境如何度量系统行为（链路 + 指标）。
+> 核心难点是「静默降级」纪律——所有新组件未配置时必须零感知，不能让监控
+> 设施反过来成为可用性风险。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | 推理后端开关 `EMBEDDING_BACKEND`（local 默认不变 / tei）+ `TEI_EMBEDDING_URL` / `TEI_RERANKER_URL` | `config.py`、`agent/rag_pipeline.py` | tei 模式：嵌入走 TEI OpenAI 兼容 `/v1/embeddings`（langchain_openai 复用），重排走 TEI `/rerank`；lru_cache 懒加载约定不变 |
+| 2 | TEI reranker 客户端封装（零重依赖，仅 urllib）：按 query 分组批量请求，`predict` 调用面与 CrossEncoder 完全一致，按 index 映射回原顺序 | `agent/tei.py`（新增） | 调用点（search_hr_policy）零改动 |
+| 3 | compose `tei` profile：TEI CPU 版双服务（bge-small-zh-v1.5 / bge-reranker-base），共用 tei-models 卷，app 环境变量注释示例 | `docker-compose.yml` | 镜像 tag `cpu-latest`，生产建议钉具体版本；离线改绑定挂载宿主机 HF 缓存 |
+| 4 | OTel tracer 工厂：`OTEL_EXPORTER_OTLP_ENDPOINT` 未配置/包缺失 → 返回 None 静默降级（对齐 langfuse 模式）；`stream_turn` 整轮包 span（channel / uid_hash 脱敏 / thread_id / latency / usage token） | `observability/otel.py`（新增）、`agent/session_runner.py` | uid 只落 sha256 前 12 位，不落明文 |
+| 5 | Prometheus 指标出口：`/metrics` 端点 + HTTP 中间件（请求计数 / 延迟直方图）+ 审计与 RBAC 计数镜像（audit.py 口径不变，record_* 同时写 prometheus）；prometheus_client 未装时全模块 no-op | `observability/prom.py`（新增）、`observability/audit.py`、`api/server.py` | `/metrics` 自身不计数；指标标签不含 PII |
+| 6 | compose `monitoring` profile：prometheus（抓取配置 `docker/prometheus/prometheus.yml`）+ grafana（预置数据源 provisioning） | `docker-compose.yml`、`docker/prometheus/`、`docker/grafana/`（新增） | Grafana :3001，admin 密码走环境变量 |
+| 7 | 依赖钉版三处同步：prometheus-client==0.26.0、opentelemetry-sdk==1.44.0、opentelemetry-exporter-otlp-proto-http==1.44.0 | `pyproject.toml`、`requirements.txt`、`build_wheels/constraints.txt` | == 钉版纪律不变 |
+| 8 | 单测：TEI reranker 封装（mock HTTP）+ 后端开关（mock 模型类，local 路径回归）+ otel 静默降级 + stream_turn 降级回归 + /metrics 端点与 RBAC 计数镜像 | `test/test_tei_backend.py`、`test/test_observability_otel.py`（新增） | 零外部依赖可跑；缺 langchain_openai/fastapi 时按既有 skipUnless 模式跳过 |
+| 9 | 文档：README 9.6（推理服务化与监控）、DEPLOY 3.1（可选拓扑图） | `README.md`、`DEPLOY.md` | |
+
+### 验证结果（第二阶段续）
+
+- venv（[dev,models] 全依赖）：`pytest test/ -q` 83 passed / 4 skipped 全绿
+  （含新增 16 条：TEI 封装与开关 10 条、otel/metrics 6 条）
+- `compileall` + `scripts/check_import_cycles.py` 通过（56 模块无环）
+- TEI / Prometheus / Grafana 容器未实起（本机无 docker）：compose 结构走 CI
+  docker-check（config 校验）；TEI 客户端逻辑由 mock 单测覆盖
+
+### 遗留项（第二阶段续）
+
+- TEI 真实联调（起容器跑一轮检索质量门禁比对 local/tei 口径）待有 docker 的环境执行
+- Grafana dashboard JSON 未预置（仅数据源 provisioning），可按需追加到
+  `docker/grafana/provisioning/dashboards/`
+- compose 中 TEI / Prometheus / Grafana 镜像 tag 为浮动/大版本钉版，生产环境
+  建议钉到具体 patch 版本
