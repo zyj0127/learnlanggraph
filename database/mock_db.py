@@ -79,12 +79,15 @@ def build_roster() -> Tuple[List[tuple], List[tuple]]:
 
 
 def get_connection(db_path: Path = DB_PATH) -> sqlite3.Connection:
-    """业务运行时连接函数，仅连接并开启外键"""
+    """业务运行时连接函数，仅连接并开启外键。
+
+    全新克隆/容器首启时库文件不存在（运行时产物不入库），自动初始化并
+    播种 80 人花名册（build_roster 固定种子，结果幂等），避免手工步骤。
+    仅在文件缺失时触发，已有库绝不重建（init_db 会清空重插）。
+    """
     if not db_path.exists():
-        raise FileNotFoundError(
-            f'数据库文件未找到：{db_path}\n'
-            f'请先运行初始化脚本：python database/mock_db.py'
-        )
+        logger.warning('实体数据库不存在，自动初始化并播种：%s', db_path)
+        init_db(db_path)
     conn = sqlite3.connect(str(db_path),check_same_thread=False)
     conn.execute('PRAGMA foreign_keys=ON')
     return conn

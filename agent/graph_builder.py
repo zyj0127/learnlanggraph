@@ -73,6 +73,8 @@ def _build_checkpointer():
             # 与项目「外围能力失败不影响主链路」原则一致：pg 不可用时回退 sqlite
             logger.warning("PostgreSQL checkpointer 初始化失败，回退 SQLite：%s", e)
 
+    # 全新克隆/容器首启时 db/ 目录可能不存在（运行时产物不入库），先兜底建目录
+    CHECKPOINT_DB.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(CHECKPOINT_DB), check_same_thread=False)
     saver = SqliteSaver(conn)
     saver.setup()
