@@ -126,6 +126,44 @@ def health():
     return {"status": "ok"}
 
 
+@app.get("/metrics")
+def metrics():
+    """Prometheus 抓取端点（企业化第二阶段监控）。
+
+    prometheus_client 未安装时返回 501（依赖已钉版，正常部署不会走到）。
+    端点本身无鉴权：指标不含 PII（uid 不落标签，RBAC 仅 action 枚举值），
+    生产环境如需收敛可在 nginx/网关层限制来源。
+    """
+    from observability import prom
+
+    rendered = prom.render_metrics()
+    if rendered is None:
+        raise HTTPException(status_code=501, detail="prometheus_client 未安装")
+    body, content_type = rendered
+    from fastapi import Response
+
+    return Response(content=body, media_type=content_type)
+
+
+@app.middleware("http")
+async def prometheus_middleware(request: Request, call_next):
+    """请求计数 + 延迟直方图（Prometheus）。SSE 流式响应的延迟口径为
+    「首字节前耗时 + 流持续总耗时」（call_next 返回即流建立，体随后台推送）。
+    /metrics 自身不计数，避免抓取动作污染业务指标。"""
+    import time
+
+    from observability import prom
+
+    started = time.perf_counter()
+    response = await call_next(request)
+    if request.url.path != "/metrics":
+        prom.record_http_request(
+            request.method, request.url.path, response.status_code,
+            time.perf_counter() - started,
+        )
+    return response
+
+
 @app.post("/auth/token")
 def issue_token(req: TokenRequest):
     """开发用 token 签发：uid+role 换 JWT。

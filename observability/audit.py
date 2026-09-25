@@ -19,6 +19,8 @@
 import threading
 from typing import Dict, List
 
+from observability import prom  # prometheus_client 缺失时内部静默降级
+
 
 class AuditCounters:
     """审计节点运行指标，供评测脚本与周报计算拦截率/误杀率。"""
@@ -43,6 +45,7 @@ class AuditCounters:
         """一轮进入审计。"""
         with self._lock:
             self._checked += 1
+        prom.mirror_audit_checked()
 
     def record_passed(self) -> None:
         """一轮审计通过。"""
@@ -65,6 +68,7 @@ class AuditCounters:
             self._access_denied += 1
             if len(self._block_reasons) < 50:
                 self._block_reasons.append({"layer": "rbac", "reason": action})
+        prom.mirror_rbac_denied(action)
 
     def record_block(self, layer: str, reason: str) -> None:
         """记录一次拦截：layer 为 "rule"（规则层）或 "llm"（模型层）。"""
@@ -75,6 +79,7 @@ class AuditCounters:
                 self._llm_blocked += 1
             if len(self._block_reasons) < 50:
                 self._block_reasons.append({"layer": layer, "reason": reason})
+        prom.mirror_audit_block("rule" if layer == "rule" else "llm")
 
     # ---- 读取接口 ----
     def reset(self) -> None:

@@ -46,6 +46,14 @@ class Settings(BaseSettings):
     embedding_model: str = ""
     rerank_model: str = ""
 
+    # ---- 推理后端（企业化第二阶段：嵌入/重排服务化）----
+    # embedding_backend: local（进程内加载 BGE，默认，行为不变）/ tei（TEI 推理服务）
+    embedding_backend: str = "local"
+    # tei 模式下生效：TEI embedding 服务根地址（OpenAI 兼容 /v1/embeddings，
+    # 代码自动补 /v1 后缀）；TEI reranker 服务根地址（/rerank 接口）
+    tei_embedding_url: str = ""
+    tei_reranker_url: str = ""
+
     # ---- 运行策略 ----
     hybrid_weights: str = ""
     log_level: str = "INFO"
@@ -84,6 +92,10 @@ class Settings(BaseSettings):
     langfuse_public_key: str = ""
     langfuse_secret_key: str = ""
     langfuse_host: str = "http://localhost:3000"
+
+    # ---- OpenTelemetry 链路追踪（OTLP endpoint 未配置时静默降级，对齐 langfuse 模式）----
+    otel_exporter_otlp_endpoint: str = ""
+    otel_service_name: str = "hr-agent"
 
     # ---- 路径（由 PROJECT_ROOT 派生，唯一真源）----
     @property

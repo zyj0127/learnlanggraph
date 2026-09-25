@@ -76,7 +76,38 @@ def stream_turn(app, graph_input, config: dict,
     上下文（contextvars），供工具层 RBAC 校验；None 表示不设置
     （AUTH_ENABLED=false 旁路或调用方未认证，工具层按匿名身份处理）。
     审批恢复路径同样由本参数恢复身份上下文（审批人与申请人身份分离）。
+
+    OpenTelemetry（可选）：配置了 OTEL_EXPORTER_OTLP_ENDPOINT 时整轮包一个
+    "stream_turn" span（channel / uid_hash 脱敏 / thread_id / latency / usage）；
+    未配置或 otel 未安装时 get_tracer() 返回 None，行为与之前完全一致。
     """
+    from observability.otel import get_tracer, hash_uid
+
+    tracer = get_tracer()
+    if tracer is None:
+        yield from _stream_turn_impl(app, graph_input, config, meta=meta, identity=identity)
+        return
+
+    attributes = {
+        "channel": (meta or {}).get("channel", "http"),
+        "uid_hash": hash_uid((meta or {}).get("uid", "")),
+        "thread_id": config.get("configurable", {}).get("thread_id", ""),
+    }
+    with tracer.start_as_current_span("stream_turn", attributes=attributes) as span:
+        for event in _stream_turn_impl(app, graph_input, config, meta=meta, identity=identity):
+            if event["type"] == "done":
+                span.set_attribute("latency_s", round(event.get("latency_s", 0.0), 4))
+                usage = event.get("usage") or {}
+                for key in ("total_tokens", "input_tokens", "output_tokens"):
+                    if isinstance(usage.get(key), (int, float)):
+                        span.set_attribute(f"usage.{key}", int(usage[key]))
+            yield event
+
+
+def _stream_turn_impl(app, graph_input, config: dict,
+                      meta: Optional[Dict[str, Any]] = None,
+                      identity=None) -> Iterator[Dict[str, Any]]:
+    """stream_turn 的实际执行体（事件协议见 stream_turn docstring）。"""
     tracker = UsageTracker()
     callbacks = [tracker]
     # Langfuse 可观测性（未配置时返回 None 静默降级，与既有埋点并存）
