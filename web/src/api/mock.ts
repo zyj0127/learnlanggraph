@@ -2,7 +2,10 @@
 // 事件序列与后端 SSE 契约一致（token / approval_required / done）。
 import type {
   ChatRequest,
+  LeaveDecisionResponse,
+  LeaveRequestListResponse,
   ResumeRequest,
+  SecuritySummary,
   SseEvent,
   TokenRequest,
   TokenResponse,
@@ -146,4 +149,100 @@ export async function mockChatResume(
     )
   }
   onEvent({ type: 'done' })
+}
+
+// ---- Mock 管理台：审批队列 + 安全看板（演示数据，无后端可预览）----
+
+// mock 会话内工单池（approve/reject 会就地改状态，模拟单一事实源）
+const mockQueue = [
+  {
+    id: 3, uid: '1003', name: '王五', leave_type: '年假',
+    start_date: '2026-10-09', end_date: '2026-10-10', days: 2,
+    reason: '家中有事', status: 'pending', approver: null,
+    created_at: '2026-09-25 10:12:00', decided_at: null,
+  },
+  {
+    id: 4, uid: '1002', name: '李四', leave_type: '病假',
+    start_date: '2026-10-12', end_date: '2026-10-12', days: 1,
+    reason: '感冒发烧', status: 'pending', approver: null,
+    created_at: '2026-09-25 11:03:00', decided_at: null,
+  },
+  {
+    id: 1, uid: '1001', name: '张三', leave_type: '年假',
+    start_date: '2026-01-05', end_date: '2026-01-06', days: 2,
+    reason: '家中事务', status: 'approved', approver: 'hr01',
+    created_at: '2026-01-02 10:00:00', decided_at: '2026-01-02 15:30:00',
+  },
+] as {
+  id: number; uid: string; name: string; leave_type: string
+  start_date: string; end_date: string; days: number; reason: string
+  status: 'pending' | 'approved' | 'rejected'; approver: string | null
+  created_at: string; decided_at: string | null
+}[]
+
+export async function mockFetchLeaveRequests(
+  status: string,
+): Promise<LeaveRequestListResponse> {
+  await sleep(200)
+  const items =
+    status === 'all' ? [...mockQueue] : mockQueue.filter((r) => r.status === status)
+  return { status, count: items.length, items }
+}
+
+export async function mockDecideLeaveRequest(
+  id: number,
+  decision: 'approve' | 'reject',
+  approverUid: string,
+  approverRole: string,
+): Promise<LeaveDecisionResponse> {
+  await sleep(250)
+  if (approverRole !== 'hr' && approverRole !== 'admin') {
+    throw new ApiError(403, '权限提示：仅 HR 或管理员可执行人工审批。')
+  }
+  const row = mockQueue.find((r) => r.id === id)
+  if (!row) throw new ApiError(404, `工单 ${id} 不存在`)
+  if (row.status !== 'pending') {
+    throw new ApiError(409, `工单 ${id} 已是 ${row.status} 状态，请勿重复审批`)
+  }
+  if (approverUid && approverUid === row.uid) {
+    throw new ApiError(403, '权限提示：审批人不能与申请人为同一人，请交由其他 HR 专员或管理员审批。')
+  }
+  row.status = decision === 'approve' ? 'approved' : 'rejected'
+  row.approver = approverUid || 'hr-mock'
+  row.decided_at = new Date().toISOString().slice(0, 19).replace('T', ' ')
+  return {
+    ok: true,
+    id,
+    status: row.status,
+    message:
+      decision === 'approve'
+        ? `工单 LR-${id} 已批准，假期余额已同步扣减（年假）。`
+        : `工单 LR-${id} 已驳回，假期余额未发生变化。`,
+  }
+}
+
+export async function mockFetchSecuritySummary(): Promise<SecuritySummary> {
+  await sleep(200)
+  return {
+    total: 17,
+    by_action_result: {
+      'approval/approved': 5, 'approval/rejected': 2, 'approval/denied': 1,
+      'view_profile/denied': 3, 'view_leave/denied': 2, 'cert_issued/success': 4,
+    },
+    by_role: { anonymous: 3, employee: 8, hr: 5, admin: 1 },
+    approvals: { approved: 5, rejected: 2, denied: 1 },
+    access_denied_total: 6,
+    access_denied_top_actions: [
+      { action: 'view_profile', count: 3 },
+      { action: 'view_leave', count: 2 },
+      { action: 'issue_cert', count: 1 },
+    ],
+    cert_issued: 4,
+    period_days: 7,
+    action_labels: {
+      view_profile: '越权查档案', view_leave: '越权查假期',
+      issue_cert: '越权开证明', approval: '人工审批', cert_issued: '证明开具',
+    },
+    role_labels: { anonymous: '匿名', employee: '员工', hr: 'HR', admin: '管理员' },
+  }
 }

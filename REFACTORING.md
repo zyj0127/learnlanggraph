@@ -342,3 +342,24 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
   1 条 needs_pg 默认跳过），36 subtests passed
 - compileall + check_import_cycles（57 模块无环）通过
 - 前端：vue-tsc --noEmit 零错误 + vite build 通过（本地内置 node 实跑）
+
+## 十五、HR 管理台：审批队列 + 安全看板（第二条审批通道）
+
+> 承接第十四节。本节回答的问题是：散落在各会话 interrupt 里的审批如何集中管理。
+> 核心约束是「状态同源」——聊天内审批与队列审批是同一批工单的两条通道，
+> `leave_requests.status` 为单一事实源：聊天里批过的工单在队列里自然消失，
+> 队列批过的工单聊天 resume 时履约更新因 `status='pending'` 条件不命中而幂等。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | leave_service 履约/驳回支持按 id 定向更新（可选 request_id 参数，WHERE 带 `status='pending'` 防重复履约） | `tools/leave_service.py` | 不传时保持按（uid+类型+起止）定位的旧行为，聊天路径零改动 |
+| 2 | 管理台 API 三端点（仅 HR/ADMIN，旁路模式放行；匿名/员工 403）：`GET /api/admin/leave-requests`（join employees 取名，status/limit/offset）、`POST .../{id}/approve|reject`（404/409/自审自批 403）、`GET /api/admin/security-summary`（包装 auth_security_summary + 中英文标签映射） | `api/server.py` | 审批复用 leave_service 同一实现；审批人=当前身份并落 audit_leave_request 留痕；自审自批复用 check_approval_allowed 语义（工单 uid 即申请人 uid） |
+| 3 | 前端管理台：App.vue 视图切换（不引入 vue-router，HR/ADMIN 登录后侧栏出现入口，身份降级自动回聊天）；AdminPanel.vue（工单表格 + 行内批准/拒绝 + 空队列兜底 + 安全看板卡片/Top 越权动作）；admin store；types/client/mock 三处同步（mock 内置 3 条演示工单，无后端可完整预览审批交互） | `web/src/App.vue`、`components/AdminPanel.vue`、`stores/admin.ts`、`types.ts`、`api/client.ts`、`api/mock.ts`（新增/修改） | 样式 scoped 自带，风格对齐现有 UI |
+| 4 | 测试 10 条：员工/匿名 403、列表 join 姓名与 status 过滤、approve 扣余额置 approved、reject 不动余额、重复审批 409、404、自审自批 403、security-summary 结构断言 | `test/test_admin_queue.py`（新增） | TestClient + 测试 JWT 模式对齐 test_api；SQLite 实测；conftest collect_ignore 补零依赖兜底 |
+| 5 | 文档：README 功能列表加管理台 | `README.md` | |
+
+### 验证结果（管理台）
+
+- 全量 `pytest test/ -q`：**106 passed / 5 skipped**（96 条存量全绿 + 新增 10 条）
+- compileall + check_import_cycles（57 模块无环）通过
+- 前端：vue-tsc --noEmit 零错误 + vite build 通过

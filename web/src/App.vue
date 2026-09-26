@@ -4,12 +4,22 @@ import { useAuthStore } from './stores/auth'
 import { useChatStore } from './stores/chat'
 import LoginPanel from './components/LoginPanel.vue'
 import ApprovalCard from './components/ApprovalCard.vue'
+import AdminPanel from './components/AdminPanel.vue'
 
 const auth = useAuthStore()
 const chat = useChatStore()
 
 const input = ref('')
 const msgListEl = ref<HTMLElement | null>(null)
+
+// 视图切换：chat（聊天）/ admin（管理台）。管理台入口仅 HR/ADMIN 可见
+const view = ref<'chat' | 'admin'>('chat')
+const isPrivileged = computed(
+  () => auth.identity !== null && ['hr', 'admin'].includes(auth.identity.role),
+)
+watch(isPrivileged, (ok) => {
+  if (!ok) view.value = 'chat'   // 退出/降级身份时自动回到聊天视图
+})
 
 onMounted(() => {
   void chat.checkBackend()
@@ -114,13 +124,34 @@ function submit() {
         </button>
       </section>
 
+      <section v-if="isPrivileged" class="side-section">
+        <h3>管理台</h3>
+        <button
+          class="btn btn-ghost btn-block"
+          @click="view = view === 'admin' ? 'chat' : 'admin'"
+        >
+          {{ view === 'admin' ? '💬 返回聊天' : '🗂️ 审批队列与安全看板' }}
+        </button>
+      </section>
+
       <section class="side-section caps">
-        💡 能力：员工档案查询 / 假期余额 / 在职·收入证明 / 员工手册政策问答
+        💡 能力：员工档案查询 / 假期余额 / 请假申请 / 在职·收入证明 / 员工手册政策问答
       </section>
     </aside>
 
+    <!-- 管理台视图 -->
+    <main v-if="view === 'admin' && isPrivileged" class="main">
+      <header class="main-header">
+        <h1>HR 管理台</h1>
+        <p class="subtitle">请假审批队列与安全看板（与聊天内审批状态同源）</p>
+      </header>
+      <div class="messages">
+        <AdminPanel />
+      </div>
+    </main>
+
     <!-- 主聊天区 -->
-    <main class="main">
+    <main v-else class="main">
       <header class="main-header">
         <h1>HR 智能助理</h1>
         <p class="subtitle">

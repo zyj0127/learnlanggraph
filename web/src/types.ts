@@ -55,3 +55,49 @@ export interface PendingApproval {
 
 // 闲置会话总结指令（与 agent/constants.py 的 IDLE_TIMEOUT_CMD 一致）
 export const IDLE_TIMEOUT_CMD = '__SYS_IDLE_TIMEOUT__'
+
+// ---- 管理台（/api/admin/*，仅 HR/ADMIN）----
+
+// GET /api/admin/leave-requests 响应项
+export interface AdminLeaveRequest {
+  id: number
+  uid: string
+  name: string | null
+  leave_type: string
+  start_date: string
+  end_date: string
+  days: number
+  reason: string | null
+  status: 'pending' | 'approved' | 'rejected'
+  approver: string | null
+  created_at: string | null
+  decided_at: string | null
+}
+
+export interface LeaveRequestListResponse {
+  status: string
+  count: number
+  items: AdminLeaveRequest[]
+}
+
+// POST /api/admin/leave-requests/{id}/approve|reject 响应
+export interface LeaveDecisionResponse {
+  ok: boolean
+  id: number
+  status: string
+  message: string
+}
+
+// GET /api/admin/security-summary 响应
+export interface SecuritySummary {
+  total: number
+  by_action_result: Record<string, number>
+  by_role: Record<string, number>
+  approvals: { approved: number; rejected: number; denied: number }
+  access_denied_total: number
+  access_denied_top_actions: { action: string; count: number }[]
+  cert_issued: number
+  period_days: number
+  action_labels: Record<string, string>
+  role_labels: Record<string, string>
+}

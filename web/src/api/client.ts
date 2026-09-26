@@ -2,7 +2,10 @@
 // 用 fetch + ReadableStream 手动解析 `data: {json}\n\n` 帧。
 import type {
   ChatRequest,
+  LeaveDecisionResponse,
+  LeaveRequestListResponse,
   ResumeRequest,
+  SecuritySummary,
   SseEvent,
   TokenRequest,
   TokenResponse,
@@ -121,4 +124,42 @@ export async function chatResume(
     body: JSON.stringify(req),
   })
   await consumeSse(resp, onEvent)
+}
+
+// ---- 管理台 API（/api/admin/*，仅 HR/ADMIN）----
+
+export async function fetchLeaveRequests(
+  status: string,
+  token: string | null,
+): Promise<LeaveRequestListResponse> {
+  const resp = await fetch(
+    `${API_BASE}/admin/leave-requests?status=${encodeURIComponent(status)}`,
+    { headers: authHeaders(token) },
+  )
+  if (!resp.ok) throw await parseError(resp)
+  return resp.json()
+}
+
+export async function decideLeaveRequest(
+  id: number,
+  decision: 'approve' | 'reject',
+  token: string | null,
+): Promise<LeaveDecisionResponse> {
+  const resp = await fetch(`${API_BASE}/admin/leave-requests/${id}/${decision}`, {
+    method: 'POST',
+    headers: authHeaders(token),
+  })
+  if (!resp.ok) throw await parseError(resp)
+  return resp.json()
+}
+
+export async function fetchSecuritySummary(
+  days: number,
+  token: string | null,
+): Promise<SecuritySummary> {
+  const resp = await fetch(`${API_BASE}/admin/security-summary?days=${days}`, {
+    headers: authHeaders(token),
+  })
+  if (!resp.ok) throw await parseError(resp)
+  return resp.json()
 }
