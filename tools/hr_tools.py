@@ -1,21 +1,29 @@
 # -*- coding: utf-8 -*-
-"""HR 实体查询工具：员工档案查询 / 假期余额查询 / 证明开具（LangChain @tool）。
+"""HR 实体查询工具：员工档案查询 / 假期余额查询 / 证明开具 / 请假申请（LangChain @tool）。
 
 数据访问统一走 database/repository.py（SQLite / PostgreSQL 双后端，
 由 Settings.use_sqlite_fallback 切换），工具签名与返回文案保持不变。
-三个工具同时被 mcp_server/hr_tools_server.py 以「逻辑零复制」方式复用
+三个查询工具同时被 mcp_server/hr_tools_server.py 以「逻辑零复制」方式复用
 对外暴露为 MCP 工具。
+
+请假申请（apply_leave）为写操作 + 敏感工具：图拓扑（human_review interrupt
+先于 ToolNode）决定本工具只在审批通过后执行，故工具体即「履约」——
+余额复核 + pending→approved + 年假余额扣减；预检与 pending 落库在
+human_review_node（见 tools/leave_service.py 模块注释）。
 """
 from langchain_core.tools import tool
 
 from auth.guard import (
+    ACTION_APPLY_LEAVE,
     ACTION_ISSUE_CERT,
     ACTION_VIEW_LEAVE,
     ACTION_VIEW_PROFILE,
     audit_cert_issued,
+    audit_leave_request,
     check_tool_permission,
 )
 from database.repository import run_query
+from tools import leave_service
 
 
 @tool
@@ -126,3 +134,45 @@ def generate_employment_certification(uid: str, cer_type: str) -> str:
         return (f"「系统成功」已自动为您生成在职证明：\n---\n"
                 f"{content}\n---")
     return "错误：不支持的证明类型。可选类型为'employment'或'income'"
+
+
+@tool
+def apply_leave(uid: str, leave_type: str, start_date: str, end_date: str,
+                reason: str = "") -> str:
+    """为员工提交请假申请（写操作，需人工审批后生效）。
+
+    参数：
+    - uid：请假员工的 uid
+    - leave_type：请假类型，必须是「年假」「病假」「事假」之一
+    - start_date / end_date：起止日期，格式 YYYY-MM-DD（如 2026-03-05）
+    - reason：请假事由（可选）
+
+    本工具是敏感工具（agent/constants.py SENSITIVE_TOOLS）：图拓扑保证它只在
+    人工审批通过后执行，因此函数体即履约逻辑——年假余额复核、扣减余额、
+    申请单置 approved。参数预检与余额预检在审批挂起前已完成
+    （agent/nodes.py human_review_node），此处复核兜底。
+    """
+    # RBAC：员工仅可为本人申请，HR/ADMIN 可代申请（审批后执行时身份为审批人）
+    denial = check_tool_permission(ACTION_APPLY_LEAVE, uid)
+    if denial is not None:
+        return denial
+
+    # 参数与余额复核（防御性：审批期间余额可能变化）
+    days, error = leave_service.validate_request(leave_type, start_date, end_date)
+    if error is not None:
+        return error
+
+    from auth.context import get_current_identity
+
+    identity = get_current_identity()
+    approver_uid = identity.uid or ""
+    ok, text, _request_id = leave_service.fulfill_approved(
+        uid, leave_type, start_date, end_date, days, reason, approver_uid,
+    )
+    # 审计留痕（detail 只记类型/天数等枚举值，不落事由自由文本）
+    audit_leave_request(
+        identity, uid,
+        result="approved" if ok else "rejected",
+        detail=f"{leave_type}/{days}天",
+    )
+    return text

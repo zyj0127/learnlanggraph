@@ -58,3 +58,29 @@ class Certification(Base):
     created_at: Mapped[str] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
+
+
+class LeaveRequest(Base):
+    """请假申请表（企业化写操作扩展）：pending → approved / rejected。
+
+    状态机：挂起审批时落 pending；审批通过由 apply_leave 工具履约置 approved
+    （年假同时扣减 leave_balances）；拒绝由 human_review 节点置 rejected。
+    """
+
+    __tablename__ = "leave_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    uid: Mapped[str] = mapped_column(
+        String, ForeignKey("employees.uid"), nullable=False, index=True
+    )
+    leave_type: Mapped[str] = mapped_column(String, nullable=False)  # 年假/病假/事假
+    start_date: Mapped[str] = mapped_column(String, nullable=False)  # YYYY-MM-DD
+    end_date: Mapped[str] = mapped_column(String, nullable=False)
+    days: Mapped[int] = mapped_column(Integer, nullable=False)
+    reason: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String, nullable=False, default="pending")
+    approver: Mapped[str | None] = mapped_column(String)  # 审批人 uid
+    created_at: Mapped[str] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    decided_at: Mapped[str | None] = mapped_column(DateTime(timezone=True))

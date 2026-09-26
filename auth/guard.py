@@ -14,6 +14,7 @@ from typing import Callable, Optional
 from auth.context import get_current_identity
 from auth.models import Identity, Role
 from auth.permissions import (
+    can_apply_leave,
     can_approve,
     can_issue_certification,
     can_view_leave_balance,
@@ -28,18 +29,21 @@ logger = get_logger(__name__)
 ACTION_VIEW_PROFILE = "view_profile"
 ACTION_VIEW_LEAVE = "view_leave"
 ACTION_ISSUE_CERT = "issue_cert"
+ACTION_APPLY_LEAVE = "apply_leave"
 
 # 越权固定拒答文案（唯一真源；风格对齐工具既有返回文案，不含任何 PII）
 DENIAL_TEXTS = {
     ACTION_VIEW_PROFILE: "权限提示：您当前的身份无权查询该员工的人事档案（仅可查询本人档案，或请联系 HR 协助）。",
     ACTION_VIEW_LEAVE: "权限提示：您当前的身份无权查询该员工的假期余额（仅可查询本人假期，或请联系 HR 协助）。",
     ACTION_ISSUE_CERT: "权限提示：您当前的身份无权为该员工开具证明（仅可为本人申请，或请联系 HR 协助）。",
+    ACTION_APPLY_LEAVE: "权限提示：您当前的身份无权为该员工提交请假申请（仅可为本人申请，或请联系 HR 协助）。",
 }
 
 _PERMISSION_FN: dict[str, Callable[[Identity, str], bool]] = {
     ACTION_VIEW_PROFILE: can_view_profile,
     ACTION_VIEW_LEAVE: can_view_leave_balance,
     ACTION_ISSUE_CERT: can_issue_certification,
+    ACTION_APPLY_LEAVE: can_apply_leave,
 }
 
 
@@ -169,3 +173,16 @@ def audit_cert_issued(identity: Identity, target_uid: str, cer_type: str) -> Non
         identity.uid or "anonymous", identity.role.value, target_uid, cer_type,
     )
     _log_auth_event("cert_issued", identity, target_uid, result="success", detail=cer_type)
+
+
+def audit_leave_request(identity: Identity, target_uid: str, result: str,
+                        detail: str = "") -> None:
+    """请假申请留痕（detail 只记请假类型/天数等枚举值，不落事由等自由文本）。
+
+    result: pending（挂起待审）/ approved（审批通过履约）/ rejected（审批拒绝）。
+    """
+    logger.info(
+        "请假申请留痕：actor=%s role=%s target=%s result=%s detail=%s",
+        identity.uid or "anonymous", identity.role.value, target_uid, result, detail,
+    )
+    _log_auth_event("leave_request", identity, target_uid, result=result, detail=detail)

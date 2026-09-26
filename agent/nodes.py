@@ -37,6 +37,7 @@ from config import get_chat_llm
 from logging_config import get_logger
 from observability import AUDIT_COUNTERS
 from tools.hr_tools import (
+    apply_leave,
     generate_employment_certification,
     get_employee_profile,
     get_leave_balance,
@@ -49,6 +50,7 @@ ALL_TOOLS = [
     get_employee_profile,
     get_leave_balance,
     generate_employment_certification,
+    apply_leave,
     search_hr_policy,
 ]
 
@@ -148,6 +150,48 @@ def chatbot_node(state: AgentState) -> dict:
     return {"messages": [response], "loop_state": state.get("loop_state", 0) + 1}
 
 
+def _precheck_leave(tool_call: dict) -> Optional[str]:
+    """请假申请预检（审批挂起前）：参数合法性 + 年假余额。
+
+    返回 None 表示通过（继续挂起审批）；返回提示文案表示不通过——
+    直接回 ToolMessage 给 chatbot，**不进入审批**（对齐「余额不足不审批」口径）。
+    """
+    from tools import leave_service
+
+    args = tool_call.get("args") or {}
+    uid = str(args.get("uid") or "")
+    leave_type = str(args.get("leave_type") or "")
+    start_date = str(args.get("start_date") or "")
+    end_date = str(args.get("end_date") or "")
+    days, error = leave_service.validate_request(leave_type, start_date, end_date)
+    if error is not None:
+        return error
+    return leave_service.check_annual_balance(uid, leave_type, days)
+
+
+def _leave_pending(tool_call: dict, applicant_uid: str) -> str:
+    """请假申请落 pending 记录并组装审批文案（含类型/日期/天数/事由详情）。"""
+    from tools import leave_service
+
+    args = tool_call.get("args") or {}
+    uid = str(args.get("uid") or "")
+    leave_type = str(args.get("leave_type") or "")
+    start_date = str(args.get("start_date") or "")
+    end_date = str(args.get("end_date") or "")
+    reason = str(args.get("reason") or "")
+    days, _ = leave_service.validate_request(leave_type, start_date, end_date)
+    request_id = leave_service.create_pending(
+        uid, leave_type, start_date, end_date, days or 0, reason)
+    from auth.context import get_current_identity
+    from auth.guard import audit_leave_request
+
+    audit_leave_request(get_current_identity(), uid, result="pending",
+                        detail=f"{leave_type}/{days}天")
+    return (f"Agent 正在为 uid {uid} 提交请假申请（编号 LR-{request_id}）：\n"
+            f"类型：{leave_type}；起止：{start_date} 至 {end_date}（共 {days} 天）；"
+            f"事由：{reason or '（未填写）'}。\n是否授权执行？（输入approve或者reject）")
+
+
 def human_review_node(state: AgentState) -> dict:
     """人工介入节点：敏感工具调用挂起，等待 approve / reject。"""
     last_message = state["messages"][-1]
@@ -159,24 +203,54 @@ def human_review_node(state: AgentState) -> dict:
                 sensitive_tool_call = tool_call
                 break
     if sensitive_tool_call:
-        logger.warning("系统挂起，检测到敏感操作：%s 准备生成证明文件", sensitive_tool_call["name"])
+        tool_name = sensitive_tool_call["name"]
+        logger.warning("系统挂起，检测到敏感操作：%s", tool_name)
+
+        # 请假申请：审批挂起前先做参数/余额预检，不通过则直接回提示，不进入审批
+        if tool_name == "apply_leave":
+            precheck_error = _precheck_leave(sensitive_tool_call)
+            if precheck_error is not None:
+                logger.info("请假预检未通过，不进入审批：%s", precheck_error)
+                return {"messages": [ToolMessage(
+                    content=precheck_error,
+                    name=tool_name,
+                    tool_call_id=sensitive_tool_call["id"],
+                )]}
+
         interrupt_message = "Agent 正在尝试生成包含薪资证明的文件，是否授权执行？（输入approve或者reject）"
         # 企业化第二阶段：开启鉴权时负载记录申请人 uid（供 /chat/resume 校验审批人 ≠ 申请人）；
         # AUTH_ENABLED=false 时保持旧的纯字符串负载，行为完全不变
         from auth.guard import build_interrupt_payload, is_auth_enabled
 
+        applicant_uid = ""
         if is_auth_enabled():
             from auth.context import get_current_identity
 
             applicant_uid = get_current_identity().uid or state.get("current_uid", "") or ""
-            payload = build_interrupt_payload(interrupt_message, applicant_uid)
-        else:
-            payload = interrupt_message
+
+        # 请假申请：挂起前落 pending 记录（approve 时由工具履约置 approved 并扣余额）
+        if tool_name == "apply_leave":
+            interrupt_message = _leave_pending(sensitive_tool_call, applicant_uid)
+
+        payload = (build_interrupt_payload(interrupt_message, applicant_uid)
+                   if is_auth_enabled() else interrupt_message)
         user_decision = interrupt(payload)
         if user_decision == "reject":
+            # 请假拒绝：pending 置 rejected（余额不变，审批人留痕）
+            if tool_name == "apply_leave":
+                from auth.context import get_current_identity
+
+                from tools import leave_service
+
+                args = sensitive_tool_call.get("args") or {}
+                leave_service.mark_rejected(
+                    str(args.get("uid") or ""), str(args.get("leave_type") or ""),
+                    str(args.get("start_date") or ""), str(args.get("end_date") or ""),
+                    approver_uid=get_current_identity().uid or "",
+                )
             reject_msg = ToolMessage(
                 content="system:人工审批未通过，操作已被拒绝，请安抚用户并告知由于安全问题无法生成",
-                name=sensitive_tool_call["name"],
+                name=tool_name,
                 tool_call_id=sensitive_tool_call["id"],
             )
             return {"messages": [reject_msg]}

@@ -15,7 +15,7 @@ HANDOFF_PREFIX = "【转人工】"
 SUMMARY_PREFIX = "【会话闲置总结】"
 
 # 需要人工审批的敏感工具集合（新增敏感工具时在此登记即可）
-SENSITIVE_TOOLS = {"generate_employment_certification"}
+SENSITIVE_TOOLS = {"generate_employment_certification", "apply_leave"}
 
 # 转人工兜底：情绪/投诉关键词（命中即转接真人 HR，避免 LLM 硬答激化情绪）
 DISTRESS_KEYWORDS = (

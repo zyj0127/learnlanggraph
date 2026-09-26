@@ -35,6 +35,7 @@ def seed(force: bool = False) -> None:
 
         logger.info("开始灌入花名册（force=%s，现有 %d 行）", force, count)
         # 先删子表再删主表，避免外键约束冲突（与 mock_db.init_db 同序）
+        conn.execute(text("DELETE FROM leave_requests"))
         conn.execute(text("DELETE FROM leave_balances"))
         conn.execute(text("DELETE FROM employees"))
         conn.execute(
@@ -46,6 +47,21 @@ def seed(force: bool = False) -> None:
             text("INSERT INTO leave_balances (uid,annual_leave_remaining,sick_leave_remaining) "
                  "VALUES (:uid,:annual,:sick)"),
             [dict(zip(("uid", "annual", "sick"), b)) for b in balances],
+        )
+        # 预置两条历史请假记录（与 mock_db.init_db 同源）
+        conn.execute(
+            text("INSERT INTO leave_requests "
+                 "(uid,leave_type,start_date,end_date,days,reason,status,approver,"
+                 "created_at,decided_at) "
+                 "VALUES (:uid,:lt,:sd,:ed,:days,:reason,:status,:approver,:ca,:da)"),
+            [
+                {"uid": "1001", "lt": "年假", "sd": "2026-01-05", "ed": "2026-01-06",
+                 "days": 2, "reason": "家中事务", "status": "approved", "approver": "hr01",
+                 "ca": "2026-01-02 10:00:00", "da": "2026-01-02 15:30:00"},
+                {"uid": "1002", "lt": "事假", "sd": "2026-01-10", "ed": "2026-01-10",
+                 "days": 1, "reason": "个人事务", "status": "rejected", "approver": "hr01",
+                 "ca": "2026-01-08 09:00:00", "da": "2026-01-08 11:00:00"},
+            ],
         )
 
     logger.info("PostgreSQL 花名册 seed 完成：%d 名员工", len(employees))
