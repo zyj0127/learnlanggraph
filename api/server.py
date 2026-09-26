@@ -35,7 +35,13 @@ from pydantic import BaseModel, Field
 
 from agent.graph_builder import hr_agent_app
 from agent.session_runner import build_turn_state, stream_turn
-from auth.guard import audit_approval, check_approval_allowed, extract_applicant_uid
+from auth.guard import (
+    APPROVER_ROLE_DENIAL,
+    audit_approval,
+    audit_leave_request,
+    check_approval_allowed,
+    extract_applicant_uid,
+)
 from auth.jwt_tokens import decode_token, encode_token
 from auth.models import Identity, Role
 from config import get_settings
@@ -274,3 +280,135 @@ def chat_resume(req: ResumeRequest, identity: Optional[Identity] = Depends(get_r
         }, identity=identity),
         media_type="text/event-stream",
     )
+
+
+# ---- 管理台 API（审批队列第二条通道；仅 HR/ADMIN，AUTH_ENABLED=false 时旁路）----
+# 与聊天内审批状态同源：leave_requests.status 是单一事实源——聊天里批过的工单
+# 在队列里自然消失（status != 'pending'），队列批过的工单聊天 resume 时
+# 履约更新因 status='pending' 条件不命中而幂等。
+
+def _require_privileged(identity: Optional[Identity]) -> None:
+    """管理台准入：仅 HR/ADMIN；旁路模式（auth 关闭）放行；匿名/员工 403。"""
+    settings = get_settings()
+    if not settings.auth_enabled:
+        return
+    if identity is None or identity.role not in (Role.HR, Role.ADMIN):
+        raise HTTPException(status_code=403, detail=APPROVER_ROLE_DENIAL)
+
+
+@app.get("/api/admin/leave-requests")
+def admin_leave_requests(status: str = "pending", limit: int = 50, offset: int = 0,
+                         identity: Optional[Identity] = Depends(get_request_identity)):
+    """请假工单列表（join employees 取姓名；status 过滤，all 为全部）。"""
+    _require_privileged(identity)
+    if status not in ("pending", "approved", "rejected", "all"):
+        raise HTTPException(status_code=400, detail="status 必须是 pending / approved / rejected / all")
+    limit = max(1, min(limit, 200))
+
+    from database.repository import run_query
+
+    rows = run_query(
+        sql_pg="""select r.id, r.uid, e.name, r.leave_type, r.start_date, r.end_date,
+                  r.days, r.reason, r.status, r.approver, r.created_at, r.decided_at
+                  from leave_requests r left join employees e on r.uid = e.uid
+                  where (:0 = 'all' or r.status = :0)
+                  order by r.id desc limit :1 offset :2""",
+        sql_sqlite="""select r.id, r.uid, e.name, r.leave_type, r.start_date, r.end_date,
+                  r.days, r.reason, r.status, r.approver, r.created_at, r.decided_at
+                  from leave_requests r left join employees e on r.uid = e.uid
+                  where (? = 'all' or r.status = ?)
+                  order by r.id desc limit ? offset ?""",
+        params=(status, status, limit, offset),
+    )
+    for row in rows:  # datetime 对象序列化为字符串（pg 路径）
+        for key in ("created_at", "decided_at"):
+            if row.get(key) is not None and not isinstance(row[key], str):
+                row[key] = str(row[key])
+    return {"status": status, "count": len(rows), "items": rows}
+
+
+def _decide_leave_request(request_id: int, decision: str,
+                          identity: Optional[Identity]) -> dict:
+    """队列内审批决定：approve 履约（复核+扣减+置 approved）/ reject 置 rejected。
+
+    与聊天审批共用 tools/leave_service 同一实现；审批人 = 当前身份；
+    自审自批复用 check_approval_allowed（队列场景工单 uid 即申请人 uid）。
+    """
+    from database.repository import run_query
+    from tools import leave_service
+
+    rows = run_query(
+        sql_pg="select * from leave_requests where id=:0",
+        sql_sqlite="select * from leave_requests where id=?",
+        params=(request_id,),
+    )
+    if not rows:
+        raise HTTPException(status_code=404, detail=f"工单 {request_id} 不存在")
+    row = rows[0]
+    if row["status"] != "pending":
+        raise HTTPException(status_code=409,
+                            detail=f"工单 {request_id} 已是 {row['status']} 状态，请勿重复审批")
+
+    # 自审自批 / 角色校验（旁路模式 identity=None 时跳过，与 /chat/resume 口径一致）
+    if get_settings().auth_enabled and identity is not None:
+        denial = check_approval_allowed(identity, str(row["uid"]))
+        if denial:
+            audit_approval(decision, identity, target_uid=str(row["uid"]),
+                           result="denied", detail="self_approval" if "同一人" in denial else "role")
+            raise HTTPException(status_code=403, detail=denial)
+
+    approver_uid = identity.uid if identity else ""
+    if decision == "approve":
+        ok, text, _ = leave_service.fulfill_approved(
+            str(row["uid"]), row["leave_type"], row["start_date"], row["end_date"],
+            int(row["days"]), row["reason"] or "", approver_uid, request_id=request_id,
+        )
+        audit_leave_request(identity or Identity(), str(row["uid"]),
+                            result="approved" if ok else "rejected",
+                            detail=f"{row['leave_type']}/{row['days']}天")
+        return {"ok": ok, "id": request_id,
+                "status": "approved" if ok else "rejected", "message": text}
+
+    leave_service.mark_rejected(
+        str(row["uid"]), row["leave_type"], row["start_date"], row["end_date"],
+        approver_uid=approver_uid, reason=row["reason"] or "",
+        days=int(row["days"]), request_id=request_id,
+    )
+    audit_leave_request(identity or Identity(), str(row["uid"]),
+                        result="rejected", detail=f"{row['leave_type']}/{row['days']}天")
+    return {"ok": True, "id": request_id, "status": "rejected",
+            "message": f"工单 LR-{request_id} 已驳回，假期余额未发生变化。"}
+
+
+@app.post("/api/admin/leave-requests/{request_id}/approve")
+def admin_leave_approve(request_id: int,
+                        identity: Optional[Identity] = Depends(get_request_identity)):
+    _require_privileged(identity)
+    return _decide_leave_request(request_id, "approve", identity)
+
+
+@app.post("/api/admin/leave-requests/{request_id}/reject")
+def admin_leave_reject(request_id: int,
+                       identity: Optional[Identity] = Depends(get_request_identity)):
+    _require_privileged(identity)
+    return _decide_leave_request(request_id, "reject", identity)
+
+
+@app.get("/api/admin/security-summary")
+def admin_security_summary(days: int = 7,
+                           identity: Optional[Identity] = Depends(get_request_identity)):
+    """安全看板：auth_events 聚合（越权拦截 / 审批通过拒绝 / Top 越权动作）。
+
+    数据口径复用 telemetry.metrics.auth_security_summary（不落 PII 字段值）；
+    动作/角色附中文标签（AUTH_ACTION_LABELS / AUTH_ROLE_LABELS）。
+    """
+    _require_privileged(identity)
+    days = max(1, min(days, 90))
+
+    from telemetry.metrics import AUTH_ACTION_LABELS, AUTH_ROLE_LABELS, auth_security_summary
+
+    summary = auth_security_summary(days)
+    summary["period_days"] = days
+    summary["action_labels"] = AUTH_ACTION_LABELS
+    summary["role_labels"] = AUTH_ROLE_LABELS
+    return summary

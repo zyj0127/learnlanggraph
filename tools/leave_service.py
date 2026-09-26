@@ -94,19 +94,22 @@ def _find_latest_pending(uid: str, leave_type: str, start_date: str, end_date: s
 
 
 def fulfill_approved(uid: str, leave_type: str, start_date: str, end_date: str,
-                     days: int, reason: str, approver_uid: str
+                     days: int, reason: str, approver_uid: str,
+                     request_id: Optional[int] = None
                      ) -> Tuple[bool, str, Optional[int]]:
-    """审批通过后的履约（apply_leave 工具体内调用）。
+    """审批通过后的履约（apply_leave 工具 / 管理台队列审批共用）。
 
     年假余额复核（审批期间余额可能变化，防御性复检）→ 扣减余额 →
-    pending 置 approved（找不到 pending 记录则兜底直插 approved 行）。
+    pending 置 approved。request_id 传入时按 id 定向更新（且要求当前为
+    pending，防止重复履约）；否则按（uid+类型+起止）定位最近 pending，
+    都找不到则兜底直插 approved 行。
     返回 (是否成功, 对外文案, 申请 id)。
     """
     denial = check_annual_balance(uid, leave_type, days)
     if denial is not None:
         # 审批通过但余额在审批期间被占用：置 rejected 并提示
         mark_rejected(uid, leave_type, start_date, end_date, approver_uid,
-                      reason=reason, days=days)
+                      reason=reason, days=days, request_id=request_id)
         return False, denial + "（该申请已按余额不足驳回。）", None
 
     if leave_type == "年假":
@@ -121,13 +124,16 @@ def fulfill_approved(uid: str, leave_type: str, start_date: str, end_date: str,
         )
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    request_id = _find_latest_pending(uid, leave_type, start_date, end_date)
+    if request_id is None:
+        request_id = _find_latest_pending(uid, leave_type, start_date, end_date)
     if request_id is not None:
         run_execute(
             sql_pg="""update leave_requests
-                      set status='approved', approver=:0, decided_at=:1 where id=:2""",
+                      set status='approved', approver=:0, decided_at=:1
+                      where id=:2 and status='pending'""",
             sql_sqlite="""update leave_requests
-                      set status='approved', approver=?, decided_at=? where id=?""",
+                      set status='approved', approver=?, decided_at=?
+                      where id=? and status='pending'""",
             params=(approver_uid or "", now, request_id),
         )
     else:
@@ -158,16 +164,24 @@ def fulfill_approved(uid: str, leave_type: str, start_date: str, end_date: str,
 
 
 def mark_rejected(uid: str, leave_type: str, start_date: str, end_date: str,
-                  approver_uid: str, reason: str = "", days: int = 0) -> None:
-    """审批拒绝（或履约期余额复检驳回）：pending 置 rejected，余额不变。"""
+                  approver_uid: str, reason: str = "", days: int = 0,
+                  request_id: Optional[int] = None) -> None:
+    """审批拒绝（或履约期余额复检驳回）：pending 置 rejected，余额不变。
+
+    request_id 传入时按 id 定向更新（且要求当前为 pending），否则按
+    （uid+类型+起止）定位最近 pending，都找不到则兜底直插 rejected 行。
+    """
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    request_id = _find_latest_pending(uid, leave_type, start_date, end_date)
+    if request_id is None:
+        request_id = _find_latest_pending(uid, leave_type, start_date, end_date)
     if request_id is not None:
         run_execute(
             sql_pg="""update leave_requests
-                      set status='rejected', approver=:0, decided_at=:1 where id=:2""",
+                      set status='rejected', approver=:0, decided_at=:1
+                      where id=:2 and status='pending'""",
             sql_sqlite="""update leave_requests
-                      set status='rejected', approver=?, decided_at=? where id=?""",
+                      set status='rejected', approver=?, decided_at=?
+                      where id=? and status='pending'""",
             params=(approver_uid or "", now, request_id),
         )
     else:
