@@ -302,3 +302,43 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
   集群化时可把 tei 双服务与 prometheus/grafana 另建 manifests 或复用社区 chart）
 - kubeconform 容器镜像 tag（v0.7.0）若上游变更需跟进；hadolint 同为通报制，
   镜像 Dockerfile 的 K8s 适配（非 root 运行等）未深入
+
+## 十四、请假申请：从问答机器人到办事机器人（写操作 + 人工审批）
+
+> 本节回答的问题是：如何在「不改图结构、不破 SSE 契约」的前提下新增一个
+> 写操作业务。核心难点是图拓扑决定敏感工具只在审批通过后执行
+> （human_review interrupt 先于 ToolNode），因此「预检 / pending 落库 /
+> 履约扣款」三个阶段必须拆到两个位置，由 tools/leave_service.py 收敛为唯一实现。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | `leave_requests` 表（id/uid/类型/起止/天数/事由/状态/审批人/时间戳）：ORM + alembic 0002 迁移 + SQLite 自愈建表（init_db）+ 双后端预置 2 条历史示例 | `database/models.py`、`alembic/versions/0002_leave_requests.py`、`database/mock_db.py`、`database/seed.py`（新增/修改） | SQLite 与 pg 的 DDL 逐字对齐；seed 幂等判据不变（employees 行数） |
+| 2 | repository 写路径：run_execute（UPDATE/DELETE）+ run_insert_id（INSERT 取自增主键，pg 走 RETURNING） | `database/repository.py` | 占位约定与 run_query 同源（pg `:0` / sqlite `?`） |
+| 3 | RBAC 新动作 `apply_leave`：员工仅本人、HR/ADMIN 可代申请、匿名拒（矩阵与 issue_cert 同构）；拒答文案 + 请假留痕（audit_leave_request，detail 不落事由自由文本） | `auth/permissions.py`、`auth/guard.py` | 审批恢复后工具以审批人（HR）身份执行，HR 代申请口径恰好兼容 |
+| 4 | 业务逻辑层 leave_service：validate_request（类型/日期/天数）、check_annual_balance（预检）、create_pending、fulfill_approved（复核+扣减+置 approved）、mark_rejected | `tools/leave_service.py`（新增） | 节点与工具共用同一实现；测试按 service 序列驱动全链路 |
+| 5 | apply_leave 工具（敏感工具）：RBAC → 参数/余额复核 → 履约；注册进 SENSITIVE_TOOLS 与 ALL_TOOLS | `tools/hr_tools.py`、`agent/constants.py`、`agent/nodes.py` | 履约在工具内（审批通过后执行），与开证明「通过后实际开具」同位置 |
+| 6 | human_review_node 扩展：apply_leave 挂起前预检（余额不足直接回提示，**不进入审批**）+ pending 落库 + 审批文案含类型/日期/天数/事由；reject 分支置 rejected | `agent/nodes.py` | 图结构零改动，复用 interrupt/human_review 拓扑；防自审自批由 payload applicant_uid 自动适用 |
+| 7 | SSE 透出审批详情：approval_required 的 detail 优先取 interrupt 负载文案（兼容旧字符串负载，回退固定文案） | `api/server.py` | 契约字段不变，前端审批卡片直接渲染请假详情 |
+| 8 | Vue mock 演示：敏感词「请假/休年假/请病假/请事假」触发挂起，resume 按 cert/leave 场景分支应答 | `web/src/api/mock.ts` | ApprovalCard 复用 detail 渲染，无需结构化改动 |
+| 9 | 测试 14 条：参数校验 4 + 工具级 5（本人成功/代他人被拦/匿名被拦/余额不足/HR 代申请）+ 审批链路 4（approve 扣余额/reject 不动/预检拦截/自审自批）+ pg needs_pg 冒烟 | `test/test_leave_request.py`（新增） | SQLite 实测（setUp 重建确定性花名册）；缺 langchain 时工具级用例 skipUnless |
+| 10 | 文档：README 功能列表加办事写操作 | `README.md` | |
+
+### 设计决策（请假）
+
+- **履约位置**：图拓扑决定敏感工具只在审批通过后执行，故履约（余额复核 →
+  年假扣减 → pending→approved）放在 apply_leave 工具体内——与开证明
+  「审批通过后实际开具」同一位置；**扣减时机 = 审批通过瞬间**（pending 期间不锁余额，
+  审批期间余额被占用的并发场景由履约时的复核兜底，不足则置 rejected 并提示）。
+- **预检前置**：参数/余额预检在 human_review_node（挂起前），不足直接回
+  ToolMessage 提示，不进入审批——对齐「余额不足不审批」需求且不打断审批拓扑。
+- **pending 落库时机**：挂起 interrupt 之前（同节点），reject 分支置 rejected；
+  找不到 pending 记录时（旧拓扑/旁路模式）履约与驳回都兜底直插对应状态行。
+- **eval 数据集未动**：请假场景属工具/写操作链路而非检索题，加入检索评测集会
+  改变 741 题基线（Hit@3/MRR），按「不破坏基线」原则不纳入 eval/dataset.py。
+
+### 验证结果（请假）
+
+- 全量 `pytest test/ -q`：**96 passed / 5 skipped**（原 83 条全绿 + 新增 13 条通过、
+  1 条 needs_pg 默认跳过），36 subtests passed
+- compileall + check_import_cycles（57 模块无环）通过
+- 前端：vue-tsc --noEmit 零错误 + vite build 通过（本地内置 node 实跑）

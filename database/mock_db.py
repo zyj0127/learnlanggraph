@@ -125,7 +125,26 @@ def init_db(db_path: Path = DB_PATH) -> sqlite3.Connection:
         )
     ''')
 
+    # 2.1 创建 leave_requests 表（请假申请，企业化写操作扩展）
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS leave_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uid TEXT NOT NULL,
+            leave_type TEXT NOT NULL,
+            start_date TEXT NOT NULL,
+            end_date TEXT NOT NULL,
+            days INTEGER NOT NULL,
+            reason TEXT,
+            status TEXT NOT NULL DEFAULT 'pending',
+            approver TEXT,
+            created_at TEXT,
+            decided_at TEXT,
+            FOREIGN KEY (uid) REFERENCES employees (uid)
+        )
+    ''')
+
     # 3. 清空旧数据（先删子表，再删主表，避免外键约束冲突）
+    cursor.execute('DELETE FROM leave_requests')
     cursor.execute('DELETE FROM leave_balances')
     cursor.execute('DELETE FROM employees')
 
@@ -133,6 +152,19 @@ def init_db(db_path: Path = DB_PATH) -> sqlite3.Connection:
     test_employees, test_balances = build_roster()
     cursor.executemany('INSERT INTO employees VALUES (?, ?, ?, ?, ?, ?)', test_employees)
     cursor.executemany('INSERT INTO leave_balances VALUES (?, ?, ?)', test_balances)
+
+    # 4.1 预置两条历史请假记录（approved / rejected 各一，演示与联调用）
+    cursor.executemany(
+        '''INSERT INTO leave_requests
+           (uid, leave_type, start_date, end_date, days, reason, status, approver, created_at, decided_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+        [
+            ('1001', '年假', '2026-01-05', '2026-01-06', 2, '家中事务',
+             'approved', 'hr01', '2026-01-02 10:00:00', '2026-01-02 15:30:00'),
+            ('1002', '事假', '2026-01-10', '2026-01-10', 1, '个人事务',
+             'rejected', 'hr01', '2026-01-08 09:00:00', '2026-01-08 11:00:00'),
+        ],
+    )
 
     conn.commit()
     logger.info('实体数据库初始化成功，已落盘：%s', db_path)

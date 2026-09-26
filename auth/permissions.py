@@ -11,6 +11,7 @@
 | 查档案 view_profile   |    ×      | 仅本人     |  ✓   |  ✓    |
 | 查假期 view_leave     |    ×      | 仅本人     |  ✓   |  ✓    |
 | 开证明 issue_cert     |    ×      | 仅本人     |  ✓   |  ✓    |
+| 请假申请 apply_leave  |    ×      | 仅本人     |  ✓   |  ✓    |
 | 审批 approve          |    ×      |     ×      |  ✓   |  ✓    |
 
 「仅本人」= identity.uid == target_uid（且 uid 非空，防空串相等误判）。
@@ -38,6 +39,11 @@ def can_view_leave_balance(identity: Identity, target_uid: str) -> bool:
 
 def can_issue_certification(identity: Identity, target_uid: str) -> bool:
     """开具证明：HR/ADMIN 可为任何人发起；EMPLOYEE 仅可为本人申请；匿名拒绝。"""
+    return identity.role in _PRIVILEGED_ROLES or _is_self(identity, target_uid)
+
+
+def can_apply_leave(identity: Identity, target_uid: str) -> bool:
+    """请假申请：HR/ADMIN 可代任何人申请；EMPLOYEE 仅可为本人申请；匿名拒绝。"""
     return identity.role in _PRIVILEGED_ROLES or _is_self(identity, target_uid)
 
 

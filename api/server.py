@@ -112,10 +112,18 @@ def _event_stream(graph_input, config: dict, meta: dict = None, identity=None):
         if event_type == "token":
             yield _sse({"type": "token", "content": event["content"]})
         elif event_type == "approval_required":
+            # detail 优先取 interrupt 负载中的文案（请假申请含类型/日期/天数/事由详情）；
+            # 兼容旧纯字符串负载与缺失场景，回退固定文案，SSE 契约不变
+            interrupt_value = event.get("interrupt_value")
+            detail = None
+            if isinstance(interrupt_value, dict):
+                detail = interrupt_value.get("message")
+            elif isinstance(interrupt_value, str):
+                detail = interrupt_value
             yield _sse({
                 "type": "approval_required",
                 "thread_id": event["thread_id"],
-                "detail": "检测到敏感操作（开具证明），请调用 /chat/resume 提交人工审批决定",
+                "detail": detail or "检测到敏感操作（开具证明），请调用 /chat/resume 提交人工审批决定",
             })
         elif event_type == "done":
             yield _sse({"type": "done"})

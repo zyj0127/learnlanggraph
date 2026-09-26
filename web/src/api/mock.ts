@@ -28,6 +28,11 @@ async function streamText(
 
 // 模拟敏感操作关键词（触发审批挂起）
 const SENSITIVE_RE = /(证明|在职证明|收入证明)/
+// 请假申请（写操作，同样触发审批挂起）
+const LEAVE_RE = /(请假|休年假|请年假|请病假|请事假)/
+
+// mock 会话内最近一次挂起的场景（resume 应答据此分支）
+let lastPendingKind: 'cert' | 'leave' = 'cert'
 
 export async function mockIssueToken(req: TokenRequest): Promise<TokenResponse> {
   await sleep(200)
@@ -64,10 +69,26 @@ export async function mockChatStream(
 
   if (SENSITIVE_RE.test(req.question)) {
     // 敏感操作：挂起等待人工审批
+    lastPendingKind = 'cert'
     onEvent({
       type: 'approval_required',
       thread_id: req.thread_id,
       detail: '检测到敏感操作（开具证明），请调用 /chat/resume 提交人工审批决定',
+    })
+    onEvent({ type: 'done' })
+    return
+  }
+
+  if (LEAVE_RE.test(req.question)) {
+    // 请假申请（写操作）：挂起等待人工审批，detail 透出申请详情
+    lastPendingKind = 'leave'
+    onEvent({
+      type: 'approval_required',
+      thread_id: req.thread_id,
+      detail:
+        `Agent 正在为 uid ${req.uid} 提交请假申请（编号 LR-3）：\n` +
+        '类型：年假；起止：2026-10-09 至 2026-10-10（共 2 天）；事由：家中有事。\n' +
+        '是否授权执行？（输入approve或者reject）',
     })
     onEvent({ type: 'done' })
     return
@@ -82,7 +103,7 @@ export async function mockChatStream(
   } else if (/档案|个人信息|工资|薪资/.test(q)) {
     answer = `【Mock 演示】员工档案概要（${req.uid}）：\n\n- 部门：产品研发部\n- 职级：P5\n- 入职日期：2021-03-15\n- 工作地点：北京\n\n如需变更个人信息请联系 HR。`
   } else {
-    answer = `【Mock 演示】收到您的问题：「${q}」。\n\n这是演示模式下的模拟流式回答。我可以协助查询：\n\n- 员工档案与假期余额\n- 员工手册政策问答（考勤、差旅、报销等）\n- 开具在职证明 / 收入证明（需人工审批）\n\n试试输入「帮我开一份在职证明」体验审批流。`
+    answer = `【Mock 演示】收到您的问题：「${q}」。\n\n这是演示模式下的模拟流式回答。我可以协助查询：\n\n- 员工档案与假期余额\n- 员工手册政策问答（考勤、差旅、报销等）\n- 开具在职证明 / 收入证明（需人工审批）\n- 提交请假申请（年假/病假/事假，需人工审批）\n\n试试输入「帮我开一份在职证明」或「帮我请两天年假」体验审批流。`
   }
 
   await streamText(answer, onEvent)
@@ -111,12 +132,16 @@ export async function mockChatResume(
 
   if (req.decision === 'approve') {
     await streamText(
-      `【Mock 演示】✅ 审批已通过（审批人 ${approverUid}）。\n\n已为员工 ${applicantUid} 开具在职证明，证明编号 CERT-2024-MOCK01，可在人事系统「我的证明」中下载 PDF 版本。`,
+      lastPendingKind === 'leave'
+        ? `【Mock 演示】✅ 审批已通过（审批人 ${approverUid}）。\n\n员工 ${applicantUid} 的请假申请已生效（编号 LR-3）：年假 2026-10-09 至 2026-10-10（共 2 天），假期余额已同步扣减。`
+        : `【Mock 演示】✅ 审批已通过（审批人 ${approverUid}）。\n\n已为员工 ${applicantUid} 开具在职证明，证明编号 CERT-2024-MOCK01，可在人事系统「我的证明」中下载 PDF 版本。`,
       onEvent,
     )
   } else {
     await streamText(
-      `【Mock 演示】❌ 本次开具证明的申请已被审批人 ${approverUid} 拒绝。如有疑问请联系 HR 专员了解具体原因，或补充材料后重新申请。`,
+      lastPendingKind === 'leave'
+        ? `【Mock 演示】❌ 员工 ${applicantUid} 的请假申请已被审批人 ${approverUid} 驳回，假期余额未发生变化。如需调整请假时间或类型，可重新发起申请。`
+        : `【Mock 演示】❌ 本次开具证明的申请已被审批人 ${approverUid} 拒绝。如有疑问请联系 HR 专员了解具体原因，或补充材料后重新申请。`,
       onEvent,
     )
   }

@@ -37,6 +37,7 @@ learnlanggraph
   - 如果是查阅政策，路由给 `Policy_Search_Agent`。
   - 如果是查询年假，路由给 `Tool_Execution_Agent` 调用接口。
 - **工具箱 (Tools)：** 预先定义好几个高频接口，如 `get_employee_profile(uid)`、`check_leave_balance(uid)`、`generate_income_certificate(name, salary)`。
+- **办事写操作（请假申请）：** `apply_leave(uid, leave_type, start_date, end_date, reason)` 把系统从问答机器人升级为办事机器人——员工发起年假/病假/事假申请，经人工审批（复用开证明同一 interrupt 拓扑与审批卡片）后生效：年假余额自动校验（不足不进入审批）与扣减，申请单全状态（pending/approved/rejected）落 `leave_requests` 表留痕。
 
 ### 4. 重难点与风险
 
