@@ -36,6 +36,8 @@ const LEAVE_RE = /(请假|休年假|请年假|请病假|请事假)/
 
 // mock 会话内最近一次挂起的场景（resume 应答据此分支）
 let lastPendingKind: 'cert' | 'leave' = 'cert'
+// mock 会话内最近一条请假工单 id（聊天审批 → 工单池联动）
+let lastLeaveRequestId = 0
 
 export async function mockIssueToken(req: TokenRequest): Promise<TokenResponse> {
   await sleep(200)
@@ -83,13 +85,23 @@ export async function mockChatStream(
   }
 
   if (LEAVE_RE.test(req.question)) {
-    // 请假申请（写操作）：挂起等待人工审批，detail 透出申请详情
+    // 请假申请（写操作）：挂起等待人工审批，detail 透出申请详情；
+    // 同时在 mock 工单池落一条 pending（与「我的工单」/ 管理台队列联动演示）
     lastPendingKind = 'leave'
+    const id = mockQueue.reduce((m, r) => Math.max(m, r.id), 0) + 1
+    lastLeaveRequestId = id
+    mockQueue.unshift({
+      id, uid: req.uid, name: '演示员工', leave_type: '年假',
+      start_date: '2026-10-09', end_date: '2026-10-10', days: 2,
+      reason: '家中有事', status: 'pending', approver: null,
+      created_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      decided_at: null,
+    })
     onEvent({
       type: 'approval_required',
       thread_id: req.thread_id,
       detail:
-        `Agent 正在为 uid ${req.uid} 提交请假申请（编号 LR-3）：\n` +
+        `Agent 正在为 uid ${req.uid} 提交请假申请（编号 LR-${id}）：\n` +
         '类型：年假；起止：2026-10-09 至 2026-10-10（共 2 天）；事由：家中有事。\n' +
         '是否授权执行？（输入approve或者reject）',
     })
@@ -134,13 +146,30 @@ export async function mockChatResume(
   }
 
   if (req.decision === 'approve') {
+    // 聊天内批准 → 工单池状态联动（approved + 审批人留痕）
+    if (lastPendingKind === 'leave') {
+      const row = mockQueue.find((r) => r.id === lastLeaveRequestId)
+      if (row && row.status === 'pending') {
+        row.status = 'approved'
+        row.approver = approverUid || 'hr-mock'
+        row.decided_at = new Date().toISOString().slice(0, 19).replace('T', ' ')
+      }
+    }
     await streamText(
       lastPendingKind === 'leave'
-        ? `【Mock 演示】✅ 审批已通过（审批人 ${approverUid}）。\n\n员工 ${applicantUid} 的请假申请已生效（编号 LR-3）：年假 2026-10-09 至 2026-10-10（共 2 天），假期余额已同步扣减。`
+        ? `【Mock 演示】✅ 审批已通过（审批人 ${approverUid}）。\n\n员工 ${applicantUid} 的请假申请已生效（编号 LR-${lastLeaveRequestId}）：年假 2026-10-09 至 2026-10-10（共 2 天），假期余额已同步扣减。`
         : `【Mock 演示】✅ 审批已通过（审批人 ${approverUid}）。\n\n已为员工 ${applicantUid} 开具在职证明，证明编号 CERT-2024-MOCK01，可在人事系统「我的证明」中下载 PDF 版本。`,
       onEvent,
     )
   } else {
+    if (lastPendingKind === 'leave') {
+      const row = mockQueue.find((r) => r.id === lastLeaveRequestId)
+      if (row && row.status === 'pending') {
+        row.status = 'rejected'
+        row.approver = approverUid || 'hr-mock'
+        row.decided_at = new Date().toISOString().slice(0, 19).replace('T', ' ')
+      }
+    }
     await streamText(
       lastPendingKind === 'leave'
         ? `【Mock 演示】❌ 员工 ${applicantUid} 的请假申请已被审批人 ${approverUid} 驳回，假期余额未发生变化。如需调整请假时间或类型，可重新发起申请。`
@@ -245,4 +274,16 @@ export async function mockFetchSecuritySummary(): Promise<SecuritySummary> {
     },
     role_labels: { anonymous: '匿名', employee: '员工', hr: 'HR', admin: '管理员' },
   }
+}
+
+/** Mock 我的工单：按登录 uid 过滤工单池（与管理台队列/聊天审批共用同一池） */
+export async function mockFetchMyLeaveRequests(
+  uid: string,
+  status: string,
+): Promise<LeaveRequestListResponse> {
+  await sleep(200)
+  const items = mockQueue.filter(
+    (r) => r.uid === uid && (status === 'all' || r.status === status),
+  )
+  return { status, count: items.length, items: [...items] }
 }

@@ -296,6 +296,49 @@ def _require_privileged(identity: Optional[Identity]) -> None:
         raise HTTPException(status_code=403, detail=APPROVER_ROLE_DENIAL)
 
 
+# ---- 员工视图 API：我的工单（闭环请假体验）----
+# uid 一律从 JWT 身份取，不接受客户端传 uid（防越权）；匿名 403（对齐管理台口径）。
+
+@app.get("/api/my/leave-requests")
+def my_leave_requests(status: str = "all",
+                      identity: Optional[Identity] = Depends(get_request_identity)):
+    """当前身份名下的请假工单列表（按创建时间倒序，id 倒序近似）。
+
+    员工/HR/ADMIN 均可查自己（HR 在管理台批别人、在这里看自己的申请）；
+    匿名 403 提示登录；AUTH_ENABLED=false 旁路模式回退请求方 uid 不可知，
+    返回空列表并附提示（旁路=开发态，不做数据暴露）。
+    """
+    settings = get_settings()
+    if not settings.auth_enabled:
+        return {"status": status, "count": 0, "items": [],
+                "hint": "鉴权旁路模式（AUTH_ENABLED=false）不提供个人工单视图"}
+    if identity is None or identity.role == Role.ANONYMOUS or not identity.uid:
+        raise HTTPException(status_code=403, detail="请先登录后再查看我的工单。")
+    if status not in ("pending", "approved", "rejected", "all"):
+        raise HTTPException(status_code=400, detail="status 必须是 pending / approved / rejected / all")
+
+    from database.repository import run_query
+
+    rows = run_query(
+        sql_pg="""select r.id, r.uid, e.name, r.leave_type, r.start_date, r.end_date,
+                  r.days, r.reason, r.status, r.approver, r.created_at, r.decided_at
+                  from leave_requests r left join employees e on r.uid = e.uid
+                  where r.uid = :0 and (:1 = 'all' or r.status = :1)
+                  order by r.id desc""",
+        sql_sqlite="""select r.id, r.uid, e.name, r.leave_type, r.start_date, r.end_date,
+                  r.days, r.reason, r.status, r.approver, r.created_at, r.decided_at
+                  from leave_requests r left join employees e on r.uid = e.uid
+                  where r.uid = ? and (? = 'all' or r.status = ?)
+                  order by r.id desc""",
+        params=(identity.uid, status, status),
+    )
+    for row in rows:  # datetime 对象序列化为字符串（pg 路径）
+        for key in ("created_at", "decided_at"):
+            if row.get(key) is not None and not isinstance(row[key], str):
+                row[key] = str(row[key])
+    return {"status": status, "count": len(rows), "items": rows}
+
+
 @app.get("/api/admin/leave-requests")
 def admin_leave_requests(status: str = "pending", limit: int = 50, offset: int = 0,
                          identity: Optional[Identity] = Depends(get_request_identity)):

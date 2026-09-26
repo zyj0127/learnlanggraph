@@ -5,6 +5,7 @@ import { useChatStore } from './stores/chat'
 import LoginPanel from './components/LoginPanel.vue'
 import ApprovalCard from './components/ApprovalCard.vue'
 import AdminPanel from './components/AdminPanel.vue'
+import MyRequests from './components/MyRequests.vue'
 
 const auth = useAuthStore()
 const chat = useChatStore()
@@ -12,13 +13,18 @@ const chat = useChatStore()
 const input = ref('')
 const msgListEl = ref<HTMLElement | null>(null)
 
-// 视图切换：chat（聊天）/ admin（管理台）。管理台入口仅 HR/ADMIN 可见
-const view = ref<'chat' | 'admin'>('chat')
+// 视图切换：chat（聊天）/ admin（管理台）/ my（我的工单）。
+// 管理台入口仅 HR/ADMIN 可见；我的工单对所有已登录角色可见
+const view = ref<'chat' | 'admin' | 'my'>('chat')
 const isPrivileged = computed(
   () => auth.identity !== null && ['hr', 'admin'].includes(auth.identity.role),
 )
+const isLoggedIn = computed(() => auth.identity !== null)
 watch(isPrivileged, (ok) => {
-  if (!ok) view.value = 'chat'   // 退出/降级身份时自动回到聊天视图
+  if (!ok && view.value === 'admin') view.value = 'chat'   // 退出/降级身份时自动回到聊天视图
+})
+watch(isLoggedIn, (ok) => {
+  if (!ok && view.value === 'my') view.value = 'chat'      // 退出登录时离开我的工单
 })
 
 onMounted(() => {
@@ -134,6 +140,16 @@ function submit() {
         </button>
       </section>
 
+      <section v-if="isLoggedIn" class="side-section">
+        <h3>我的工单</h3>
+        <button
+          class="btn btn-ghost btn-block"
+          @click="view = view === 'my' ? 'chat' : 'my'"
+        >
+          {{ view === 'my' ? '💬 返回聊天' : '📋 我的请假工单' }}
+        </button>
+      </section>
+
       <section class="side-section caps">
         💡 能力：员工档案查询 / 假期余额 / 请假申请 / 在职·收入证明 / 员工手册政策问答
       </section>
@@ -147,6 +163,17 @@ function submit() {
       </header>
       <div class="messages">
         <AdminPanel />
+      </div>
+    </main>
+
+    <!-- 我的工单视图 -->
+    <main v-else-if="view === 'my' && isLoggedIn" class="main">
+      <header class="main-header">
+        <h1>我的工单</h1>
+        <p class="subtitle">我提交的请假申请及审批状态（与聊天、管理台同源）</p>
+      </header>
+      <div class="messages">
+        <MyRequests />
       </div>
     </main>
 

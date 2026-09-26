@@ -163,3 +163,17 @@ export async function fetchSecuritySummary(
   if (!resp.ok) throw await parseError(resp)
   return resp.json()
 }
+
+// ---- 员工视图 API（/api/my/*）：uid 从 JWT 取，不传客户端参数 ----
+
+export async function fetchMyLeaveRequests(
+  status: string,
+  token: string | null,
+): Promise<LeaveRequestListResponse> {
+  const resp = await fetch(
+    `${API_BASE}/my/leave-requests?status=${encodeURIComponent(status)}`,
+    { headers: authHeaders(token) },
+  )
+  if (!resp.ok) throw await parseError(resp)
+  return resp.json()
+}
