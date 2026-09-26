@@ -363,3 +363,25 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
 - 全量 `pytest test/ -q`：**106 passed / 5 skipped**（96 条存量全绿 + 新增 10 条）
 - compileall + check_import_cycles（57 模块无环）通过
 - 前端：vue-tsc --noEmit 零错误 + vite build 通过
+
+## 十六、我的工单：员工自查视图（闭环请假体验）
+
+> 承接第十五节。管理台解决了 HR 侧集中审批，本节补上员工侧的最后一环：
+> 员工提交请假后能在哪里看到审批进度。核心约束仍是「状态同源」——
+> 员工视图只读 `leave_requests`，与聊天审批、管理台共用同一事实源；
+> 安全口径是 uid 只能来自 JWT，不接受 query/body 传 uid，结构上杜绝越权查他人。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | `GET /api/my/leave-requests?status=`：uid 从 JWT identity 取（匿名 403），status 校验（非法值 400），join employees 取姓名，按提交时间倒序；旁路模式（AUTH_ENABLED=false）返回空列表 + hint，不伪造数据 | `api/server.py` | 插在 admin 端点之前；只读端点不落审计留痕（与管理台写操作区分） |
+| 2 | 前端：MyRequests.vue（工单表格 + 状态徽章 pending 黄/approved 绿/rejected 红 + pending 显示「等待 HR 审批中」+ 空列表兜底 + 手动刷新）；App.vue 视图切换扩为 chat/admin/my，所有已登录角色侧栏可见入口，退出登录自动回聊天；client.ts 加 fetchMyLeaveRequests | `web/src/App.vue`、`components/MyRequests.vue`、`api/client.ts`（新增/修改） | 复用 AdminLeaveRequest 类型（含 employee_name），无新增类型 |
+| 3 | mock 联动闭环：聊天里发起请假挂起时向 mockQueue 落 pending 行（动态 id），resume 批准/拒绝时联动改该行状态——Mock 演示模式下「聊天发起 → 审批 → 我的工单查看」全程可走通 | `web/src/api/mock.ts` | mockFetchMyLeaveRequests(uid, status) 按 uid 过滤 mockQueue 池；模块级 lastLeaveRequestId 串联挂起与恢复 |
+| 4 | 测试 5 条：员工只见本人工单（看不到他人）、匿名 403、HR 登录也只见自己的（而非全员）、无工单员工空列表 200、status 过滤生效 | `test/test_my_requests.py`（新增）、`test/conftest.py` | TestClient + 测试 JWT 模式对齐 test_admin_queue；conftest collect_ignore 补零依赖兜底 |
+| 5 | 文档：README 功能列表加「我的工单」 | `README.md` | |
+
+### 验证结果（我的工单）
+
+- 全量 `pytest test/ -q`：**111 passed / 5 skipped**（106 条存量全绿 + 新增 5 条），
+  36 subtests passed
+- compileall + check_import_cycles（57 模块无环）通过
+- 前端：vue-tsc --noEmit 零错误 + vite build 通过

@@ -42,9 +42,11 @@ if not _HAS_LANGCHAIN:
         "test_milestone4.py",
     ]
 if not (_HAS_FASTAPI and _HAS_LANGGRAPH):
-    # test_api / test_admin_queue 在测试方法内 import fastapi.testclient 与 api.server（依赖 langgraph）
+    # test_api / test_admin_queue / test_my_requests 在测试方法内 import
+    # fastapi.testclient 与 api.server（依赖 langgraph）
     collect_ignore.append("test_api.py")
     collect_ignore.append("test_admin_queue.py")
+    collect_ignore.append("test_my_requests.py")
 
 # ---------------------------------------------------------------------------
 # marker 门禁：默认跳过，CI 有对应资源时经环境变量开启

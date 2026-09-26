@@ -39,6 +39,7 @@ learnlanggraph
 - **工具箱 (Tools)：** 预先定义好几个高频接口，如 `get_employee_profile(uid)`、`check_leave_balance(uid)`、`generate_income_certificate(name, salary)`。
 - **办事写操作（请假申请）：** `apply_leave(uid, leave_type, start_date, end_date, reason)` 把系统从问答机器人升级为办事机器人——员工发起年假/病假/事假申请，经人工审批（复用开证明同一 interrupt 拓扑与审批卡片）后生效：年假余额自动校验（不足不进入审批）与扣减，申请单全状态（pending/approved/rejected）落 `leave_requests` 表留痕。
 - **HR 管理台（审批队列 + 安全看板）：** HR/ADMIN 登录后侧栏出现「管理台」入口——请假工单集中审批（表格行内批准/拒绝，与聊天内审批共用 `leave_requests.status` 单一事实源，两通道状态同步），安全看板聚合越权拦截/审批通过拒绝/Top 越权动作（复用 telemetry auth_events 口径）。后端对应 `GET/POST /api/admin/*` 三个端点（仅 HR/ADMIN，匿名/员工 403）。
+- **我的工单（员工视图）：** 任何已登录员工侧栏出现「我的工单」入口，查看自己全部请假申请与实时审批状态（pending 黄 / approved 绿 / rejected 红徽章，与管理台、聊天审批同源）。后端对应 `GET /api/my/leave-requests?status=`（uid 从 JWT 取，匿名 403，杜绝跨员工越权查询），闭环「聊天发起 → HR 审批 → 员工自查」体验。
 
 ### 4. 重难点与风险
 
