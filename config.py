@@ -90,6 +90,10 @@ class Settings(BaseSettings):
     # 缓存有效期（天）：政策会修订，过期条目查询时自动清除
     semantic_cache_ttl_days: int = 7
 
+    # ---- 流式幻觉预检（规则层前置到 token 流出途中）----
+    # False 时全旁路，回到「事后审计」单防线行为
+    stream_fact_check_enabled: bool = True
+
     # ---- 企业化第二阶段：认证授权（auth/ 包）----
     # 总开关：False 时所有鉴权逻辑完全旁路，回到第一阶段行为
     auth_enabled: bool = True
