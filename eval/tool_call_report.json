@@ -1,14 +1,15 @@
 {
-  "dataset_version": "2026.10-v1",
-  "generated_at": "2026-10-04 17:54:36",
+  "dataset_version": "2026.10-v2",
+  "generated_at": "2026-10-04 18:46:09",
   "dry_run": false,
-  "total_cases": 4,
+  "total_cases": 70,
   "metrics": {
-    "total": 4,
-    "tool_selection_accuracy": 1.0,
+    "total": 70,
+    "tool_selection_accuracy": 0.7778,
     "slot_completeness": 1.0,
-    "false_trigger_rate": null,
-    "clarify_accuracy": null,
+    "false_trigger_rate": 0.0,
+    "clarify_accuracy": 1.0,
+    "confirm_assisted": 10,
     "pass_rate": 1.0
   },
   "rows": [
@@ -28,13 +29,15 @@
           "args": {
             "uid": "1001"
           },
-          "id": "call_00_BPLVhuiMENgBMKrNCOur2215",
+          "id": "call_00_JaVbeeSXkusmHr9ypegM0027",
           "type": "tool_call"
         }
       ],
+      "rounds": 1,
       "error": null,
       "pass": true,
-      "failures": []
+      "failures": [],
+      "confirm_assisted": false
     },
     {
       "case": {
@@ -52,13 +55,15 @@
           "args": {
             "uid": "1001"
           },
-          "id": "call_00_bwJc9CMnLxAEwyxTVhdU0255",
+          "id": "call_00_4DXSrUUpHcnMjSNsEVKQ0750",
           "type": "tool_call"
         }
       ],
+      "rounds": 1,
       "error": null,
       "pass": true,
-      "failures": []
+      "failures": [],
+      "confirm_assisted": false
     },
     {
       "case": {
@@ -76,13 +81,15 @@
           "args": {
             "uid": "1001"
           },
-          "id": "call_00_jmQxM9qT0uOgrDiAUvGv8326",
+          "id": "call_00_kaj2wDQepzVXcJqH22Y79136",
           "type": "tool_call"
         }
       ],
+      "rounds": 1,
       "error": null,
       "pass": true,
-      "failures": []
+      "failures": [],
+      "confirm_assisted": false
     },
     {
       "case": {
@@ -100,14 +107,1925 @@
           "args": {
             "uid": "1001"
           },
-          "id": "call_00_13ad0Lq7oxWeg2wi7Zxz4997",
+          "id": "call_00_DFKQ5H7YodcFu6KbZNXe1883",
           "type": "tool_call"
         }
       ],
+      "rounds": 1,
       "error": null,
       "pass": true,
-      "failures": []
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "查询我的入职年限",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_uUc0UYEZpjqblNOgcAEL3996",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我在哪个城市办公？帮我确认下档案",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_ni3hDtPfpP7EFw7MPedg1849",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "麻烦调出我的员工资料",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_Q4GeVSvZBB8aEZOc9yRv6348",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我的个人信息帮我看一下",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_1bk23Ya7k1HVxTiUZWYX3617",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "查下我的薪资和职级",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_T9KWPZloxeOB2jFjFiwR5554",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我想知道我档案里登记的入职时长",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_GJkoIO1NpXjikMvOpzOX7780",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我还有几天年假？",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_FMa1JRFYL2iC0dEDozwT6345",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_pBVczOl6IOcsxw3yws1A8640",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我查下假期余额",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_TjkjRi1csfwYiOwe5ELG0288",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_AMZQB0XxqLX1fjKLekRS7729",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我的病假还剩多少天？",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_6ro2mSipBKpQkWVdFxef4277",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_YzH618B1mmEznCCfVvjn1053",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "今年年假用了多少还剩多少？",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_VAPTXj0hlLtoDe2dDAny8545",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_uqscWCJzDWga9KmJzZAi5074",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "看看我还有多少天假可以休",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_oBOlJhicMbpnJfdDGV7C0215",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_eLxeg9px1u7a5ZJiMC827525",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "查询我的年假剩余天数",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_h06d8blTh6tqSUUzxlMM1520",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_4maLpNT0NfKvblVm1qXe0350",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我剩多少病假？",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_jw4QKOJmrr2d0TrALQh72015",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_yRi2fAT31zx0I3Cjotr88796",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "余额查询：年假",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_55kBGX0bLhGmFDlxCrRY5419",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_NomS4mzJ8nv4isMi4Kvf9200",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我看看还能休几天",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_u2Gbjcanx4Xq5G9Zn2Se6203",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_iFsrnWyg6PoIBSAfO5m75536",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我的假期额度还剩多少？",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_leave_balance",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_eMMb97RgHsOWt4ORUwEe7887",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_tDcGtUYkKE91xc7J7fzO9304",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我开一份在职证明",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "employment"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_N03VD67pDtiVz6NMM3yL1146",
+          "type": "tool_call"
+        },
+        {
+          "name": "generate_employment_certification",
+          "args": {
+            "uid": "1001",
+            "cer_type": "employment"
+          },
+          "id": "call_00_1iMS8eDTCxvMx2DQXXEr7341",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我要办签证，需要在职证明",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "employment"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_6ZcZSYd09ONqpbR07ad94616",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "帮我开在职证明，办社保落户用",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "employment"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_h7i5XTabDGZyapDWWZwa6848",
+          "type": "tool_call"
+        },
+        {
+          "name": "generate_employment_certification",
+          "args": {
+            "uid": "1001",
+            "cer_type": "employment"
+          },
+          "id": "call_00_XVGbSIfEf6ZdESd2wBDX9542",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "麻烦出一份在职证明，办银行卡用",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "employment"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_JAauqrsRbbSwKK2m04gE5855",
+          "type": "tool_call"
+        },
+        {
+          "name": "generate_employment_certification",
+          "args": {
+            "uid": "1001",
+            "cer_type": "employment"
+          },
+          "id": "call_00_JI3DQYSVflj6hoWzeeFC9922",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我生成在职证明文件",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "employment"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_qUiewOB3iCXVRt3nYh9K0792",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "需要一份证明我在职的材料",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "employment"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_sVtLfVT4uXO37vceDFBn7368",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "帮我开一份收入证明",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "income"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_g2rEUAjaCNX3inKhu4RV3761",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "贷款要用收入证明，帮我开一下",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "income"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_QynMRSQicqt3Gm126orm2408",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "我需要带薪资的在职收入证明",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "income"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_FgMEx50zqTY1Lg2CPMoa9678",
+          "type": "tool_call"
+        },
+        {
+          "name": "generate_employment_certification",
+          "args": {
+            "uid": "1001",
+            "cer_type": "income"
+          },
+          "id": "call_00_tPS92IJa8XgPcuf0AxGa0243",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "开一份包含工资的证明",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "income"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_hiHUZKRrXOeNBggibrDu1343",
+          "type": "tool_call"
+        },
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "开具包含薪资的在职收入证明的职级权限要求"
+          },
+          "id": "call_00_9l8EnjPL6JjvpHOcpr5K8380",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "帮我生成薪资收入证明",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "income"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_HFCdb9Rqvy3JHK6skmvw2427",
+          "type": "tool_call"
+        },
+        {
+          "name": "generate_employment_certification",
+          "args": {
+            "uid": "1001",
+            "cer_type": "income"
+          },
+          "id": "call_00_beSlQca8Y35QcKBp36Qf4573",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "办房贷需要收入证明，麻烦开一份",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "generate_employment_certification",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "cer_type": "income"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_GBw7yRfjGQzL86ivptZZ0762",
+          "type": "tool_call"
+        },
+        {
+          "name": "generate_employment_certification",
+          "args": {
+            "uid": "1001",
+            "cer_type": "income"
+          },
+          "id": "call_00_snF48PmX1YRouDcitRBt1381",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我请 2026-11-02 到 2026-11-03 的年假，家中有事",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "leave_type": "年假",
+          "start_date": "2026-11-02",
+          "end_date": "2026-11-03"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_cbNCqNv4kUTFMVFh4fFV4515",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "年假",
+            "start_date": "2026-11-02",
+            "end_date": "2026-11-03",
+            "reason": "家中有事"
+          },
+          "id": "call_00_40RuhaU6mGo3zeJdegFo7382",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我要请病假，2026-11-05 一天，感冒发烧",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "leave_type": "病假",
+          "start_date": "2026-11-05",
+          "end_date": "2026-11-05"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_P8PmikyePd0SJrKm2Oi90605",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "病假",
+            "start_date": "2026-11-05",
+            "end_date": "2026-11-05",
+            "reason": "感冒发烧"
+          },
+          "id": "call_00_92TuAf3v3KRiua7lS6sk0119",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我提交事假申请：2026-12-01 至 2026-12-02，处理个人事务",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "uid": "1001",
+          "leave_type": "事假",
+          "start_date": "2026-12-01",
+          "end_date": "2026-12-02"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_qcLFghgurbEwwOBrGySY3536",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "事假",
+            "start_date": "2026-12-01",
+            "end_date": "2026-12-02",
+            "reason": "处理个人事务"
+          },
+          "id": "call_00_MCiDlAlpQARyqQHcKafj3138",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我想休年假，从 2026-11-10 到 2026-11-11",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "年假",
+          "start_date": "2026-11-10",
+          "end_date": "2026-11-11"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_mXojcidOxLJ8DE4cWAFL8118",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_88EoaKPgiYq680UaaWPr7827",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "请两天年假，2026-11-16 到 2026-11-17，回老家",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "年假",
+          "start_date": "2026-11-16",
+          "end_date": "2026-11-17"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_KgXCADENBrt0Q6Fa6VlA9161",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_L2zfkPxpQvOGQoZGnoXp0538",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "年假",
+            "start_date": "2026-11-16",
+            "end_date": "2026-11-17",
+            "reason": "回老家"
+          },
+          "id": "call_00_11GYh8zMp2CDQbQlQPHy4070",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "2026-12-07 我请一天事假，去办过户",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "事假",
+          "start_date": "2026-12-07",
+          "end_date": "2026-12-07"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_8X3KvSbdUV2nvPPR0SW84208",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "病假申请：2026-12-08 到 2026-12-09，拔牙休息",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "病假",
+          "start_date": "2026-12-08",
+          "end_date": "2026-12-09"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_1F8FIPPjNaj2eRvpwwzE9606",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "病假",
+            "start_date": "2026-12-08",
+            "end_date": "2026-12-09",
+            "reason": "拔牙休息"
+          },
+          "id": "call_00_v15uyKeL6crNoYtblLW27790",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我请年假 2026-12-14 一天",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "年假",
+          "start_date": "2026-12-14",
+          "end_date": "2026-12-14"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_KVTxg2quFZAHf34EZFl81575",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_GccbKxwIhfsImQoIUclu3259",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "年假",
+            "start_date": "2026-12-14",
+            "end_date": "2026-12-14"
+          },
+          "id": "call_00_BUBpAxMMZ7BwZNcNDBci8275",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 3,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "年假，11月20号，就一天，家里有事",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_i3dWA42qmO0hldb2zWDi8124",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_xoLD6cMjTLj1njUrfLD62792",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "请病假，下周三和周四，2026-11-18 到 2026-11-19",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "病假",
+          "start_date": "2026-11-18",
+          "end_date": "2026-11-19"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_Z2b0PZZn3eJM3AS9alTv3551",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_6UQViMyaBq0mexhqpQf81912",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 3,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "我要休 2027-01-04 到 2027-01-05 的年假",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "年假",
+          "start_date": "2027-01-04",
+          "end_date": "2027-01-05"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_NUQkYG4Tyzjp74RYn5ML8546",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_leave_balance",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_AIlgd2S396i9xFWqWw8X6122",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": true
+    },
+    {
+      "case": {
+        "question": "请事假，2026-11-25 至 2026-11-26，共两天",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "事假",
+          "start_date": "2026-11-25",
+          "end_date": "2026-11-26"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_pdCwGU6Soq1nrD59emQX3000",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "事假",
+            "start_date": "2026-11-25",
+            "end_date": "2026-11-26"
+          },
+          "id": "call_00_Omuc92fUCJQEPGYnjtn59256",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "麻烦帮我请 2026-12-21 到 2026-12-22 的病假",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "病假"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_ZsrK45B8T7CgsPVJHt3s1635",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "病假",
+            "start_date": "2026-12-21",
+            "end_date": "2026-12-22"
+          },
+          "id": "call_00_A5rhkzYygy0W78IQgFBu3105",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "提交请假申请：年假 2026-12-28 一天，事由休息",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "apply_leave",
+        "confirm_ok": true,
+        "slots": {
+          "leave_type": "年假",
+          "start_date": "2026-12-28"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_s5JbBNzRSGbRNMdKh2Qm5666",
+          "type": "tool_call"
+        },
+        {
+          "name": "apply_leave",
+          "args": {
+            "uid": "1001",
+            "leave_type": "年假",
+            "start_date": "2026-12-28",
+            "end_date": "2026-12-28",
+            "reason": "休息"
+          },
+          "id": "call_00_wq3OU8jQb2HA80cBrkcE1280",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 2,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我想请假",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我请个假",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我要休年假",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "请假，下周五",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_vpYame4aXKj93WGaoF8f5308",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我想请两天病假",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_WG8ATBXdMeSzmxRzKEVd2506",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "帮我开个证明",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "开证明",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "我要请假，过几天再说哪天",
+        "uid": "1001",
+        "expect": "clarify"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "你好",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "今天天气怎么样？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "你是谁？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "谢谢你的帮助",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "差旅报销标准是什么？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "差旅报销标准是什么？"
+          },
+          "id": "call_00_zOOqQRSjFkbM2LOkFUbI1650",
+          "type": "tool_call"
+        },
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_01_PDTCU9TimX9KuJIQBw7g8958",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "公司的年假政策是怎样的？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "公司的年假政策是怎样的？"
+          },
+          "id": "call_00_9II1nBPVEgkA3o94iSnN3778",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "加班有加班费吗？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_ccFlbx0P4BMG92IQfEyb5017",
+          "type": "tool_call"
+        },
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "加班有加班费吗？"
+          },
+          "id": "call_01_Or9bhjgPPA1gwhtjILLN8445",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "试用期多久？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_fthFfwLywk5AQvTAXPkK9398",
+          "type": "tool_call"
+        },
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "试用期多久？"
+          },
+          "id": "call_01_lq4Q7irY1MYWgaBLTLVI4812",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "五险一金缴纳比例是多少？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_ObLnZ997aKRoHK4sxhR29107",
+          "type": "tool_call"
+        },
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "五险一金缴纳比例是多少？"
+          },
+          "id": "call_01_MUQUC6DVZHfWUUmyXbuF1063",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "离职流程是什么？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_d494c6qWe8I24zqRd8K45845",
+          "type": "tool_call"
+        },
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "离职流程是什么？"
+          },
+          "id": "call_01_MdHSnMFL0LfIMvEpqnNp7563",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "中秋节公司放几天假？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "中秋节公司放几天假？"
+          },
+          "id": "call_00_fp03LJtZ7wy4XpQIMYH01518",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "报销需要哪些发票？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "报销需要哪些发票？"
+          },
+          "id": "call_00_a3QIDdNOSzVPCsMg5a1D7186",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "给我讲个笑话",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "1+1 等于几？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "公司食堂在哪里？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_pmTZXqNSn6I2OMcHg6ib8611",
+          "type": "tool_call"
+        },
+        {
+          "name": "search_hr_policy",
+          "args": {
+            "query": "公司食堂在哪里？"
+          },
+          "id": "call_01_lsRHigmlwjHls9IdJTPW3628",
+          "type": "tool_call"
+        }
+      ],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
+    },
+    {
+      "case": {
+        "question": "附近有什么好吃的？",
+        "uid": "1001",
+        "expect": "none"
+      },
+      "tool_calls": [],
+      "rounds": 1,
+      "error": null,
+      "pass": true,
+      "failures": [],
+      "confirm_assisted": false
     }
   ],
+  "thresholds": {
+    "pass_rate": 0.9,
+    "false_trigger_rate": 0.1
+  },
   "ok": true
 }

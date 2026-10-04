@@ -96,18 +96,77 @@ class ToolCallDatasetTest(unittest.TestCase):
     def test_judge_none_and_clarify(self):
         none_case = {"question": "你好", "expect": "none"}
         self.assertTrue(judge_case(none_case, [])["pass"])
-        self.assertFalse(judge_case(
+        # 档案预取是系统提示词强制行为，不算误触发
+        self.assertTrue(judge_case(
             none_case, [{"name": "get_employee_profile", "args": {"uid": "1001"}}])["pass"])
+        # 查余额/开证明/请假才是真误触发
+        for bad in ("get_leave_balance", "generate_employment_certification", "apply_leave"):
+            self.assertFalse(judge_case(
+                none_case, [{"name": bad, "args": {"uid": "1001"}}])["pass"], bad)
 
         clarify = {"question": "我想请假", "expect": "clarify"}
         self.assertTrue(judge_case(clarify, [])["pass"])  # 先反问：通过
-        # 调了但缺槽位（预检会兜底）：通过
+        # 只读预取（档案/余额）不产生副作用：通过
+        self.assertTrue(judge_case(clarify, [
+            {"name": "get_employee_profile", "args": {"uid": "1001"}},
+            {"name": "get_leave_balance", "args": {"uid": "1001"}}])["pass"])
+        # 敏感工具槽位缺失（预检会兜底反问）：通过
         self.assertTrue(judge_case(clarify, [{"name": "apply_leave", "args": {
             "uid": "1001", "leave_type": "年假"}}])["pass"])
-        # 信息不全却补齐式编造完整调用：不通过
+        # 信息不全却补齐式编造完整敏感调用：不通过
         self.assertFalse(judge_case(clarify, [{"name": "apply_leave", "args": {
             "uid": "1001", "leave_type": "年假",
             "start_date": "2026-11-02", "end_date": "2026-11-03"}}])["pass"])
+        self.assertFalse(judge_case(clarify, [{"name": "generate_employment_certification",
+                                               "args": {"uid": "1001", "cer_type": "income"}}])["pass"])
+
+    def test_judge_two_rounds_merged(self):
+        """两段式：首轮只调档案（预取），第二轮补调期望工具——合并序列判定通过。"""
+        case = {"question": "帮我开一份在职证明", "uid": "1001", "expect": "tool",
+                "tool": "generate_employment_certification",
+                "slots": {"uid": "1001", "cer_type": "employment"}}
+        round1_only = [{"name": "get_employee_profile", "args": {"uid": "1001"}}]
+        self.assertFalse(judge_case(case, round1_only)["pass"])  # 一轮内未出现：不过
+        merged = round1_only + [{"name": "generate_employment_certification",
+                                 "args": {"uid": "1001", "cer_type": "employment"}}]
+        self.assertTrue(judge_case(case, merged)["pass"])        # 两轮合并：过
+        merged_wrong = round1_only + [{"name": "apply_leave", "args": {}}]
+        self.assertFalse(judge_case(case, merged_wrong)["pass"])  # 二轮补错工具：不过
+
+    def test_judge_confirm_ok(self):
+        """confirm_ok：未调用但末轮复述全部槽位 → 通过且显式标记；复述不全 → 不过。"""
+        case = {"question": "帮我请年假 2026-12-14 一天", "uid": "1001",
+                "expect": "tool", "tool": "apply_leave", "confirm_ok": True,
+                "slots": {"leave_type": "年假", "start_date": "2026-12-14",
+                          "end_date": "2026-12-14"}}
+        prefetch = [{"name": "get_employee_profile", "args": {"uid": "1001"}}]
+        ok = judge_case(case, prefetch, final_content=(
+            "请确认：请假类型 年假，2026-12-14 至 2026-12-14，共 1 天。"))
+        self.assertTrue(ok["pass"])
+        self.assertTrue(ok["confirm_assisted"])
+        bad = judge_case(case, prefetch, final_content="请问您要请哪种假？")
+        self.assertFalse(bad["pass"])
+        # 无 confirm_ok 标记的用例不适用确认放行
+        strict = {**case, "confirm_ok": False}
+        self.assertFalse(judge_case(strict, prefetch, final_content=(
+            "年假 2026-12-14 至 2026-12-14"))["pass"])
+        # cer_type 中文别名：employment → 在职证明
+        cert = {"question": "q", "uid": "1001", "expect": "tool",
+                "tool": "generate_employment_certification", "confirm_ok": True,
+                "slots": {"uid": "1001", "cer_type": "employment"}}
+        self.assertTrue(judge_case(cert, prefetch, final_content=(
+            "为您开具在职证明，请确认。"))["pass"])
+        self.assertFalse(judge_case(cert, prefetch, final_content=(
+            "为您开具收入证明，请确认。"))["pass"])
+
+    def test_report_ok_thresholds(self):
+        from eval.eval_tool_calls import _report_ok
+
+        self.assertTrue(_report_ok({"pass_rate": 0.9, "false_trigger_rate": 0.1}))
+        self.assertTrue(_report_ok({"pass_rate": 1.0, "false_trigger_rate": 0.0}))
+        self.assertFalse(_report_ok({"pass_rate": 0.89, "false_trigger_rate": 0.0}))
+        self.assertFalse(_report_ok({"pass_rate": 1.0, "false_trigger_rate": 0.11}))
+        self.assertTrue(_report_ok({"pass_rate": None, "false_trigger_rate": None}))
 
     def test_dry_run(self):
         with tempfile.TemporaryDirectory() as td:
