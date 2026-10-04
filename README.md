@@ -41,6 +41,8 @@ learnlanggraph
 - **HR 管理台（审批队列 + 安全看板）：** HR/ADMIN 登录后侧栏出现「管理台」入口——请假工单集中审批（表格行内批准/拒绝，与聊天内审批共用 `leave_requests.status` 单一事实源，两通道状态同步），安全看板聚合越权拦截/审批通过拒绝/Top 越权动作（复用 telemetry auth_events 口径）。后端对应 `GET/POST /api/admin/*` 三个端点（仅 HR/ADMIN，匿名/员工 403）。
 - **我的工单（员工视图）：** 任何已登录员工侧栏出现「我的工单」入口，查看自己全部请假申请与实时审批状态（pending 黄 / approved 绿 / rejected 红徽章，与管理台、聊天审批同源）。后端对应 `GET /api/my/leave-requests?status=`（uid 从 JWT 取，匿名 403，杜绝跨员工越权查询），闭环「聊天发起 → HR 审批 → 员工自查」体验。
 - **回答引用溯源：** 政策类回答句末标注来源编号 `[1][2]`，气泡下方附引用卡片（章 > 节 + 内容摘要，点击展开）。链路：检索文本头部以 `来源 [n]: 章 > 节` 编号 → SSE 新增 `sources` 事件（紧随 `tool_result` 透出结构化来源，additive 扩展，旧客户端忽略不炸）→ 前端正文 `[n]` 高亮 + 引用卡片渲染。
+- **多轮追问改写（Query Rewriting）：** 「差旅住宿标准多少？」→「那病假呢？」这类追问直接检索必败。human_review（所有 tool_calls 必经关卡）在工具执行前用启发式判定追问（强承接词/弱标记+短句/极短无主题词，首轮与自足问题零成本跳过），命中时复用扩写 LLM 结合对话历史改写成自足问题——**只改工具调用的 query 参数**（同 id AIMessage 替换），用户消息原文与前端展示不受影响，sources 溯源基于改写后的检索正常透出；改写失败回退原查询不阻断。
+- **拒答校准评测：** `eval/refusal_dataset.py` 42 题「手册不存在/不该答」问题（他人隐私 10 + 竞品外部 8 + 制度外事项 10 + 闲聊 8 + 违规诱导 6），`eval/eval_refusal.py` 判定规则优先（拒答信号词 + 手机号/身份证格式与无信号具体数字硬拦），规则不确定走 LLM judge 兜底；阈值制门禁 refusal_accuracy≥0.85，CI 与工具调用评测同 job 并列步骤（secrets 缺失跳过保持绿，`--dry-run` 零成本自检）。
 - **账号密码登录（SSO 中间态）：** `POST /auth/login` 账密登录（bcrypt 校验，统一初始密码见 9.2 演示账号表），角色从员工表服务端读取签进 JWT——客户端不再自选角色；失败统一模糊文案 + 连续 5 次失败锁定 10 分钟。接企业 SSO 时切 RS256+JWKS，账密与 dev 签发端点一并下线。
 
 ### 4. 重难点与风险
@@ -167,6 +169,11 @@ python -m unittest test.test_fact_rules -v          # 纯规则单测：不加�
   工具选择准确率 / 槽位完整率 / 误触发率 / 反问率（`--dry-run` 零成本自检结构；
   支持「先查档案再办事」两段式多轮 harness 与敏感操作确认追问判定；
   阈值制门禁：pass_rate≥0.90 且 false_trigger_rate≤0.10，未达标 exit 1）。
+  另有拒答校准评测集 `eval/refusal_dataset.py` `2026.10-v1`（42 题手册外/不该答问题，
+  与 741 检索基线互不并入），由 `eval/eval_refusal.py` 跑真实 LLM 统计
+  拒答准确率（阈值 ≥0.85），CI 与工具调用评测同 job 并列。
+- **追问改写**：`agent/query_rewrite.py` 启发式判定 + 扩写 LLM 改写，接入
+  human_review 节点（仅改 search_hr_policy 的 query 参数，不动用户消息）。
 - **槽位补全（Slot Filling）**：`tools/slot_filling.py` 纯函数登记表 + 预检，接入
   human_review 节点（所有 tool_calls 必经关卡，图拓扑零改动）——必填槽位缺失时
   **不执行工具、不进审批**，回 ToolMessage 让 chatbot 反问补齐，多轮对话历史天然合并。

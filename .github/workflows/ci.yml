@@ -7,7 +7,8 @@
 #     eval-nightly：完整 741 题检索质量门禁（下载 BGE 权重，不调用 LLM，
 #     零 token 成本），基线回归即红
 #     eval-tool-calls：工具调用准确率评测（70 题真实 LLM，耗 token；
-#     secrets.DEEPSEEK_API_KEY 未配置时跳过保持绿）
+#     secrets.DEEPSEEK_API_KEY 未配置时跳过保持绿）+ 拒答校准评测
+#     （42 题真实 LLM，阈值 refusal_accuracy≥0.85，同 job 并列步骤）
 #
 # marker 门禁约定（test/conftest.py + pyproject.toml）：
 #   needs_models / needs_pg / needs_llm 默认跳过，分别由
@@ -156,16 +157,23 @@ jobs:
             --index-url https://download.pytorch.org/whl/cpu "torch==2.13.0"
           pip install --no-cache-dir -e .[dev]
       - name: 数据集结构自检（dry-run，无密钥也执行，证明数据集契约健康）
-        run: python -m eval.eval_tool_calls --dry-run
+        run: |
+          python -m eval.eval_tool_calls --dry-run
+          python -m eval.eval_refusal --dry-run
       - name: 工具调用准确率评测（70 题，真实 LLM）
         if: env.DEEPSEEK_API_KEY != ''
         run: python -m eval.eval_tool_calls
+      - name: 拒答校准评测（42 题，真实 LLM，阈值 refusal_accuracy≥0.85）
+        if: env.DEEPSEEK_API_KEY != ''
+        run: python -m eval.eval_refusal
       - name: 上传评测报告
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tool-call-report
-          path: eval/tool_call_report.json
+          path: |
+            eval/tool_call_report.json
+            eval/refusal_report.json
           retention-days: 30
 
   # ---- 依赖漏洞扫描：pip 钉版依赖为通报制（continue-on-error），npm 高危阻塞 ----
