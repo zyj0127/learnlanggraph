@@ -148,7 +148,10 @@ def chatbot_node(state: AgentState) -> dict:
                     f"起止日期（YYYY-MM-DD）；开证明需要证明类型（在职/收入）。"
                     f"用户没提供时不要编造参数，先用自然语言追问收集（可多轮），"
                     f"结合对话历史合并已知信息，只追问仍缺失的部分；"
-                    f"参数齐全后再一次性发起工具调用。")
+                    f"参数齐全后再一次性发起工具调用。\n"
+                    f"回答政策类问题时，必须在引用事实的句末标注来源编号（如"
+                    f"「住宿标准为 500 元/晚[1]」），编号与检索结果的"
+                    f"「来源 [n]」一一对应；未标注来源的数字视为不可信。")
         messages = [system_msg] + messages
 
     response = get_llm_with_tools().invoke(messages)

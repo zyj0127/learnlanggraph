@@ -141,6 +141,9 @@ def _event_stream(graph_input, config: dict, meta: dict = None, identity=None):
                 "thread_id": event["thread_id"],
                 "detail": detail or "检测到敏感操作（开具证明），请调用 /chat/resume 提交人工审批决定",
             })
+        elif event_type == "sources":
+            # 引用溯源（additive 扩展）：结构化来源列表透传，旧客户端忽略即可
+            yield _sse({"type": "sources", "sources": event["sources"]})
         elif event_type == "done":
             yield _sse({"type": "done"})
 

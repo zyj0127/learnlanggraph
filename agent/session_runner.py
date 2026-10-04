@@ -19,6 +19,9 @@ log_turn，streamlit 没有）。本模块把它收敛为唯一实现：
       工具返回结果（同上）
 - {"type": "approval_required", "thread_id": str, "detail": str, "interrupt_value": Any}
       Graph 挂起在人工审批节点
+- {"type": "sources", "sources": [{id, chapter, section, snippet}, ...]}
+      政策引用来源（additive 扩展：紧随 search_hr_policy 的 tool_result 之后
+      透出；旧客户端忽略未知事件类型即可，契约向后兼容）
 - {"type": "done", "usage": dict, "latency_s": float}
       本轮结束，附带用量统计与耗时
 
@@ -142,6 +145,15 @@ def _stream_turn_impl(app, graph_input, config: dict,
                 yield {"type": "token", "content": msg.content, "msg_id": getattr(msg, "id", None)}
             elif isinstance(msg, ToolMessage):
                 yield {"type": "tool_result", "name": msg.name or "tool", "content": str(msg.content)}
+                # 引用溯源（additive）：政策检索结果随 tool_result 立即解析透出
+                # sources 事件（文本即事实源，不依赖 contextvars 跨 langchain
+                # 调用边界传播）；旧客户端忽略未知事件类型即可
+                if (msg.name or "") == "search_hr_policy":
+                    from agent.citations import parse_sources_from_text
+
+                    sources = parse_sources_from_text(str(msg.content))
+                    if sources:
+                        yield {"type": "sources", "sources": sources}
 
         # 兜底：messages 流不直接透出 interrupt，改查图状态
         state = app.get_state(config)

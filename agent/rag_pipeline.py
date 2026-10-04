@@ -317,18 +317,13 @@ def search_hr_policy(query: str) -> str:
     # 按模型打分从高到低排序
     scored_docs.sort(key=lambda x: x[1], reverse=True)
 
-    # 步骤五：截取真正的 Top-3 并组装返回文本
+    # 步骤五：截取真正的 Top-3，分配稳定引用编号 [1][2][3] 并组装返回文本
+    # （编号即重排名次，当次调用内唯一；session_runner 从 ToolMessage 文本
+    # 解析回结构化来源（parse_sources_from_text），透出 sources 事件）
+    from agent.citations import format_sources_text, number_sources
+
     top_3_docs = [doc for doc, _ in scored_docs[:3]]
-
-    context_parts = []
-    for i, doc in enumerate(top_3_docs, 1):
-        chapter = doc.metadata.get("Chapter", "未知章节")
-        section = doc.metadata.get("Section", "未知段落")
-        context_parts.append(f"来源 {i}: {chapter} > {section} \n {doc.page_content}")
-
-    merged_context = "\n\n".join(context_parts)
-
-    return f"「知识库检索结果」\n{merged_context}"
+    return format_sources_text(number_sources(top_3_docs))
 
 
 # ---- 历史兼容：模块级惰性属性（PEP 562）----
