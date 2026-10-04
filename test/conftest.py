@@ -47,6 +47,7 @@ if not (_HAS_FASTAPI and _HAS_LANGGRAPH):
     collect_ignore.append("test_api.py")
     collect_ignore.append("test_admin_queue.py")
     collect_ignore.append("test_my_requests.py")
+    collect_ignore.append("test_login.py")
 
 # ---------------------------------------------------------------------------
 # marker 门禁：默认跳过，CI 有对应资源时经环境变量开启

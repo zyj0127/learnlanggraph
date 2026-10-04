@@ -3,6 +3,8 @@
 
 接口：
 - GET  /health         健康检查
+- POST /auth/login     账号密码登录（uid+password → bcrypt 校验 → 角色取员工表 → 签 JWT；
+                       连续失败 5 次锁 10 分钟；SSO 中间态，堵「客户端自选角色」口子）
 - POST /auth/token     开发用 token 签发（uid+role 换 JWT；仅 AUTH_DEV_MODE=true 时启用，
                        生产关闭，token 由企业 SSO 签发——见 auth/jwt_tokens.py 扩展点）
 - POST /chat/stream    SSE 流式问答：token 级推送；遇到敏感操作挂起时
@@ -39,6 +41,7 @@ from auth.guard import (
     APPROVER_ROLE_DENIAL,
     audit_approval,
     audit_leave_request,
+    audit_login,
     check_approval_allowed,
     extract_applicant_uid,
 )
@@ -68,6 +71,13 @@ class TokenRequest(BaseModel):
     role: str = Field(description="角色：employee / hr / admin")
     name: str = Field(default="", description="姓名（可选）")
     department: str = Field(default="", description="部门（可选）")
+
+
+class LoginRequest(BaseModel):
+    """账号密码登录请求。模型不含 role 字段：角色一律由服务端按员工表读取，
+    客户端额外塞进来的 role 字段被 pydantic 默认忽略（不可伪造）。"""
+    uid: str = Field(description="员工账号 uid")
+    password: str = Field(description="登录密码")
 
 
 def get_request_identity(request: Request) -> Optional[Identity]:
@@ -209,6 +219,106 @@ def issue_token(req: TokenRequest):
         "access_token": token,
         "token_type": "bearer",
         "expires_in": settings.jwt_expire_minutes * 60,
+    }
+
+
+# ---- 账号密码登录（SSO 中间态）----
+# 防爆破：同一 uid 连续失败 _LOGIN_MAX_FAILS 次锁定 _LOGIN_LOCK_SECONDS 秒。
+# 内存计数（进程内字典）：多副本部署/重启即失效，生产环境应替换为 Redis
+# 计数器（INCR + EXPIRE）或网关层限流，此处为演示级实现。
+LOGIN_FAIL_TEXT = "账号或密码错误"          # 统一模糊文案：不区分用户不存在/密码错误
+_LOGIN_MAX_FAILS = 5
+_LOGIN_LOCK_SECONDS = 600                   # 锁定 10 分钟
+_login_fails: dict[str, tuple[int, float]] = {}  # uid -> (连续失败次数, 锁定截止时间戳)
+
+
+def _login_locked_until(uid: str) -> float:
+    """uid 当前锁定截止时间戳（未锁定返回 0）；到期自动清零计数。"""
+    import time
+
+    fails, until = _login_fails.get(uid, (0, 0.0))
+    if until > time.time():
+        return until
+    if until and until <= time.time():
+        _login_fails.pop(uid, None)         # 锁定期满：清零重来
+    return 0.0
+
+
+def _record_login_fail(uid: str) -> None:
+    import time
+
+    fails, _ = _login_fails.get(uid, (0, 0.0))
+    fails += 1
+    until = time.time() + _LOGIN_LOCK_SECONDS if fails >= _LOGIN_MAX_FAILS else 0.0
+    _login_fails[uid] = (fails, until)
+
+
+@app.post("/auth/login")
+def login(req: LoginRequest):
+    """账号密码登录：uid + password → bcrypt 校验 → 角色从员工表读 → 签 JWT。
+
+    安全口径：
+    - 角色唯一真源是 employees.role，请求体里的任何 role 字段一律忽略；
+    - 失败统一 401 模糊文案（不区分用户不存在/密码错误），并对不存在的 uid
+      执行一次哑校验（bcrypt.checkpw 常量哈希），抹平计时侧信道；
+    - 同一 uid 连续失败 5 次锁定 10 分钟（423），锁定中即使密码正确也拒绝；
+    - 成功/失败/锁定全部留痕（audit_login，不落密码）。
+    """
+    settings = get_settings()
+    if not settings.auth_enabled:
+        raise HTTPException(status_code=404, detail="Not Found")
+    if not settings.jwt_secret:
+        raise HTTPException(status_code=500, detail="服务端认证未配置（JWT_SECRET 缺失）")
+
+    import time
+
+    import bcrypt
+
+    from database.mock_db import DEMO_PASSWORD_HASH
+    from database.repository import run_query
+
+    uid = req.uid.strip()
+    locked_until = _login_locked_until(uid)
+    if locked_until:
+        audit_login(uid, "locked", detail=f"locked_until={int(locked_until)}")
+        raise HTTPException(
+            status_code=423,
+            detail=f"失败次数过多，账号已锁定，请 {int((locked_until - time.time()) // 60) + 1} 分钟后再试",
+        )
+
+    rows = run_query(
+        sql_pg="select uid, name, role, password_hash from employees where uid=:0",
+        sql_sqlite="select uid, name, role, password_hash from employees where uid=?",
+        params=(uid,),
+    )
+    row = rows[0] if rows else None
+    # 用户不存在时用常量哈希做哑校验，避免「是否存在」可由响应时长区分
+    candidate = (row or {}).get("password_hash") or DEMO_PASSWORD_HASH
+    ok = bcrypt.checkpw(req.password.encode("utf-8"), candidate.encode("utf-8"))
+    if row is None or not ok:
+        _record_login_fail(uid)
+        audit_login(uid, "failed")
+        raise HTTPException(status_code=401, detail=LOGIN_FAIL_TEXT)
+
+    _login_fails.pop(uid, None)  # 登录成功：清零失败计数
+    try:
+        role = Role(str(row.get("role") or "employee"))
+    except ValueError:
+        role = Role.EMPLOYEE  # 脏数据安全兜底：未知角色按最低员工权限
+    identity = Identity(uid=row["uid"], name=row["name"] or "", role=role)
+    token = encode_token(
+        identity,
+        secret=settings.jwt_secret,
+        algorithm=settings.jwt_algorithm,
+        expire_minutes=settings.jwt_expire_minutes,
+    )
+    audit_login(uid, "success", detail=f"role={role.value}")
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "expires_in": settings.jwt_expire_minutes * 60,
+        "identity": {"uid": identity.uid, "name": identity.name,
+                     "role": identity.role.value},
     }
 
 

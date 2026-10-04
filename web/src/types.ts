@@ -23,6 +23,17 @@ export interface TokenResponse {
   expires_in: number
 }
 
+// POST /auth/login 请求体（账号密码登录；角色由服务端按员工表返回，不可伪造）
+export interface LoginRequest {
+  uid: string
+  password: string
+}
+
+// POST /auth/login 响应（identity 为服务端权威身份，前端仅展示用）
+export interface LoginResponse extends TokenResponse {
+  identity: Identity
+}
+
 // POST /chat/stream 请求体
 export interface ChatRequest {
   uid: string

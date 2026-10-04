@@ -4,6 +4,8 @@ import type {
   ChatRequest,
   LeaveDecisionResponse,
   LeaveRequestListResponse,
+  LoginRequest,
+  LoginResponse,
   ResumeRequest,
   SecuritySummary,
   SseEvent,
@@ -48,6 +50,17 @@ function authHeaders(token: string | null): Record<string, string> {
 
 export async function issueToken(req: TokenRequest): Promise<TokenResponse> {
   const resp = await fetch(`${API_BASE}/auth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(req),
+  })
+  if (!resp.ok) throw await parseError(resp)
+  return resp.json()
+}
+
+/** 账号密码登录：uid+password → JWT + 服务端权威身份（角色不可伪造） */
+export async function login(req: LoginRequest): Promise<LoginResponse> {
+  const resp = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),

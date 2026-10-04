@@ -80,13 +80,15 @@ body {
 
 .field { display: block; margin-bottom: 10px; }
 .field span { display: block; font-size: 12px; color: var(--text-sub); margin-bottom: 4px; }
-.field select {
+.field select,
+.field input {
   width: 100%;
   padding: 8px;
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 14px;
   background: #fff;
+  box-sizing: border-box;
 }
 
 .logged-in { display: flex; flex-direction: column; gap: 8px; }

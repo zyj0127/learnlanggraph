@@ -2,29 +2,32 @@
 import { ref } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import { useChatStore } from '../stores/chat'
-import type { Role } from '../types'
 
 const auth = useAuthStore()
 const chat = useChatStore()
 
-const uidOptions: Record<string, string> = {
-  '1001': '1001 · 张三（P5 北京）',
-  '1002': '1002 · 李四（P4 成都）',
-  '1003': '1003 · 王五（P7 上海）',
-  '1004': '1004 · 赵六（P3 深圳）',
-}
+// 演示账号（统一初始密码 Hr@2026；角色由服务端按员工表返回，前端不可选）
+const demoAccounts = [
+  { uid: '1001', label: '1001 · 张三（员工）' },
+  { uid: '8001', label: '8001 · 林敏（HR）' },
+  { uid: '9001', label: '9001 · 安管理员（管理员）' },
+]
 
 const loginUid = ref('1001')
-const loginRole = ref<Exclude<Role, 'anonymous'>>('employee')
+const loginPassword = ref('')
 const loginError = ref('')
 const loggingIn = ref(false)
 
 async function doLogin() {
   loginError.value = ''
+  if (!loginUid.value.trim() || !loginPassword.value) {
+    loginError.value = '请输入账号与密码'
+    return
+  }
   loggingIn.value = true
   try {
-    const name = uidOptions[loginUid.value].split('·')[1].trim().split('（')[0]
-    await auth.login(loginUid.value, loginRole.value, name, chat.mock)
+    await auth.login(loginUid.value.trim(), loginPassword.value, chat.mock)
+    loginPassword.value = ''
     chat.resetConversation()
   } catch (e) {
     loginError.value = e instanceof Error ? e.message : String(e)
@@ -52,24 +55,34 @@ function doLogout() {
       <p class="anon-hint">未登录（匿名）：仅可咨询政策类问题，个人数据功能需登录</p>
       <label class="field">
         <span>员工账号</span>
-        <select v-model="loginUid">
-          <option v-for="(label, uid) in uidOptions" :key="uid" :value="uid">
-            {{ label }}
+        <input
+          v-model="loginUid"
+          list="demo-uids"
+          placeholder="请输入账号 uid"
+          autocomplete="username"
+          @keydown.enter="doLogin"
+        />
+        <datalist id="demo-uids">
+          <option v-for="a in demoAccounts" :key="a.uid" :value="a.uid">
+            {{ a.label }}
           </option>
-        </select>
+        </datalist>
       </label>
       <label class="field">
-        <span>角色</span>
-        <select v-model="loginRole">
-          <option value="employee">员工</option>
-          <option value="hr">HR 专员</option>
-          <option value="admin">管理员</option>
-        </select>
+        <span>密码</span>
+        <input
+          v-model="loginPassword"
+          type="password"
+          placeholder="演示账号统一密码 Hr@2026"
+          autocomplete="current-password"
+          @keydown.enter="doLogin"
+        />
       </label>
       <p v-if="loginError" class="error-text">{{ loginError }}</p>
       <button class="btn btn-primary btn-block" :disabled="loggingIn" @click="doLogin">
         {{ loggingIn ? '登录中…' : '🔑 登录' }}
       </button>
+      <p class="anon-hint">演示账号：1001 员工 / 8001 HR / 9001 管理员，密码 Hr@2026</p>
     </template>
   </div>
 </template>

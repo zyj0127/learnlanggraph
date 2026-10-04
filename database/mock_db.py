@@ -48,6 +48,32 @@ _SALARY_RANGE = {
 
 COMPANY_SIZE = 80
 
+# ---- 账号密码登录（SSO 中间态）：演示账号口令与角色 ----
+# 统一初始密码 Hr@2026 的 bcrypt(cost=12) 哈希（一次计算固化为常量：
+# 逐账号现算会让 init_db 慢约 20 秒，且演示环境共用同一口令，哈希可复用；
+# 生产环境必须为每个账号单独设置口令，此处仅演示种子）。
+# 明文口令只出现在 README 演示账号表，不落任何代码/数据库。
+DEMO_PASSWORD_HASH = "$2b$12$Y4GnQiYtM4Kh4EmNLd8GB.O8if2ppESpWFwnSKFwJRRQHFH2LIA/6"
+
+# 职能演示账号（uid/姓名/职级/城市/工龄/月薪）：在 80 人花名册之外追加，
+# 角色分配确定性——8001/8002 为 HR、9001 为管理员，其余一律 employee。
+# 追加账号不改变 build_roster() 生成的 80 人数据（eval 评测集契约不动）。
+_FUNCTIONAL_ACCOUNTS = [
+    ('8001', '林敏', 'P6', '北京', 6, 30000),
+    ('8002', '周舟', 'P5', '上海', 3, 24000),
+    ('9001', '安管理员', 'P8', '北京', 8, 60000),
+]
+_FUNCTIONAL_BALANCES = [('8001', 15, 15), ('8002', 15, 15), ('9001', 20, 15)]
+_FUNCTIONAL_ROLES = {'8001': 'hr', '8002': 'hr', '9001': 'admin'}
+
+# employees 表预期总行数（seed 幂等判据）：花名册 + 职能账号
+EXPECTED_EMPLOYEE_ROWS = COMPANY_SIZE + len(_FUNCTIONAL_ACCOUNTS)
+
+
+def role_of(uid: str) -> str:
+    """账号角色（唯一服务端真源）：职能账号按映射，其余一律 employee。"""
+    return _FUNCTIONAL_ROLES.get(uid, 'employee')
+
 
 def build_roster() -> Tuple[List[tuple], List[tuple]]:
     """确定性生成 80 名员工花名册（前 4 名固定，1005-1080 由种子生成）。
@@ -78,18 +104,50 @@ def build_roster() -> Tuple[List[tuple], List[tuple]]:
     return employees, balances
 
 
+def _ensure_auth_columns(conn: sqlite3.Connection) -> None:
+    """已有库的自愈升级：employees 缺 password_hash/role 列时 ALTER 补列并回填。
+
+    - 存量员工：role 回填 'employee'（职能账号按映射），password_hash 回填统一
+      演示口令哈希（DEMO_PASSWORD_HASH），不存明文。
+    - 职能账号（8001/8002/9001）在旧库中不存在：INSERT OR IGNORE 补齐（含假期余额）。
+    幂等：列已存在时直接返回。
+    """
+    cols = {row[1] for row in conn.execute('PRAGMA table_info(employees)')}
+    if 'password_hash' in cols and 'role' in cols:
+        return
+    logger.warning('employees 表缺少认证列，执行原位升级（ALTER TABLE + 回填）')
+    if 'password_hash' not in cols:
+        conn.execute("ALTER TABLE employees ADD COLUMN password_hash TEXT")
+    if 'role' not in cols:
+        conn.execute("ALTER TABLE employees ADD COLUMN role TEXT NOT NULL DEFAULT 'employee'")
+    conn.execute('UPDATE employees SET password_hash=? WHERE password_hash IS NULL',
+                 (DEMO_PASSWORD_HASH,))
+    for uid, role in _FUNCTIONAL_ROLES.items():
+        conn.execute('UPDATE employees SET role=? WHERE uid=?', (role, uid))
+    for acc in _FUNCTIONAL_ACCOUNTS:
+        conn.execute(
+            'INSERT OR IGNORE INTO employees VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            (*acc, DEMO_PASSWORD_HASH, role_of(acc[0])),
+        )
+    for bal in _FUNCTIONAL_BALANCES:
+        conn.execute('INSERT OR IGNORE INTO leave_balances VALUES (?, ?, ?)', bal)
+    conn.commit()
+
+
 def get_connection(db_path: Path = DB_PATH) -> sqlite3.Connection:
     """业务运行时连接函数，仅连接并开启外键。
 
     全新克隆/容器首启时库文件不存在（运行时产物不入库），自动初始化并
     播种 80 人花名册（build_roster 固定种子，结果幂等），避免手工步骤。
-    仅在文件缺失时触发，已有库绝不重建（init_db 会清空重插）。
+    仅在文件缺失时触发，已有库绝不重建（init_db 会清空重插）；
+    已有旧库缺认证列时原位升级（_ensure_auth_columns）。
     """
     if not db_path.exists():
         logger.warning('实体数据库不存在，自动初始化并播种：%s', db_path)
         init_db(db_path)
     conn = sqlite3.connect(str(db_path),check_same_thread=False)
     conn.execute('PRAGMA foreign_keys=ON')
+    _ensure_auth_columns(conn)
     return conn
 
 
@@ -103,7 +161,7 @@ def init_db(db_path: Path = DB_PATH) -> sqlite3.Connection:
     conn.execute('PRAGMA foreign_keys=ON')
     cursor = conn.cursor()
 
-    # 1. 创建 employees 表（主表）
+    # 1. 创建 employees 表（主表；password_hash/role 为账号密码登录扩展列）
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS employees (
             uid TEXT PRIMARY KEY,
@@ -111,9 +169,15 @@ def init_db(db_path: Path = DB_PATH) -> sqlite3.Connection:
             level TEXT,
             city TEXT,
             tenure INTEGER,
-            salary INTEGER
+            salary INTEGER,
+            password_hash TEXT,
+            role TEXT NOT NULL DEFAULT 'employee'
         )
     ''')
+
+    # 1.1 旧库原位升级：已有 employees 表缺认证列时先 ALTER 补齐
+    # （CREATE TABLE IF NOT EXISTS 不会改已有表的 schema；回填在下方重插时完成）
+    _ensure_auth_columns(conn)
 
     # 2. 创建 leave_balances 表（子表，外键依赖 employees）
     cursor.execute('''
@@ -148,10 +212,19 @@ def init_db(db_path: Path = DB_PATH) -> sqlite3.Connection:
     cursor.execute('DELETE FROM leave_balances')
     cursor.execute('DELETE FROM employees')
 
-    # 4. 插入员工测试数据（80 人花名册：前 4 名固定，其余由固定种子生成）
+    # 4. 插入员工测试数据（80 人花名册：前 4 名固定，其余由固定种子生成；
+    #    追加 3 个职能演示账号 8001/8002=hr、9001=admin；统一初始密码哈希）
     test_employees, test_balances = build_roster()
-    cursor.executemany('INSERT INTO employees VALUES (?, ?, ?, ?, ?, ?)', test_employees)
-    cursor.executemany('INSERT INTO leave_balances VALUES (?, ?, ?)', test_balances)
+    rows = [
+        (*e, DEMO_PASSWORD_HASH, role_of(e[0]))
+        for e in (*test_employees, *_FUNCTIONAL_ACCOUNTS)
+    ]
+    cursor.executemany(
+        'INSERT INTO employees VALUES (?, ?, ?, ?, ?, ?, ?, ?)', rows)
+    cursor.executemany(
+        'INSERT INTO leave_balances VALUES (?, ?, ?)',
+        [*test_balances, *_FUNCTIONAL_BALANCES],
+    )
 
     # 4.1 预置两条历史请假记录（approved / rejected 各一，演示与联调用）
     cursor.executemany(

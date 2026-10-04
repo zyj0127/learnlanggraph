@@ -4,7 +4,8 @@
 数据真源仍是 database/mock_db.py 的 build_roster()（固定种子 42），
 与 SQLite 初始化、评测集（eval/dataset.py）严格同源。
 
-幂等：以「employees 表行数 == COMPANY_SIZE」为已灌入判据；--force 可清空重灌。
+幂等：以「employees 表行数 == EXPECTED_EMPLOYEE_ROWS（花名册 80 + 职能账号 3）」
+为已灌入判据；--force 可清空重灌。
 
 用法：
     python -m database.seed           # 幂等灌入
@@ -12,25 +13,34 @@
 """
 import sys
 
-from database.mock_db import COMPANY_SIZE, build_roster
+from database.mock_db import (
+    DEMO_PASSWORD_HASH,
+    EXPECTED_EMPLOYEE_ROWS,
+    _FUNCTIONAL_ACCOUNTS,
+    _FUNCTIONAL_BALANCES,
+    build_roster,
+    role_of,
+)
 from logging_config import get_logger
 
 logger = get_logger(__name__)
 
 
 def seed(force: bool = False) -> None:
-    """把 80 人花名册写入 PostgreSQL（幂等）。"""
+    """把 80 人花名册 + 3 个职能账号写入 PostgreSQL（幂等）。"""
     from sqlalchemy import text  # 延迟导入：无 pg 环境不触达
 
     from database.session import get_engine
 
     employees, balances = build_roster()
+    all_employees = [*employees, *_FUNCTIONAL_ACCOUNTS]
+    all_balances = [*balances, *_FUNCTIONAL_BALANCES]
     engine = get_engine()
 
     with engine.begin() as conn:
         count = conn.execute(text("SELECT count(*) FROM employees")).scalar()
-        if count == COMPANY_SIZE and not force:
-            logger.info("employees 已有 %d 行，与花名册规模一致，跳过 seed", count)
+        if count == EXPECTED_EMPLOYEE_ROWS and not force:
+            logger.info("employees 已有 %d 行，与预期规模一致，跳过 seed", count)
             return
 
         logger.info("开始灌入花名册（force=%s，现有 %d 行）", force, count)
@@ -39,14 +49,17 @@ def seed(force: bool = False) -> None:
         conn.execute(text("DELETE FROM leave_balances"))
         conn.execute(text("DELETE FROM employees"))
         conn.execute(
-            text("INSERT INTO employees (uid,name,level,city,tenure,salary) "
-                 "VALUES (:uid,:name,:level,:city,:tenure,:salary)"),
-            [dict(zip(("uid", "name", "level", "city", "tenure", "salary"), e)) for e in employees],
+            text("INSERT INTO employees (uid,name,level,city,tenure,salary,"
+                 "password_hash,role) "
+                 "VALUES (:uid,:name,:level,:city,:tenure,:salary,:ph,:role)"),
+            [dict(zip(("uid", "name", "level", "city", "tenure", "salary"), e),
+                  ph=DEMO_PASSWORD_HASH, role=role_of(e[0]))
+             for e in all_employees],
         )
         conn.execute(
             text("INSERT INTO leave_balances (uid,annual_leave_remaining,sick_leave_remaining) "
                  "VALUES (:uid,:annual,:sick)"),
-            [dict(zip(("uid", "annual", "sick"), b)) for b in balances],
+            [dict(zip(("uid", "annual", "sick"), b)) for b in all_balances],
         )
         # 预置两条历史请假记录（与 mock_db.init_db 同源）
         conn.execute(

@@ -40,6 +40,7 @@ learnlanggraph
 - **办事写操作（请假申请）：** `apply_leave(uid, leave_type, start_date, end_date, reason)` 把系统从问答机器人升级为办事机器人——员工发起年假/病假/事假申请，经人工审批（复用开证明同一 interrupt 拓扑与审批卡片）后生效：年假余额自动校验（不足不进入审批）与扣减，申请单全状态（pending/approved/rejected）落 `leave_requests` 表留痕。
 - **HR 管理台（审批队列 + 安全看板）：** HR/ADMIN 登录后侧栏出现「管理台」入口——请假工单集中审批（表格行内批准/拒绝，与聊天内审批共用 `leave_requests.status` 单一事实源，两通道状态同步），安全看板聚合越权拦截/审批通过拒绝/Top 越权动作（复用 telemetry auth_events 口径）。后端对应 `GET/POST /api/admin/*` 三个端点（仅 HR/ADMIN，匿名/员工 403）。
 - **我的工单（员工视图）：** 任何已登录员工侧栏出现「我的工单」入口，查看自己全部请假申请与实时审批状态（pending 黄 / approved 绿 / rejected 红徽章，与管理台、聊天审批同源）。后端对应 `GET /api/my/leave-requests?status=`（uid 从 JWT 取，匿名 403，杜绝跨员工越权查询），闭环「聊天发起 → HR 审批 → 员工自查」体验。
+- **账号密码登录（SSO 中间态）：** `POST /auth/login` 账密登录（bcrypt 校验，统一初始密码见 9.2 演示账号表），角色从员工表服务端读取签进 JWT——客户端不再自选角色；失败统一模糊文案 + 连续 5 次失败锁定 10 分钟。接企业 SSO 时切 RS256+JWKS，账密与 dev 签发端点一并下线。
 
 ### 4. 重难点与风险
 
@@ -328,7 +329,29 @@ curl http://localhost:8080/api/health      # 经 nginx 反代
 （不抛异常、不打断 Graph），并记审计计数器与 `auth_events` 埋点各一笔；
 `python -m telemetry` 周报的「安全与审计」小节已聚合授权事件（按类型/角色/时间窗计数，含越权 Top 动作）。
 
-#### 9.2 获取 token（开发模式）
+#### 9.2 账号密码登录（SSO 中间态）
+
+正式登录入口是 `POST /auth/login`：uid + 密码 → bcrypt 校验 → **角色从员工表
+（`employees.role`）读取**签进 JWT——客户端不再声明角色，堵死「登录时自选角色」
+的越权口子。失败统一 401 模糊文案「账号或密码错误」（不区分用户不存在/密码错误，
+并对不存在的 uid 做哑 bcrypt 校验抹平计时侧信道）；同一 uid 连续失败 5 次锁定
+10 分钟（内存计数，生产应换 Redis/网关限流）。
+
+```bash
+curl -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"uid": "1001", "password": "Hr@2026"}'
+```
+
+**演示账号**（统一初始密码 `Hr@2026`，数据库只存 bcrypt 哈希）：
+
+| 账号 uid | 姓名 | 角色 |
+|---------|------|------|
+| 1001 | 张三 | 员工（其余 1002–1080 同） |
+| 8001 / 8002 | 林敏 / 周舟 | HR |
+| 9001 | 安管理员 | 管理员 |
+
+#### 9.3 获取 token（开发模式，备选）
 
 ```bash
 # .env 中设置 JWT_SECRET=... 与 AUTH_DEV_MODE=true（生产必须关闭本端点）
@@ -337,7 +360,7 @@ curl -X POST http://localhost:8000/auth/token \
   -d '{"uid": "1001", "role": "employee"}'
 ```
 
-#### 9.3 调用方式
+#### 9.4 调用方式
 
 ```bash
 curl -N -X POST http://localhost:8000/chat/stream \
@@ -350,15 +373,15 @@ curl -N -X POST http://localhost:8000/chat/stream \
 - token 无效/过期：401；`/chat/resume` 审批：非 HR/ADMIN 一律 403，审批人与申请人同 uid（自审自批）同样 403 并留痕；升级前挂起的旧会话负载无申请人 uid 时按安全默认处理（HR 拒绝、ADMIN 放行）。
 - SSE 事件契约不变（`token` / `approval_required` / `done`）。
 
-#### 9.4 接企业 SSO（扩展点）
+#### 9.5 接企业 SSO（扩展点）
 
 当前为 HS256 对称签名（`JWT_SECRET`）。接企业 SSO/OIDC 时：将
 `JWT_ALGORITHM` 切为 RS256，把 `auth/jwt_tokens.py` 中 `decode_token` 的密钥
 替换为从 IdP JWKS endpoint 拉取的公钥（推荐 `jwt.PyJWKClient`），并补充
 `iss` / `aud` 校验；payload → Identity 的字段映射与下游 RBAC 口径不变。
-届时 `/auth/token` 开发端点应整体下线。
+届时 `/auth/token` 开发端点与 `/auth/login` 账密端点都应整体下线（由 IdP 签发）。
 
-#### 9.5 环境变量清单（新增，详见 .env.sample）
+#### 9.6 环境变量清单（新增，详见 .env.sample）
 
 | 变量 | 默认 | 说明 |
 |------|------|------|
@@ -439,7 +462,7 @@ npm run preview    # 预览构建产物
 dev server 已配置 proxy：`/api/*` → `http://localhost:8000/*`（前缀重写），
 目标可用 `VITE_PROXY_TARGET` 覆盖。后端需先启动
 （`uvicorn api.server:app --host 0.0.0.0 --port 8000`，并开启
-`AUTH_ENABLED=true` + `AUTH_DEV_MODE=true` + `JWT_SECRET=...` 以启用登录签发）。
+`AUTH_ENABLED=true` + `JWT_SECRET=...` 以启用账号密码登录（`/auth/login`））。
 
 #### 10.2 环境变量（见 `web/.env.example`）
 
@@ -452,15 +475,16 @@ dev server 已配置 proxy：`/api/*` → `http://localhost:8000/*`（前缀重�
 #### 10.3 Mock 演示模式
 
 `VITE_MOCK=true`，或后端不可达时点击横幅「切换到 Mock 演示模式」。Mock 模式
-内置：伪 JWT 签发（uid+role）、按字符切片模拟流式输出、敏感操作关键词
+内置：账密登录（演示账号 1001 员工 / 8001 HR / 9001 管理员，密码 `Hr@2026`，
+错误密码统一提示「账号或密码错误」）、按字符切片模拟流式输出、敏感操作关键词
 （证明/在职证明/收入证明）触发审批挂起、复刻 `auth/guard.py` 的审批人校验
 （员工审批 403、自审自批 403）。SSE 事件序列与后端契约一致
 （token / approval_required / done），可无后端完整预览登录、流式问答与审批流。
 
 #### 10.4 功能口径（与 Streamlit 对齐）
 
-- 登录（uid+角色换 JWT，Bearer 头，localStorage 持久化）、退出登录；
-  未登录匿名可政策问答。
+- 账号密码登录（账号 + 密码表单，角色由后端 `/auth/login` 按员工表返回，
+  Bearer 头，localStorage 持久化）、退出登录；未登录匿名可政策问答。
 - POST 型 SSE 流式对话（fetch + ReadableStream 手动解析 `data: {json}\n\n` 帧），
   token 级渲染。
 - interrupt → `approval_required` 事件渲染审批卡片；approve/reject 调

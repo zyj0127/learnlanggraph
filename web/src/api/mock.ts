@@ -4,7 +4,10 @@ import type {
   ChatRequest,
   LeaveDecisionResponse,
   LeaveRequestListResponse,
+  LoginRequest,
+  LoginResponse,
   ResumeRequest,
+  Role,
   SecuritySummary,
   SseEvent,
   TokenRequest,
@@ -53,6 +56,37 @@ export async function mockIssueToken(req: TokenRequest): Promise<TokenResponse> 
     access_token: `mock.${fake}.signature`,
     token_type: 'bearer',
     expires_in: 3600,
+  }
+}
+
+// ---- Mock 账号密码登录（对齐后端 /auth/login 口径）----
+// 演示账号（统一密码 Hr@2026）：角色由「服务端」表返回，请求体不含 role。
+const MOCK_ACCOUNTS: Record<string, { name: string; role: Role }> = {
+  '1001': { name: '张三', role: 'employee' },
+  '1002': { name: '李四', role: 'employee' },
+  '1003': { name: '王五', role: 'employee' },
+  '1004': { name: '赵六', role: 'employee' },
+  '8001': { name: '林敏', role: 'hr' },
+  '8002': { name: '周舟', role: 'hr' },
+  '9001': { name: '安管理员', role: 'admin' },
+}
+const MOCK_PASSWORD = 'Hr@2026'
+
+export async function mockLogin(req: LoginRequest): Promise<LoginResponse> {
+  await sleep(250)
+  const acc = MOCK_ACCOUNTS[req.uid.trim()]
+  // 统一模糊文案：不区分用户不存在 / 密码错误
+  if (!acc || req.password !== MOCK_PASSWORD) {
+    throw new ApiError(401, '账号或密码错误')
+  }
+  const fake = btoa(
+    JSON.stringify({ uid: req.uid, role: acc.role, name: acc.name, mock: true }),
+  )
+  return {
+    access_token: `mock.${fake}.signature`,
+    token_type: 'bearer',
+    expires_in: 3600,
+    identity: { uid: req.uid.trim(), name: acc.name, role: acc.role },
   }
 }
 
