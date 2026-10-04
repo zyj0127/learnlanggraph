@@ -51,11 +51,21 @@ export interface ResumeRequest {
 export type SseEvent =
   | { type: 'token'; content: string }
   | { type: 'approval_required'; thread_id: string; detail: string }
+  | { type: 'sources'; sources: SourceItem[] }
   | { type: 'done' }
+
+// 引用来源（sources 事件）：政策回答的溯源卡片
+export interface SourceItem {
+  id: number
+  chapter: string
+  section: string
+  snippet: string
+}
 
 export interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
+  sources?: SourceItem[]
 }
 
 export interface PendingApproval {

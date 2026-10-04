@@ -40,6 +40,7 @@ learnlanggraph
 - **办事写操作（请假申请）：** `apply_leave(uid, leave_type, start_date, end_date, reason)` 把系统从问答机器人升级为办事机器人——员工发起年假/病假/事假申请，经人工审批（复用开证明同一 interrupt 拓扑与审批卡片）后生效：年假余额自动校验（不足不进入审批）与扣减，申请单全状态（pending/approved/rejected）落 `leave_requests` 表留痕。
 - **HR 管理台（审批队列 + 安全看板）：** HR/ADMIN 登录后侧栏出现「管理台」入口——请假工单集中审批（表格行内批准/拒绝，与聊天内审批共用 `leave_requests.status` 单一事实源，两通道状态同步），安全看板聚合越权拦截/审批通过拒绝/Top 越权动作（复用 telemetry auth_events 口径）。后端对应 `GET/POST /api/admin/*` 三个端点（仅 HR/ADMIN，匿名/员工 403）。
 - **我的工单（员工视图）：** 任何已登录员工侧栏出现「我的工单」入口，查看自己全部请假申请与实时审批状态（pending 黄 / approved 绿 / rejected 红徽章，与管理台、聊天审批同源）。后端对应 `GET /api/my/leave-requests?status=`（uid 从 JWT 取，匿名 403，杜绝跨员工越权查询），闭环「聊天发起 → HR 审批 → 员工自查」体验。
+- **回答引用溯源：** 政策类回答句末标注来源编号 `[1][2]`，气泡下方附引用卡片（章 > 节 + 内容摘要，点击展开）。链路：检索文本头部以 `来源 [n]: 章 > 节` 编号 → SSE 新增 `sources` 事件（紧随 `tool_result` 透出结构化来源，additive 扩展，旧客户端忽略不炸）→ 前端正文 `[n]` 高亮 + 引用卡片渲染。
 - **账号密码登录（SSO 中间态）：** `POST /auth/login` 账密登录（bcrypt 校验，统一初始密码见 9.2 演示账号表），角色从员工表服务端读取签进 JWT——客户端不再自选角色；失败统一模糊文案 + 连续 5 次失败锁定 10 分钟。接企业 SSO 时切 RS256+JWKS，账密与 dev 签发端点一并下线。
 
 ### 4. 重难点与风险
@@ -170,6 +171,10 @@ python -m unittest test.test_fact_rules -v          # 纯规则单测：不加�
   human_review 节点（所有 tool_calls 必经关卡，图拓扑零改动）——必填槽位缺失时
   **不执行工具、不进审批**，回 ToolMessage 让 chatbot 反问补齐，多轮对话历史天然合并。
 - **实体库**：80 人花名册（`db/employees.db`，与 `build_roster()` 同源；不在版本库内）。
+- **引用溯源**：`agent/citations.py` 在检索文本头部以 `来源 [n]: 章 > 节` 编号
+  （格式与 evaluate/telemetry 旧解析兼容，评测口径不退化）；SSE 新增 `sources`
+  事件由 `session_runner` 从 ToolMessage 文本逆解析透出（additive 扩展）；
+  提示词要求句末标注 `[n]`，前端正文高亮 + 气泡下引用卡片。
 
 ### 7. 容器化运行
 

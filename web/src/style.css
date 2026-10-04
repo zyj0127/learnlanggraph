@@ -246,3 +246,36 @@ body {
   .main-header, .messages, .composer { padding-left: 14px; padding-right: 14px; }
   .badge { position: static; display: inline-block; margin-top: 8px; }
 }
+
+/* ---- 引用溯源：正文 [n] 徽章 + 来源卡片 ---- */
+.cite-badge {
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: 6px;
+  background: rgba(79, 140, 255, 0.15);
+  color: var(--primary, #4f8cff);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.sources-list {
+  margin-top: 8px;
+  border-top: 1px dashed var(--border);
+  padding-top: 6px;
+}
+.sources-title { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; }
+.source-item { font-size: 12px; margin: 2px 0; }
+.source-item summary {
+  cursor: pointer;
+  color: var(--text-sub);
+  list-style: none;
+}
+.source-item summary:hover { color: var(--primary, #4f8cff); }
+.source-snippet {
+  margin: 4px 0 6px 18px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
+  color: var(--text-sub);
+  white-space: pre-wrap;
+}

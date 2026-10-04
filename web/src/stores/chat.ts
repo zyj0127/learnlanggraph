@@ -81,6 +81,7 @@ export const useChatStore = defineStore('chat', {
       this.error = ''
       this.streaming = true
       this.streamingText = ''
+      let turnSources: import('../types').SourceItem[] = []
 
       const onEvent = (ev: SseEvent) => {
         if (ev.type === 'token') {
@@ -91,6 +92,8 @@ export const useChatStore = defineStore('chat', {
             detail: ev.detail,
             applicantUid: this.effectiveUid,
           }
+        } else if (ev.type === 'sources') {
+          turnSources = ev.sources   // 引用溯源：随本轮助手消息透出
         }
       }
 
@@ -103,7 +106,11 @@ export const useChatStore = defineStore('chat', {
       } finally {
         this.streaming = false
         if (this.streamingText) {
-          this.messages.push({ role: 'assistant', content: this.streamingText })
+          this.messages.push({
+            role: 'assistant',
+            content: this.streamingText,
+            sources: turnSources.length ? turnSources : undefined,
+          })
           this.streamingText = ''
         } else if (this.pendingApproval && !this.error) {
           // 审批挂起：不写兜底文案，由审批卡片接管
@@ -124,9 +131,11 @@ export const useChatStore = defineStore('chat', {
       this.error = ''
       this.streaming = true
       this.streamingText = ''
+      let turnSources: import('../types').SourceItem[] = []
 
       const onEvent = (ev: SseEvent) => {
         if (ev.type === 'token') this.streamingText += ev.content
+        else if (ev.type === 'sources') turnSources = ev.sources
       }
 
       try {
@@ -153,7 +162,11 @@ export const useChatStore = defineStore('chat', {
         } else {
           const text =
             this.streamingText || '本次操作已处理完毕，如需其他帮助请继续提问。'
-          this.messages.push({ role: 'assistant', content: text })
+          this.messages.push({
+            role: 'assistant',
+            content: text,
+            sources: turnSources.length ? turnSources : undefined,
+          })
         }
         this.streamingText = ''
       }

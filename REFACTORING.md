@@ -510,3 +510,34 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
 - DeepSeek 温度 0 下仍有跨 run 波动（同一题不同 run 行为偶发不同），
   阈值留了 0.1 余量吸收波动；若 nightly 偶红应先看 confirm_assisted 与
   false_trigger 明细再决定是否录新基线
+
+## 二十、回答引用溯源（政策来源编号 + sources 事件 + 前端引用卡片）
+
+> 政策类回答此前是纯文本，用户无法核验答案出自制度哪一节。本节给检索结果
+> 稳定编号，经 SSE 透出结构化来源，前端句末 `[n]` 高亮 + 气泡下引用卡片。
+> 原则：**评测口径不退化、事件协议 additive、文本即事实源**。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | 来源编号模块：`number_sources(docs)` 产出 id/chapter/section/snippet(160 字)/content；`format_sources_text` 生成 `来源 [n]: 章 > 节` 头部格式（保留空格与冒号——`evaluate._pipeline_rank` 按 `来源 ` 切块、`telemetry.extract_retrieved` 按 `startswith("来源 ")` 解析，两边兼容）；`parse_sources_from_text` 正则逆运算，非检索文本返回 [] | `agent/citations.py` | 单文件纯函数，零外部依赖 |
+| 2 | 检索文本带头：`search_hr_policy` 步骤五改用编号格式 | `agent/rag_pipeline.py` | LLM 在上下文里直接看到编号，引用有据可依 |
+| 3 | 提示词引用指引：回答政策时句末标注 `[n]`，未标注数字视为不可信 | `agent/nodes.py`（chatbot 系统提示词） | 生成侧约束 |
+| 4 | sources 事件透出：ToolMessage 分支里 `name=="search_hr_policy"` 时 `parse_sources_from_text` 逆解析，紧随 tool_result yield `{"type":"sources","sources":[...]}`；事件协议 docstring 同步 | `agent/session_runner.py` | **废弃 contextvars 方案**：实测 langchain StructuredTool.invoke 跨 context 边界，contextvar 值传不出来；文本即事实源，无需共享状态 |
+| 5 | SSE 透传：`_event_stream` 加 `elif event_type == "sources"` | `api/server.py` | additive 扩展，旧客户端（streamlit elif 链无 else）忽略不炸 |
+| 6 | 前端：SseEvent 加 sources 变体 + ChatMessage.sources；store 两处（send/resume）收集挂到 assistant 消息；renderMd inline 正则 `\[(\d+)\]` → `<sup class="cite-badge">` 高亮；气泡下 `<details>` 引用卡片（章 > 节 + snippet 展开）；Mock 差旅答案带 [1][2] + sources 事件演示 | `web/src/types.ts`、`stores/chat.ts`、`App.vue`、`style.css`、`api/mock.ts` | 引用卡片与正文标注同源（同一编号） |
+| 7 | 测试 8 条：编号稳定 / 元数据兜底 / snippet 截断 / 旧格式兼容（切块数、startswith 解析）/ parse 互逆 / 非政策文本返回空 + 两个假图事件契约（sources 在 tool_result 后 done 前；非政策工具不出 sources） | `test/test_citations.py` | 假图 `_FakeApp` 驱动 `_stream_turn_impl`，零 LLM 成本 |
+
+### 验证结果
+
+- 全量 `pytest test/ -q`：**147 passed / 5 skipped / 36 subtests**（存量全绿 + 新 8 条）
+- compileall + check_import_cycles（61 模块无环）通过；vue-tsc 零错误、vite build 通过
+- 741 检索门禁回归（本地 BGE 双模型）：`test_eval_gate.py` **6 passed**——编号格式兼容旧解析，评测口径未退化
+- 真实模型冒烟：「出差住宿报销标准是什么？」检索文本头部正确输出 `来源 [1]/[2]/[3]`，`parse_sources_from_text` 解析出 3 条来源（章/节/160 字 snippet 齐全）；此前 LLM 冒烟已确认回答句末带 `[1][2]` 标注（提示词生效）
+
+### 遗留项
+
+- contextvars 方案因 langchain 调用边界废弃：凡需从工具内部向调用方传旁路数据，
+  一律走文本/消息载体，不用隐式上下文
+- streamlit 前端未渲染引用卡片（sources 事件忽略不炸，可后续补）
+- renderMd 不支持 markdown 表格（LLM 回答出表格时是已知展示短板）
+- 正文 `[n]` 高亮是正则替换，代码块里的 `[1]` 也会高亮（展示层小瑕疵）

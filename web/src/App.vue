@@ -55,6 +55,8 @@ function renderMd(text: string): string {
     s
       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
       .replace(/`([^`]+)`/g, '<code>$1</code>')
+      // 引用编号 [n] 高亮为徽章（对应消息下方的来源列表）
+      .replace(/\[(\d+)\]/g, '<sup class="cite-badge">[$1]</sup>')
   for (const line of lines) {
     const ul = /^[-•]\s+/.test(line)
     const ol = /^\d+\.\s+/.test(line)
@@ -208,7 +210,20 @@ function submit() {
           :class="m.role"
         >
           <div class="msg-avatar">{{ m.role === 'user' ? '🧑' : '🤖' }}</div>
-          <div class="msg-body" v-html="renderMd(m.content)"></div>
+          <div class="msg-body">
+            <div v-html="renderMd(m.content)"></div>
+            <!-- 引用溯源：政策回答的来源列表（编号徽章对应正文 [n] 标记） -->
+            <div v-if="m.sources?.length" class="sources-list">
+              <div class="sources-title">📚 引用来源</div>
+              <details v-for="s in m.sources" :key="s.id" class="source-item">
+                <summary>
+                  <span class="cite-badge">[{{ s.id }}]</span>
+                  {{ s.chapter }} &gt; {{ s.section }}
+                </summary>
+                <p class="source-snippet">{{ s.snippet }}</p>
+              </details>
+            </div>
+          </div>
         </div>
 
         <!-- 流式输出中的消息 -->
