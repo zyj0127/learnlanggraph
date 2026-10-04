@@ -176,6 +176,16 @@ def _stream_turn_impl(app, graph_input, config: dict,
         sources_seen: list = []
         approval_pending = False
 
+        # ---- 流式幻觉预检（规则层前置）：只在句边界触发，半个数字不误判 ----
+        # 命中即中止 token 流出，改发兜底话术（走既有 token 事件，前端无感）；
+        # 事后审计（fact_check_node）保留不动，两层并存、同轮不双计。
+        from agent.stream_guard import StreamFactGuard
+        from config import get_settings
+
+        guard = StreamFactGuard(
+            question, enabled=get_settings().stream_fact_check_enabled)
+        stream_blocked = False
+
         for msg, metadata in app.stream(graph_input, config, stream_mode="messages"):
             node = metadata.get("langgraph_node", "")
 
@@ -193,7 +203,23 @@ def _stream_turn_impl(app, graph_input, config: dict,
 
             # 最终答案 token：仅 chatbot 节点的内容（SSE 契约保持不变）
             if node == "chatbot" and getattr(msg, "content", ""):
-                yield {"type": "token", "content": msg.content, "msg_id": getattr(msg, "id", None)}
+                if not stream_blocked:
+                    violation = guard.feed(msg.content)
+                    if violation is not None:
+                        # 命中数字幻觉：立即停止本轮 token 流出，改发兜底话术
+                        # （含事后审计打回后的重写流——本轮答案已判死刑，不再透出）
+                        stream_blocked = True
+                        from observability import AUDIT_COUNTERS
+
+                        AUDIT_COUNTERS.record_block("rule", f"[流式预检] {violation}")
+                        chunk = 20
+                        for i in range(0, len(AUDIT_FALLBACK_MESSAGE), chunk):
+                            yield {"type": "token",
+                                   "content": AUDIT_FALLBACK_MESSAGE[i:i + chunk],
+                                   "msg_id": None}
+                if not stream_blocked:
+                    yield {"type": "token", "content": msg.content,
+                           "msg_id": getattr(msg, "id", None)}
             elif isinstance(msg, ToolMessage):
                 yield {"type": "tool_result", "name": msg.name or "tool", "content": str(msg.content)}
                 # 引用溯源（additive）：政策检索结果随 tool_result 立即解析透出
@@ -206,6 +232,22 @@ def _stream_turn_impl(app, graph_input, config: dict,
                     if sources:
                         sources_seen = sources
                         yield {"type": "sources", "sources": sources}
+                    # 流式预检的比对原文（本轮 RAG 上下文）
+                    guard.set_context(str(msg.content))
+
+        # 流结束终检：句边界后的残余缓冲（此时答案完整，无切半风险）
+        if not stream_blocked:
+            violation = guard.flush()
+            if violation is not None:
+                stream_blocked = True
+                from observability import AUDIT_COUNTERS
+
+                AUDIT_COUNTERS.record_block("rule", f"[流式预检-终检] {violation}")
+                chunk = 20
+                for i in range(0, len(AUDIT_FALLBACK_MESSAGE), chunk):
+                    yield {"type": "token",
+                           "content": AUDIT_FALLBACK_MESSAGE[i:i + chunk],
+                           "msg_id": None}
 
         # 兜底：messages 流不直接透出 interrupt，改查图状态
         state = app.get_state(config)
@@ -243,7 +285,7 @@ def _stream_turn_impl(app, graph_input, config: dict,
         # 信息，与 uid 无关）、无审批挂起、最终答案非转人工/熔断话术。
         # 含个人数据（档案/余额）或写操作（证明/请假）的答案绝不缓存；
         # 审计打回后重写的最终答案本身就是审计通过的产物，可以缓存。
-        if meta and question and not approval_pending:
+        if meta and question and not approval_pending and not stream_blocked:
             from agent.semantic_cache import cache_store
 
             last_msg = final_messages[-1] if final_messages else None

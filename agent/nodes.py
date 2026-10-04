@@ -384,7 +384,12 @@ def fact_check_node(state: AgentState) -> dict:
     violations = check_numbers(answer, rag_context, question)
     if violations:
         reason = "；".join(violations)
-        AUDIT_COUNTERS.record_block("rule", reason)
+        # 流式预检已在流出途中拦截过本轮同一问题 → 跳过计数（同轮不双计；
+        # 行为不变：仍照常打回/熔断，只是计数去重。判定见 agent/stream_guard.py）
+        from agent.stream_guard import was_stream_blocked
+
+        if not was_stream_blocked(question):
+            AUDIT_COUNTERS.record_block("rule", reason)
         logger.warning("规则层拦截数字类幻觉：%s", reason)
         if loop_state > MAX_REFLECTION_LOOPS:
             AUDIT_COUNTERS.record_fallback_handoff()

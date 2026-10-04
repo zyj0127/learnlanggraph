@@ -45,6 +45,7 @@ learnlanggraph
 - **拒答校准评测：** `eval/refusal_dataset.py` 42 题「手册不存在/不该答」问题（他人隐私 10 + 竞品外部 8 + 制度外事项 10 + 闲聊 8 + 违规诱导 6），`eval/eval_refusal.py` 判定规则优先（拒答信号词 + 手机号/身份证格式与无信号具体数字硬拦），规则不确定走 LLM judge 兜底；阈值制门禁 refusal_accuracy≥0.85，CI 与工具调用评测同 job 并列步骤（secrets 缺失跳过保持绿，`--dry-run` 零成本自检）。
 - **语义缓存（政策问答零成本命中）：** `agent/semantic_cache.py` 按问题 embedding 余弦相似度（BGE 本地向量，阈值 0.90 实测标定：同义改写 0.91 / 危险混淆对 0.86）缓存**审计通过的纯政策答案**（sqlite `db/semantic_cache.db` 自愈建表，TTL 7 天 + 命中计数）。命中时走既有 SSE token 事件流出（前端无感，本轮 LLM 成本为零），埋点记 cache_hit；追问改写后的查询作为别名一并写入。安全边界：本轮工具调用 ⊆ {search_hr_policy} 才缓存——含个人数据/写操作的答案绝不入缓存；`SEMANTIC_CACHE_ENABLED=false` 全旁路。
 - **分级模型路由：** `agent/model_router.py` 纯函数判定——高置信闲聊/问候（短句 + 无政策/工具词 + 命中问候模式）走轻量模型（`LLM_MODEL_LIGHT`，未配置则与主模型无差别）；政策/工具/审计一律主模型（审计质量不可降）。轻量路径仍绑定全量工具兜底误判；埋点经 UsageTracker 记录模型档位（main/light/cache），周报「成本优化」小节可见缓存命中率与档位分布。
+- **流式幻觉预检：** 事后审计在答案生成完才校验，幻觉 token 却已流到用户屏幕。`agent/stream_guard.py` 把规则层（fact_rules 纯函数，零成本）前置到 token 流出途中——**只在句边界（。！？\\n）触发**（半个数字不误判），命中即中止流出、改发既有兜底话术（走 token 事件，前端无感），计数口径与事后规则层一致且同轮不双计；事后审计保留不动，两层并存。`STREAM_FACT_CHECK_ENABLED=false` 全旁路。
 - **账号密码登录（SSO 中间态）：** `POST /auth/login` 账密登录（bcrypt 校验，统一初始密码见 9.2 演示账号表），角色从员工表服务端读取签进 JWT——客户端不再自选角色；失败统一模糊文案 + 连续 5 次失败锁定 10 分钟。接企业 SSO 时切 RS256+JWKS，账密与 dev 签发端点一并下线。
 
 ### 4. 重难点与风险
