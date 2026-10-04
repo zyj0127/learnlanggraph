@@ -27,7 +27,7 @@
 标注规范同 dataset.py：题目增删改递增 TOOL_CALL_DATASET_VERSION。
 """
 
-TOOL_CALL_DATASET_VERSION = "2026.10-v1"
+TOOL_CALL_DATASET_VERSION = "2026.10-v2"
 
 # HR 数据工具（误触发判定的工具全集；search_hr_policy 属政策检索，不算误触发）
 HR_DATA_TOOLS = {
@@ -74,12 +74,12 @@ _BALANCE_CASES = [
 _CERT_CASES = [
     *[
         {"question": q, "uid": _U, "expect": "tool",
-         "tool": "generate_employment_certification",
+         "tool": "generate_employment_certification", "confirm_ok": True,
          "slots": {"uid": _U, "cer_type": "employment"}}
         for q in [
             "帮我开一份在职证明",
             "我要办签证，需要在职证明",
-            "开个工作证明给我",
+            "帮我开在职证明，办社保落户用",
             "麻烦出一份在职证明，办银行卡用",
             "帮我生成在职证明文件",
             "需要一份证明我在职的材料",
@@ -87,7 +87,7 @@ _CERT_CASES = [
     ],
     *[
         {"question": q, "uid": _U, "expect": "tool",
-         "tool": "generate_employment_certification",
+         "tool": "generate_employment_certification", "confirm_ok": True,
          "slots": {"uid": _U, "cer_type": "income"}}
         for q in [
             "帮我开一份收入证明",
@@ -103,7 +103,7 @@ _CERT_CASES = [
 _LEAVE_CASES = [
     *[
         {"question": q, "uid": _U, "expect": "tool", "tool": "apply_leave",
-         "slots": s}
+         "confirm_ok": True, "slots": s}
         for q, s in [
             ("帮我请 2026-11-02 到 2026-11-03 的年假，家中有事",
              {"uid": _U, "leave_type": "年假",
@@ -136,21 +136,26 @@ _LEAVE_CASES = [
      "expect": "clarify"},  # 缺年份：反问或给出可判定日期均可
     {"question": "请病假，下周三和周四，2026-11-18 到 2026-11-19", "uid": _U,
      "expect": "tool", "tool": "apply_leave",
+     "confirm_ok": True,
      "slots": {"leave_type": "病假",
                "start_date": "2026-11-18", "end_date": "2026-11-19"}},
     {"question": "我要休 2027-01-04 到 2027-01-05 的年假", "uid": _U,
      "expect": "tool", "tool": "apply_leave",
+     "confirm_ok": True,
      "slots": {"leave_type": "年假",
                "start_date": "2027-01-04", "end_date": "2027-01-05"}},
     {"question": "请事假，2026-11-25 至 2026-11-26，共两天", "uid": _U,
      "expect": "tool", "tool": "apply_leave",
+     "confirm_ok": True,
      "slots": {"leave_type": "事假",
                "start_date": "2026-11-25", "end_date": "2026-11-26"}},
     {"question": "麻烦帮我请 2026-12-21 到 2026-12-22 的病假", "uid": _U,
      "expect": "tool", "tool": "apply_leave",
+     "confirm_ok": True,
      "slots": {"leave_type": "病假"}},
     {"question": "提交请假申请：年假 2026-12-28 一天，事由休息", "uid": _U,
      "expect": "tool", "tool": "apply_leave",
+     "confirm_ok": True,
      "slots": {"leave_type": "年假", "start_date": "2026-12-28"}},
 ]
 

@@ -161,9 +161,11 @@ python -m unittest test.test_fact_rules -v          # 纯规则单测：不加�
   线上默认权重 **向量 0.6 / BM25 0.4**（709 题扫参依据见 `eval/weight_sweep_result.json`）；
   CrossEncoder(bge-reranker-base) 精排取 Top-3。
 - **评测集**：`2026.09-v4`，741 题（政策 709 + 工具 16 + 超纲拒答 10 + 敏感审批 6）；
-  另有工具调用评测集 `eval/tool_call_dataset.py` `2026.10-v1`（70 题：单轮首轮工具决策，
+  另有工具调用评测集 `eval/tool_call_dataset.py` `2026.10-v2`（70 题：单轮首轮工具决策，
   含误触发反例与缺槽位反问用例），由 `eval/eval_tool_calls.py` 跑真实 LLM 统计
-  工具选择准确率 / 槽位完整率 / 误触发率 / 反问率（`--dry-run` 零成本自检结构）。
+  工具选择准确率 / 槽位完整率 / 误触发率 / 反问率（`--dry-run` 零成本自检结构；
+  支持「先查档案再办事」两段式多轮 harness 与敏感操作确认追问判定；
+  阈值制门禁：pass_rate≥0.90 且 false_trigger_rate≤0.10，未达标 exit 1）。
 - **槽位补全（Slot Filling）**：`tools/slot_filling.py` 纯函数登记表 + 预检，接入
   human_review 节点（所有 tool_calls 必经关卡，图拓扑零改动）——必填槽位缺失时
   **不执行工具、不进审批**，回 ToolMessage 让 chatbot 反问补齐，多轮对话历史天然合并。
