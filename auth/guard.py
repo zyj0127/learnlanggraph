@@ -175,6 +175,17 @@ def audit_cert_issued(identity: Identity, target_uid: str, cer_type: str) -> Non
     _log_auth_event("cert_issued", identity, target_uid, result="success", detail=cer_type)
 
 
+def audit_login(uid: str, result: str, detail: str = "") -> None:
+    """登录留痕：成功/失败/锁定各一笔（结构化日志 + telemetry 埋点）。
+
+    result: success / failed（账号或密码错误，统一模糊口径）/ locked（锁定中拒绝）。
+    失败时不区分「用户不存在」与「密码错误」，detail 不落密码等敏感值。
+    """
+    logger.warning("登录留痕：uid=%s result=%s detail=%s", uid or "?", result, detail)
+    _log_auth_event("login", Identity(uid=uid, role=Role.ANONYMOUS), uid,
+                    result=result, detail=detail)
+
+
 def audit_leave_request(identity: Identity, target_uid: str, result: str,
                         detail: str = "") -> None:
     """请假申请留痕（detail 只记请假类型/天数等枚举值，不落事由等自由文本）。

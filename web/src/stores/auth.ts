@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Identity, Role } from '../types'
-import { issueToken } from '../api/client'
-import { mockIssueToken } from '../api/mock'
+import { login } from '../api/client'
+import { mockLogin } from '../api/mock'
 
 const STORAGE_KEY = 'hr-assistant.auth'
 
@@ -41,13 +41,13 @@ export const useAuthStore = defineStore('auth', {
     },
   },
   actions: {
-    /** 登录：uid+role 换 JWT（dev 模式端点）；mock 模式走内置签发 */
-    async login(uid: string, role: Exclude<Role, 'anonymous'>, name: string, mock: boolean) {
+    /** 账号密码登录：角色由服务端按员工表返回（/auth/login），客户端不可伪造 */
+    async login(uid: string, password: string, mock: boolean) {
       const resp = mock
-        ? await mockIssueToken({ uid, role, name })
-        : await issueToken({ uid, role, name })
+        ? await mockLogin({ uid, password })
+        : await login({ uid, password })
       this.token = resp.access_token
-      this.identity = { uid, name, role }
+      this.identity = resp.identity
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({ token: this.token, identity: this.identity }),

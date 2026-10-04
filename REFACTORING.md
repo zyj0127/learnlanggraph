@@ -385,3 +385,39 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
   36 subtests passed
 - compileall + check_import_cycles（57 模块无环）通过
 - 前端：vue-tsc --noEmit 零错误 + vite build 通过
+
+## 十七、账号密码登录：SSO 中间态（堵「客户端自选角色」口子）
+
+> 此前的登录是 `POST /auth/token`：客户端声明 uid+role 直接换 JWT——角色可伪造，
+> 任何员工都能以 admin 身份拿 token。本节把它换成账密登录作为接企业 SSO 前的
+> 中间态。核心约束：**JWT 契约不变**（sub/role/name/dept 与验签逻辑零改动），
+> 变的只是「角色从哪来」——从客户端声明改为员工表服务端真源。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | employees 表新增 `password_hash`（bcrypt cost=12，不存明文）与 `role`（服务端角色真源）两列：alembic 0003 迁移（pg：ADD COLUMN + 回填 + 职能账号 ON CONFLICT 补齐）+ SQLite 自愈（`get_connection`/`init_db` 检列缺失则 ALTER + 回填 + INSERT OR IGNORE） | `alembic/versions/0003_employee_auth.py`、`database/mock_db.py`、`database/models.py` | 旧库原位升级不丢数据；新库直接建全列 |
+| 2 | 种子确定性：80 人花名册（1001-1080）不动（eval 契约），追加 3 个职能账号 8001/8002=hr、9001=admin（含假期余额），全账号统一初始密码 `Hr@2026`；bcrypt 哈希一次计算固化为常量 `DEMO_PASSWORD_HASH`（逐账号现算会让 init_db 慢约 20 秒拖垮测试），明文口令只在 README 演示账号表 | `database/mock_db.py`、`database/seed.py` | seed 幂等判据改为 EXPECTED_EMPLOYEE_ROWS=83；演示共用哈希可接受，生产必须逐账号独立口令 |
+| 3 | `POST /auth/login`：uid+password → bcrypt 校验 → 角色从 employees.role 读 → 签 JWT（返回 identity 供前端展示）。安全口径：请求模型不含 role 字段（客户端塞了也被 pydantic 忽略）；失败统一 401「账号或密码错误」；不存在的 uid 用常量哈希做哑 checkpw 抹平计时侧信道；AUTH_ENABLED=false 时 404（与 /auth/token 口径一致）；成功/失败/锁定均 audit_login 留痕（不落密码） | `api/server.py`、`auth/guard.py`（audit_login） | 未知脏角色兜底 employee（最低权限） |
+| 4 | 防爆破：同一 uid 连续失败 5 次锁定 10 分钟（423，锁定中正确密码也拒绝；锁定按 uid 隔离；成功清零）。内存计数（进程内字典），注释标明生产应换 Redis INCR/EXPIRE 或网关限流 | `api/server.py` | 演示级实现，多副本部署不共享计数 |
+| 5 | 前端：LoginPanel 改为账号+密码表单（去掉角色下拉，附演示账号 datalist 与密码提示）；auth store login(uid,password) 消费响应里的服务端 identity；client.ts `login()`；mock.ts `mockLogin`（演示账号表 1001/8001/9001，错误密码统一 401 文案）；types.ts 加 LoginRequest/LoginResponse；style.css `.field` 补 input 样式 | `web/src/components/LoginPanel.vue`、`stores/auth.ts`、`api/client.ts`、`api/mock.ts`、`types.ts`、`style.css` | 旧 mockIssueToken/issueToken 保留未删（dev 端点仍在） |
+| 6 | 依赖：bcrypt==5.0.0 三处钉版（pyproject / requirements / build_wheels/constraints） | 三处 | 选 bcrypt 而非 passlib：passlib 已停更且与 bcrypt≥4.1 不兼容 |
+| 7 | 测试 9 条：登录成功（token 可 decode、契约字段不变）/ 角色来自服务端（8001→hr、9001→admin）/ 请求体 role=admin 被忽略 / 密码错误 401 统一文案 / 用户不存在同文案 / 5 次失败锁定 423 / 锁定按 uid 隔离 / 种子回填断言（83 行、哈希可校验）/ 旁路模式 404 | `test/test_login.py`（新增）、`test/conftest.py` | TestClient + 测试 JWT 模式对齐 test_admin_queue；init_db 对旧 schema 库也要能升级（实测踩坑：CREATE IF NOT EXISTS 不改已有表） |
+| 8 | 文档：README 9.2 账密登录 + 演示账号表（原 dev 签发降为 9.3 备选）、9.5 SSO 扩展点补 `/auth/login` 下线说明、10.3/10.4 前端口径更新；DEPLOY 环境变量表后补登录路径说明 | `README.md`、`DEPLOY.md` | |
+
+### 设计决策（登录）
+
+- **为什么不直接上 OIDC**：SSO 需要 IdP 配合，账密登录是可控的中间态——先把
+  「角色服务端化」这个安全口子堵上，JWT 契约不变意味着将来切 RS256+JWKS 时
+  下游 RBAC/审计/前端全部无感，只下线两个签发端点。
+- **哈希常量而非 seed 时现算**：bcrypt cost=12 单次约 250ms，83 账号 ≈ 20s，
+  而 init_db 被大量测试 setUp 调用；演示环境统一口令共用哈希无损安全性目标
+  （防的是离线爆破明文，哈希本身就是慢哈希），README 已注明生产必须独立口令。
+- **锁定状态码选 423（Locked）** 而非 429：语义更准（账号级锁定而非全局限流），
+  前端原样展示 detail 文案即可。
+
+### 验证结果（登录）
+
+- 全量 `pytest test/ -q`：**120 passed / 5 skipped**（111 存量全绿 + 新增 9 条），
+  36 subtests passed
+- compileall + check_import_cycles（57 模块无环）通过
+- 前端：vue-tsc --noEmit 零错误 + vite build 通过

@@ -80,6 +80,10 @@ compose 层（根 `.env`，同时被 `${VAR}` 插值与 app 的 `env_file` 消�
 | `DEEPSEEK_API_KEY` | 空 | 直连 DeepSeek 时必填（或改用 litellm） |
 | `JWT_SECRET` | 空 | JWT 验签密钥，生产必填 |
 | `AUTH_ENABLED` / `AUTH_DEV_MODE` | true / false | 鉴权开关 / 开发签发端点（生产必须 false） |
+
+> 登录路径：演示/预发用账密端点 `POST /auth/login`（角色取员工表、bcrypt 校验、
+> 内存防爆破锁定）；生产接企业 SSO/OIDC 的路径不变——切 RS256 + JWKS 后
+> `/auth/login` 与 `/auth/token` 一并下线（见 README「9.5 接企业 SSO」）。
 | `LITELLM_MASTER_KEY` | sk-litellm-dev | 网关 master key |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` | 空 | 观测性凭据 |
 

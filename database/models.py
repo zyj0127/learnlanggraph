@@ -29,6 +29,9 @@ class Employee(Base):
     city: Mapped[str | None] = mapped_column(String)
     tenure: Mapped[int | None] = mapped_column(Integer)
     salary: Mapped[int | None] = mapped_column(Integer)
+    # 账号密码登录（SSO 中间态）：bcrypt 哈希（不存明文）+ 服务端角色真源
+    password_hash: Mapped[str | None] = mapped_column(String)
+    role: Mapped[str] = mapped_column(String, nullable=False, default="employee")
 
 
 class LeaveBalance(Base):
