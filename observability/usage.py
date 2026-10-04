@@ -28,13 +28,20 @@ class UsageTracker(BaseCallbackHandler):
         self.total_output_tokens = 0
         self.total_llm_latency = 0.0
         self.calls: List[Dict[str, Any]] = []
+        self.models: List[str] = []  # 每次调用的模型名（分级路由埋点用）
         self._start_ts: Dict[Any, float] = {}
+        self._models_pending: Dict[Any, str] = {}
 
     # -- callback 钩子 --
     def on_llm_start(self, serialized, prompts, **kwargs) -> None:
         run_id = kwargs.get("run_id")
         if run_id:
             self._start_ts[run_id] = time.perf_counter()
+        # 模型名（langchain serialized kwargs：ChatOpenAI 为 model / model_name 之一）
+        kwargs_s = (serialized or {}).get("kwargs", {}) if isinstance(serialized, dict) else {}
+        model = kwargs_s.get("model") or kwargs_s.get("model_name") or ""
+        if run_id:
+            self._models_pending[run_id] = model
 
     def on_llm_end(self, response: LLMResult, **kwargs) -> None:
         run_id = kwargs.get("run_id")
@@ -46,10 +53,14 @@ class UsageTracker(BaseCallbackHandler):
         self.total_input_tokens += in_tokens
         self.total_output_tokens += out_tokens
         self.total_llm_latency += latency
+        model = self._models_pending.pop(run_id, "")
+        if model:
+            self.models.append(model)
         self.calls.append({
             "latency_s": round(latency, 3),
             "input_tokens": in_tokens,
             "output_tokens": out_tokens,
+            "model": model,
         })
 
     # -- 工具方法 --
@@ -79,7 +90,7 @@ class UsageTracker(BaseCallbackHandler):
                 + self.total_output_tokens / 1_000_000 * settings.deepseek_price_output)
 
     def summary(self) -> dict:
-        """汇总统计。"""
+        """汇总统计。models 为本轮各次调用的模型名列表（分级路由埋点用）。"""
         return {
             "llm_calls": self.llm_calls,
             "input_tokens": self.total_input_tokens,
@@ -88,4 +99,5 @@ class UsageTracker(BaseCallbackHandler):
             "llm_latency_s": round(self.total_llm_latency, 3),
             "avg_llm_latency_s": round(self.total_llm_latency / self.llm_calls, 3) if self.llm_calls else 0,
             "estimated_cost_rmb": round(self.cost(), 4),
+            "models": list(self.models),
         }

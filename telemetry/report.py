@@ -30,9 +30,30 @@ def render_markdown(report: dict) -> str:
     else:
         lines.append("- 本周期无")
 
-    # 企业化第二阶段：安全与审计（auth_events 聚合；无数据时兜底文案，不报错）
+    lines += _render_cost_saving(report)
     lines += _render_auth_security(report.get("auth_security"))
     return "\n".join(lines) + "\n"
+
+
+def _render_cost_saving(report: dict) -> list:
+    """渲染「成本优化」小节：语义缓存命中率 + 模型档位分布（任务⑥⑦）。"""
+    lines = ["", "## 成本优化（缓存与分级路由）", ""]
+    cache = report.get("semantic_cache")
+    if cache and cache.get("lookups"):
+        lines.append(
+            f"- 语义缓存：查询 {cache['lookups']} 次 ｜ 命中 {cache['hits']} 次"
+            f"（命中率 {cache['hit_rate']:.1%}，阈值 {cache['threshold']}）"
+            f" ｜ 缓存条目 {cache['entries']}（命中轮次 LLM 成本为零）")
+    elif cache and not cache.get("enabled"):
+        lines.append("- 语义缓存：已关闭（SEMANTIC_CACHE_ENABLED=false）。")
+    else:
+        lines.append("- 语义缓存：本周期无查询。")
+
+    tiers = report.get("model_tier_turns") or {}
+    if tiers:
+        dist = "、".join(f"{tier} {n} 轮" for tier, n in sorted(tiers.items(), key=lambda kv: -kv[1]))
+        lines.append(f"- 模型档位分布：{dist}（light = 轻量模型闲聊分流，cache = 缓存命中）")
+    return lines
 
 
 def _render_auth_security(auth: dict) -> list:

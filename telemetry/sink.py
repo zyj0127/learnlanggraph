@@ -57,7 +57,6 @@ CREATE TABLE IF NOT EXISTS session_events (
 );
 CREATE INDEX IF NOT EXISTS idx_events_ts ON session_events(ts);
 CREATE INDEX IF NOT EXISTS idx_events_session ON session_events(session_id);
-
 -- 企业化第二阶段：认证授权审计留痕（越权拦截 / 审批决定 / 证明开具）。
 -- 只记操作人 uid/角色/目标 uid/动作/结果，不落 PII 敏感字段值（姓名、薪资等）。
 CREATE TABLE IF NOT EXISTS auth_events (
@@ -84,6 +83,24 @@ def _connect() -> sqlite3.Connection:
 def init_db() -> None:
     with _connect() as conn:
         conn.executescript(_SCHEMA)
+        _migrate(conn)
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """自愈列迁移（对齐 auth_events 幂等模式）：旧库补 cache_hit / model_tier 列。
+
+    - cache_hit：本轮是否语义缓存命中（任务⑥，1 = 命中，LLM 成本为零）
+    - model_tier：本轮模型档位 main / light / cache（任务⑦分级路由埋点）
+    ALTER 已存在列时报 OperationalError，忽略即幂等。
+    """
+    for ddl in (
+        "ALTER TABLE session_events ADD COLUMN cache_hit INTEGER DEFAULT 0",
+        "ALTER TABLE session_events ADD COLUMN model_tier TEXT DEFAULT 'main'",
+    ):
+        try:
+            conn.execute(ddl)
+        except sqlite3.OperationalError:
+            pass  # 列已存在
 
 
 def classify_intent(question: str) -> str:
@@ -111,9 +128,15 @@ def extract_retrieved(messages) -> List[str]:
 
 def log_turn(*, session_id: str, question: str, uid: str = "", channel: str = "http",
              final_messages=None, usage: Optional[dict] = None, latency_s: Optional[float] = None,
-             feedback: Optional[str] = None) -> int:
-    """记录一轮问答。返回事件 id（失败不抛异常，埋点不得影响主链路）。"""
+             feedback: Optional[str] = None, cache_hit: bool = False,
+             model_tier: str = "main") -> int:
+    """记录一轮问答。返回事件 id（失败不抛异常，埋点不得影响主链路）。
+
+    cache_hit：本轮是否语义缓存命中（任务⑥）；model_tier：模型档位
+    main / light / cache（任务⑦分级路由，usage.models 由调用方归纳）。
+    """
     try:
+        init_db()  # 幂等：自愈列迁移（兼容旧库无 cache_hit/model_tier 列）
         messages = list(final_messages or [])
         last_text = getattr(messages[-1], "content", "") if messages else ""
         handed_off = last_text.startswith(HANDOFF_PREFIX)
@@ -133,13 +156,14 @@ def log_turn(*, session_id: str, question: str, uid: str = "", channel: str = "h
             int(handed_off), reason, int(audit_rejected),
             round(latency_s, 3) if latency_s is not None else None,
             usage.get("llm_calls"), usage.get("total_tokens"), usage.get("estimated_cost_rmb"),
-            feedback,
+            feedback, int(cache_hit), model_tier or "main",
         )
         with _connect() as conn:
             cur = conn.execute(
                 "INSERT INTO session_events (ts, session_id, uid, channel, question, intent,"
                 " retrieved, handed_off, handoff_reason, audit_rejected, latency_s, llm_calls,"
-                " tokens, cost_rmb, feedback) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                " tokens, cost_rmb, feedback, cache_hit, model_tier)"
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 row,
             )
             return int(cur.lastrowid)

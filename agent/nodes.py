@@ -68,6 +68,18 @@ def get_llm_with_tools():
 
 
 @lru_cache(maxsize=1)
+def get_light_llm_with_tools():
+    """轻量档位 LLM + 全量工具绑定（分级路由闲聊路径）。
+
+    工具绑定保留——路由误判时轻量模型仍有检索/工具能力兜底；
+    未配置 LLM_MODEL_LIGHT 时 get_light_chat_llm 回退主模型，无差别。
+    """
+    from config import get_light_chat_llm
+
+    return get_light_chat_llm(temperature=0.0).bind_tools(ALL_TOOLS)
+
+
+@lru_cache(maxsize=1)
 def get_checker_llm():
     """审计者 LLM：独立实例，与执行者解耦。"""
     return get_chat_llm(temperature=0.0)
@@ -154,7 +166,17 @@ def chatbot_node(state: AgentState) -> dict:
                     f"「来源 [n]」一一对应；未标注来源的数字视为不可信。")
         messages = [system_msg] + messages
 
-    response = get_llm_with_tools().invoke(messages)
+    # 分级模型路由（任务⑦）：高置信闲聊走轻量模型（未配置 LLM_MODEL_LIGHT
+    # 时与主模型无差别）；政策问答/工具调用一律主模型；审计节点恒主模型。
+    # 轻量路径同样绑定全量工具——路由误判时仍有检索/工具能力兜底。
+    from agent.model_router import route_model_tier
+
+    tier = route_model_tier(_last_real_user_text(messages))
+    if tier == "light":
+        logger.info("分级路由：闲聊/问候 → 轻量模型")
+        response = get_light_llm_with_tools().invoke(messages)
+    else:
+        response = get_llm_with_tools().invoke(messages)
     return {"messages": [response], "loop_state": state.get("loop_state", 0) + 1}
 
 
