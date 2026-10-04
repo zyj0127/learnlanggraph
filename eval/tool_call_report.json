@@ -1,0 +1,113 @@
+{
+  "dataset_version": "2026.10-v1",
+  "generated_at": "2026-10-04 17:54:36",
+  "dry_run": false,
+  "total_cases": 4,
+  "metrics": {
+    "total": 4,
+    "tool_selection_accuracy": 1.0,
+    "slot_completeness": 1.0,
+    "false_trigger_rate": null,
+    "clarify_accuracy": null,
+    "pass_rate": 1.0
+  },
+  "rows": [
+    {
+      "case": {
+        "question": "帮我查一下我的人事档案",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_BPLVhuiMENgBMKrNCOur2215",
+          "type": "tool_call"
+        }
+      ],
+      "error": null,
+      "pass": true,
+      "failures": []
+    },
+    {
+      "case": {
+        "question": "我的职级是多少？",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_bwJc9CMnLxAEwyxTVhdU0255",
+          "type": "tool_call"
+        }
+      ],
+      "error": null,
+      "pass": true,
+      "failures": []
+    },
+    {
+      "case": {
+        "question": "看看我的档案信息",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_jmQxM9qT0uOgrDiAUvGv8326",
+          "type": "tool_call"
+        }
+      ],
+      "error": null,
+      "pass": true,
+      "failures": []
+    },
+    {
+      "case": {
+        "question": "我现在基本工资多少？",
+        "uid": "1001",
+        "expect": "tool",
+        "tool": "get_employee_profile",
+        "slots": {
+          "uid": "1001"
+        }
+      },
+      "tool_calls": [
+        {
+          "name": "get_employee_profile",
+          "args": {
+            "uid": "1001"
+          },
+          "id": "call_00_13ad0Lq7oxWeg2wi7Zxz4997",
+          "type": "tool_call"
+        }
+      ],
+      "error": null,
+      "pass": true,
+      "failures": []
+    }
+  ],
+  "ok": true
+}

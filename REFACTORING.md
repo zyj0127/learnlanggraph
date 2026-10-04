@@ -421,3 +421,50 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
   36 subtests passed
 - compileall + check_import_cycles（57 模块无环）通过
 - 前端：vue-tsc --noEmit 零错误 + vite build 通过
+
+## 十八、AI 能力升级：槽位补全（Slot Filling）+ 工具调用准确率评测集
+
+> 本节回答两个问题：①用户说「我想请假」时 LLM 缺槽位乱调工具怎么办——
+> 在工具执行/审批之前加一道零成本预检，缺槽位时转为反问；②工具调用的好坏
+> 如何量化——单轮首轮工具决策评测集（70 题），与既有检索集（741 题，评
+> 「答得对不对」）、轨迹集（tool_cases.py，评「过程绕不绕」）互补。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | 槽位纯函数层：SLOT_SCHEMAS 登记表（apply_leave 4 必填 / 开证明 2 / 档案与余额 uid / 政策检索 query；reason 等可选不登记）+ `check_tool_slots`（缺失/空串/占位值「未知/xxx」一律判缺）+ `build_slot_hint`（反问提示：明确未执行、列缺失、禁止编造、提示多轮合并） | `tools/slot_filling.py`（新增） | 零第三方依赖，纯函数可单测；未登记工具一律放行 |
+| 2 | 预检接入 **human_review_node 开头**（所有 tool_calls 的必经关卡：非敏感工具也经此节点放行到 tools），图拓扑零改动；缺槽位 → 回 ToolMessage 提示，router_after_review 既有规则（见 ToolMessage 回 chatbot）自动形成反问回路；同一 AIMessage 多调用时全部应答（OpenAI 协议要求），完整调用回「暂缓执行」 | `agent/nodes.py` | 与请假参数/余额预检 `_precheck_leave` 同一模式、同一位置——顺序：槽位预检 → 参数/余额预检 → 审批挂起 |
+| 3 | chatbot 系统提示词补槽位收集指引（参数不齐全先追问、结合历史合并、齐全后一次性调用） | `agent/nodes.py` | 提示词治「LLM 少发起残缺调用」，预检治「发起了也拦得住」，双层 |
+| 4 | 工具调用评测集 70 题：profile 10 + balance 10 + cert 12（含 cer_type 断言）+ leave 14（含槽位子集断言）+ clarify 8（信息不全应先反问）+ none 16（闲聊/政策不触发 HR 数据工具反例）；`validate_dataset` 结构自检 | `eval/tool_call_dataset.py`（新增） | expect 三态：tool / none / clarify；clarify 判通过 = 没调工具 或 调了但槽位缺失（预检兜底口径一致） |
+| 5 | 评测脚本：生产同款系统提示词 + 绑定全量工具，单轮取首次响应 tool_calls；`judge_case` 纯函数判定；指标四项（tool_selection_accuracy / slot_completeness / false_trigger_rate / clarify_accuracy）；`--dry-run` 零成本自检、`--limit N` 冒烟省钱；报告落 eval/tool_call_report.json | `eval/eval_tool_calls.py`（新增） | 单题异常不中断全量；结果含数据集版本号可追溯 |
+| 6 | CI 新 job `eval-tool-calls`：schedule/workflow_dispatch 触发（不进 push 门禁，耗 token）；secrets.DEEPSEEK_API_KEY 未配置时安装/评测步骤级跳过保持绿，dry-run 自检照常执行；报告落 artifact | `.github/workflows/ci.yml` | 步骤级 `if: env.DEEPSEEK_API_KEY != ''`（job 级 if 不能直接读 secrets） |
+| 7 | 测试 16 条：check_tool_slots 全覆盖（逐槽位缺失/占位值/可选参数/未登记工具）+ hint 文案 + 数据集契约 + judge 三态 + dry-run + 节点级预检（缺槽位回提示不进审批/多调用全应答/完整敏感调用走到挂起点）+ 链路级两轮合并（假 LLM 驱动真实图：反问 → 补日期 → pending 落库 + interrupt 挂起） | `test/test_slot_filling.py`、`test/test_slot_filling_link.py`（新增）、`test/conftest.py` | 纯函数层零依赖可跑；链路层缺 langchain 时 collect_ignore 整模块跳过 |
+
+### 设计决策（预检接入位置）
+
+- **选 human_review_node 而非新节点/ToolNode 包装**：该节点本就是所有
+  tool_calls 的路由必经点（router_after_chatbot 只区分「有 tool_calls 与否」），
+  且已有「回 ToolMessage → router_after_review 自动回 chatbot」的成熟回路
+  （请假预检同款）——零新增节点、零新边、SSE 契约不变，是拓扑侵入最小的位置。
+- **预检只判「存在性/占位符」，格式与余额仍归 leave_service**：职责分层——
+  slot_filling 管「有没有」，_precheck_leave 管「对不对/够不够」，互不重叠。
+- **多轮合并不落状态**：槽位收集状态天然在对话历史里（checkpointer 持久化），
+  chatbot 带着历史重调工具即完成合并，无需额外槽位状态机（实测两轮链路通过）。
+
+### 验证结果（槽位 + 评测）
+
+- 全量 `pytest test/ -q`：**136 passed / 5 skipped**（120 存量全绿 + 新增 16 条），
+  36 subtests passed
+- compileall + check_import_cycles（60 模块无环）通过
+- `python -m eval.eval_tool_calls --dry-run`：70 题结构 0 问题
+- 真实 LLM 冒烟（DeepSeek，本地 .env key，共 5 次调用控制成本）：
+  前 4 题 profile 工具选择/槽位全中（accuracy 1.0）；「我想请假」单题验证
+  LLM 不调工具直接反问类型+日期（judge pass），报告落 eval/tool_call_report.json
+
+### 遗留项（槽位 + 评测）
+
+- 评测集基线（70 题全量准确率）尚未跑全量录制，待 eval-tool-calls nightly
+  首跑后视情况把阈值固化为回归门禁（当前通报制）
+- clarify 用例中「相对日期」（下周五/过几天）依赖 LLM 会话日期推断，
+  评测集只用一题覆盖；如需强约束可在系统提示词注入当前日期
+- 槽位预检对同一 AIMessage 的多个完整调用回「暂缓执行」（协议要求全应答），
+  极端多调用场景的用户体验未专门打磨

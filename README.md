@@ -160,7 +160,13 @@ python -m unittest test.test_fact_rules -v          # 纯规则单测：不加�
 - **混合召回**：向量(BGE bge-small-zh-v1.5) + BM25，EnsembleRetriever 加权 RRF，
   线上默认权重 **向量 0.6 / BM25 0.4**（709 题扫参依据见 `eval/weight_sweep_result.json`）；
   CrossEncoder(bge-reranker-base) 精排取 Top-3。
-- **评测集**：`2026.09-v4`，741 题（政策 709 + 工具 16 + 超纲拒答 10 + 敏感审批 6）。
+- **评测集**：`2026.09-v4`，741 题（政策 709 + 工具 16 + 超纲拒答 10 + 敏感审批 6）；
+  另有工具调用评测集 `eval/tool_call_dataset.py` `2026.10-v1`（70 题：单轮首轮工具决策，
+  含误触发反例与缺槽位反问用例），由 `eval/eval_tool_calls.py` 跑真实 LLM 统计
+  工具选择准确率 / 槽位完整率 / 误触发率 / 反问率（`--dry-run` 零成本自检结构）。
+- **槽位补全（Slot Filling）**：`tools/slot_filling.py` 纯函数登记表 + 预检，接入
+  human_review 节点（所有 tool_calls 必经关卡，图拓扑零改动）——必填槽位缺失时
+  **不执行工具、不进审批**，回 ToolMessage 让 chatbot 反问补齐，多轮对话历史天然合并。
 - **实体库**：80 人花名册（`db/employees.db`，与 `build_roster()` 同源；不在版本库内）。
 
 ### 7. 容器化运行
@@ -509,6 +515,7 @@ push / PR 触发五个 job，schedule（每日 18:17 UTC）与手动触发追加
 | `python-test` | push/PR | Python 3.11/3.12 矩阵；compileall 语法门禁 → `scripts/check_import_cycles.py` 循环 import 检查 → `pytest test/ -v` | 阻塞 |
 | `eval-gate` | push/PR | 评测门禁离线切片：GT 可定位 + 熔断/权重配置契约（不加载模型） | 阻塞 |
 | `eval-nightly` | 定时/手动 | 下载 BGE 权重跑 741 题检索门禁（Hit@3/Hit@5/MRR 与 `eval/baseline.json` 比对，回归即红；不调 LLM 零 token 成本） | 阻塞 |
+| `eval-tool-calls` | 定时/手动 | 工具调用准确率评测（70 题真实 LLM，耗 token 不进 push 门禁；`secrets.DEEPSEEK_API_KEY` 未配置时跳过保持绿，dry-run 自检照常执行），报告落 artifact | 通报 |
 | `security` | push/PR | `pip-audit`（钉版依赖通报制，报告落 artifact）+ `npm audit --omit=dev`（高危阻塞） | npm 阻塞 / pip 通报 |
 | `web-build` | push/PR | node 20：`npm ci` + `npm run build`（含 vue-tsc 类型门禁），dist 落 artifact | 阻塞 |
 | `docker-check` | push/PR | `docker compose config -q` 校验 + hadolint（通报制） | compose 阻塞 |
