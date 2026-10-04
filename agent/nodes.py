@@ -204,6 +204,20 @@ def human_review_node(state: AgentState) -> dict:
     """人工介入节点：敏感工具调用挂起，等待 approve / reject。"""
     last_message = state["messages"][-1]
 
+    # 多轮追问改写（query rewriting）：search_hr_policy 的 query 若是依赖上下文的
+    # 追问（「那病假呢？」），在工具执行前结合对话历史改写为自足问题——只改工具
+    # 调用参数（同 id AIMessage 替换），用户消息原文与对话历史不动。
+    # 仅当本轮调用中不含敏感工具时短路放行（含敏感工具走下方审批路径，
+    # 本轮不改写，属罕见组合，审批后下一轮检索仍会被重新判定）。
+    if getattr(last_message, "tool_calls", None) and not any(
+            tc["name"] in SENSITIVE_TOOLS for tc in last_message.tool_calls):
+        from agent.query_rewrite import rewrite_search_tool_calls
+
+        rewritten_msg = rewrite_search_tool_calls(state["messages"])
+        if rewritten_msg is not None:
+            logger.info("追问改写命中，检索查询已更新为自足问题")
+            return {"messages": [rewritten_msg]}
+
     # 槽位预检（执行/审批之前）：任何登记的必填槽位缺失 → 不执行工具、不进审批，
     # 回 ToolMessage 提示让 chatbot 向用户反问（路由 router_after_review 见到
     # ToolMessage 自动回 chatbot，图拓扑零改动）。同一 AIMessage 里的其他调用

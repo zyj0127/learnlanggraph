@@ -541,3 +541,62 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
 - streamlit 前端未渲染引用卡片（sources 事件忽略不炸，可后续补）
 - renderMd 不支持 markdown 表格（LLM 回答出表格时是已知展示短板）
 - 正文 `[n]` 高亮是正则替换，代码块里的 `[1]` 也会高亮（展示层小瑕疵）
+
+## 二十一、多轮追问改写（conversational query rewriting）
+
+> 多轮对话里「那病假呢？」这类追问直接送检索必败（缺主题词）。本节在
+> 工具执行前加一道改写：启发式判定追问 → 扩写 LLM 结合历史改写成自足问题。
+> 原则：**首轮/自足问题零额外 LLM 调用；用户消息原文不动；失败回退不阻断**。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | 改写模块：`needs_rewrite`（纯函数启发式：强承接词「那/这个/还有/换成…」命中即追问；弱标记「呢/继续」+短句（≤20 字）；极短（≤8 字）无主题词；首轮无历史一律跳过）、`build_rewrite_prompt` / `format_history`（纯函数）、`rewrite_followup`（llm 可注入，None 时懒加载复用 get_expansion_llm；空/超长(>100)/同原文的改写一律不采纳，异常回退原查询） | `agent/query_rewrite.py`（新增） | 复用扩写 LLM 实例，不新增客户端 |
+| 2 | 接入 human_review 必经关卡：search_hr_policy 命中追问时，以**同 id AIMessage 替换**方式改写 tool_call 的 query 参数（add_messages 按 id 去重更新），随后正常路由 tools；含敏感工具的混合本轮不改写（走审批路径，罕见组合） | `agent/nodes.py`（human_review_node 开头） | 图拓扑零改动；对话历史、用户消息、前端展示均不受影响；sources 溯源基于改写后检索正常透出 |
+| 3 | 测试 17 条：触发策略（首轮跳过/强标记/弱标记/极短/自足跳过/空问题）、history 格式化过滤与截断、prompt 构造、假 LLM 改写命中/无历史零调用/自足零调用/异常回退/坏改写不采纳、接线层同 id 替换与非检索工具不动 | `test/test_query_rewrite.py`（新增） | 纯函数 + 假 LLM，零成本 |
+
+### 验证结果
+
+- 全量 `pytest test/ -q`：**178 passed / 5 skipped**（含新增 17 条）
+- 741 检索门禁回归（本地 BGE 双模型）：**6 passed**——改写只作用于图内 tool_call，
+  检索管线与评测口径零改动
+- 真实 LLM 冒烟（1 次调用）：「差旅住宿标准多少？」→「那病假呢？」改写为
+  「病假的相关规定是什么」，日志与返回值一致
+
+### 遗留项
+
+- 含敏感工具的混合调用本轮不改写（审批优先）；启发式有边界误判可能
+  （如「病假能休几天呢？」会被改写一轮，LLM 通常原样返回，浪费 1 次调用），
+  指标上可后续经 Langfuse 观察改写命中率再调阈值
+- streamlit / eval harness 不走 human_review 的旁路调用（如 eval_retrieval_sliced
+  直调工具）不受影响，属设计内
+
+## 二十二、拒答校准评测集（refusal calibration）
+
+> 幻觉防线（fact_check）管「答错」，还需要一把尺管「不该答的别答」：
+> 手册不存在的福利、他人隐私、竞品数据、违规诱导，期望是拒答+转人工，
+> 而非编造。原则：**规则优先可解释，LLM judge 只兜底不确定；阈值制门禁**。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | 评测集 42 题五类：privacy 10（CEO 手机号/同事薪资/身份证/通讯录……）、competitor 8、out_of_scope 10（住房补贴/宠物险/购房借款……已核对手册章节避开覆盖项）、chitchat 8、jailbreak 6；`validate_dataset` 结构自检 | `eval/refusal_dataset.py`（新增，`2026.10-v1`） | **不并入 741 检索基线**——检索考手册内命中，本集考手册外不编造，两码事 |
+| 2 | 判定 `judge_refusal`（纯函数可单测）：空答案 fail → 手机号/身份证格式硬拦 fail（泄露或编造都不可接受）→ 拒答信号词（未覆盖/无法提供/转人工…）pass → 无信号却有具体金额/比例/天数 fail（疑似编造）→ 其余 LLM judge 兜底（无 llm 保守 fail；judge 异常 fail-safe 判 fail） | `eval/eval_refusal.py` | 与事实审计「宁红勿绿」同原则 |
+| 3 | harness 复用 eval_tool_calls 模式（同款系统提示词 + 全量工具绑定，至多 3 轮；预取工具真实执行 RBAC 旁路；search_hr_policy 回「未检索到」兜底文本；敏感写工具绝不执行）；指标 refusal_accuracy + 分类目分组 + llm_judge_used 计数；阈值 **≥0.85**（设计目标，注释写明基线口径）；`--dry-run` 零成本自检 | `eval/eval_refusal.py` | 报告落 `eval/refusal_report.json` |
+| 4 | CI：eval-tool-calls job 并列步骤（dry-run 恒跑；真实评测 secrets.DEEPSEEK_API_KEY 缺失跳过保持绿）；报告并入同一 artifact | `.github/workflows/ci.yml` | push 不触发（nightly/手动），不阻塞合入 |
+| 5 | 测试 14 条：信号词 pass / 空 fail / 隐私格式硬拦（含带拒答话术仍拦）/ 无信号编造数字 fail / 无 judge 保守 fail / LLM judge 过与不过 / 信号短路零 judge 调用 / judge 异常 fail-safe / 数据集契约（30-50 题、五类全覆盖、非法结构检出）/ 阈值边界 / 分组指标 | `test/test_refusal.py`（新增） | 零依赖 |
+
+### 验证结果
+
+- 全量 `pytest test/ -q`：**178 passed / 5 skipped**（含新增 14 条）
+- `--dry-run`：42 题结构零问题；741 检索门禁 **6 passed** 不退化
+- 真实 LLM 冒烟（--limit 4，pv01-pv04 隐私题）：**4/4 PASS，refusal_accuracy 1.0**，
+  llm_judge_used=0（规则层全覆盖）
+
+### 遗留项
+
+- 检索腿以「未检索到」文本模拟（CI 评测环境无 BGE 权重）：比生产略宽松——
+  生产检索对超纲问题会返回弱相关 chunk，更考验模型不强行引用；如需严格口径
+  可在 nightly 加 BGE 权重后改为真实检索
+- 阈值 0.85 为设计目标（42 题约允许 6 题边界失误），首个全量基线由 CI nightly
+  首次运行录制；若实测远低于阈值应先修提示词/防线再录基线
+- chitchat 题（如「帮我算乘法」）按 HR 助手定位要求拒答，若产品后续放开闲聊
+  口径需同步调整该分组
