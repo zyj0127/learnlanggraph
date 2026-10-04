@@ -22,8 +22,9 @@ log_turn，streamlit 没有）。本模块把它收敛为唯一实现：
 - {"type": "sources", "sources": [{id, chapter, section, snippet}, ...]}
       政策引用来源（additive 扩展：紧随 search_hr_policy 的 tool_result 之后
       透出；旧客户端忽略未知事件类型即可，契约向后兼容）
-- {"type": "done", "usage": dict, "latency_s": float}
-      本轮结束，附带用量统计与耗时
+- {"type": "done", "usage": dict, "latency_s": float, "cache_hit": bool}
+      本轮结束，附带用量统计与耗时；cache_hit=True 表示语义缓存命中
+      （additive 字段，本轮 LLM 成本为零，usage 全 0）
 
 埋点口径统一：无论 http 还是 streamlit 渠道，只要传入 meta 即调用 log_turn，
 埋点失败不影响主链路。
@@ -31,8 +32,9 @@ log_turn，streamlit 没有）。本模块把它收敛为唯一实现：
 import time
 from typing import Any, Dict, Iterator, Optional
 
-from langchain_core.messages import HumanMessage, ToolMessage
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
+from agent.constants import AUDIT_FALLBACK_MESSAGE, HANDOFF_PREFIX
 from logging_config import get_logger
 from observability import UsageTracker
 from telemetry import log_turn
@@ -129,7 +131,51 @@ def _stream_turn_impl(app, graph_input, config: dict,
 
         identity_token = set_current_identity(identity)
 
+    # ---- 语义缓存（任务⑥）：仅首轮/追问输入（dict）且带埋点问题时尝试 ----
+    # 命中即按既有 token 事件流出（前端无感），本轮 LLM 成本为零；
+    # 审批恢复（Command 输入）永不走缓存。缓存故障静默降级为正常执行。
+    question = (meta or {}).get("question", "")
+    if meta and isinstance(graph_input, dict) and question:
+        from agent.semantic_cache import cache_lookup
+
+        hit = cache_lookup(question)
+        if hit is not None:
+            try:
+                # 与 chatbot 流式输出同口径：分片 token 事件
+                answer = hit["answer"]
+                chunk = 20
+                for i in range(0, len(answer), chunk):
+                    yield {"type": "token", "content": answer[i:i + chunk], "msg_id": None}
+                if hit.get("sources"):
+                    yield {"type": "sources", "sources": hit["sources"]}
+                latency_s = time.perf_counter() - started
+                usage = {"llm_calls": 0, "input_tokens": 0, "output_tokens": 0,
+                         "total_tokens": 0, "estimated_cost_rmb": 0.0, "models": []}
+                log_turn(
+                    session_id=config["configurable"]["thread_id"],
+                    question=question,
+                    uid=meta.get("uid", ""),
+                    channel=meta.get("channel", "http"),
+                    final_messages=[AIMessage(content=answer)],
+                    usage=usage, latency_s=latency_s,
+                    cache_hit=True, model_tier="cache",
+                )
+                yield {"type": "done", "usage": usage, "latency_s": latency_s,
+                       "cache_hit": True}
+                return
+            finally:
+                if identity_token is not None:
+                    from auth.context import reset_current_identity
+
+                    reset_current_identity(identity_token)
+
     try:
+        # ---- 本轮观测（缓存写入判定用）----
+        tool_names_seen: list = []
+        search_query_used: str = ""
+        sources_seen: list = []
+        approval_pending = False
+
         for msg, metadata in app.stream(graph_input, config, stream_mode="messages"):
             node = metadata.get("langgraph_node", "")
 
@@ -138,6 +184,11 @@ def _stream_turn_impl(app, graph_input, config: dict,
             if tool_calls:
                 for tool_call in tool_calls:
                     yield {"type": "tool_call", "tool_call": tool_call}
+                    tool_names_seen.append(tool_call.get("name", ""))
+                    if tool_call.get("name") == "search_hr_policy":
+                        # 追问改写后的查询（缓存别名 key，改写后相同追问也能命中）
+                        search_query_used = str(
+                            (tool_call.get("args") or {}).get("query") or "")
                 continue
 
             # 最终答案 token：仅 chatbot 节点的内容（SSE 契约保持不变）
@@ -153,6 +204,7 @@ def _stream_turn_impl(app, graph_input, config: dict,
 
                     sources = parse_sources_from_text(str(msg.content))
                     if sources:
+                        sources_seen = sources
                         yield {"type": "sources", "sources": sources}
 
         # 兜底：messages 流不直接透出 interrupt，改查图状态
@@ -160,6 +212,7 @@ def _stream_turn_impl(app, graph_input, config: dict,
         if state.next:
             thread_id = config["configurable"]["thread_id"]
             logger.warning("会话挂起等待人工审批：thread=%s", thread_id)
+            approval_pending = True
             yield {
                 "type": "approval_required",
                 "thread_id": thread_id,
@@ -170,17 +223,41 @@ def _stream_turn_impl(app, graph_input, config: dict,
         latency_s = time.perf_counter() - started
         usage = tracker.summary()
 
+        final_messages = (state.values or {}).get("messages", [])
         if meta:
+            from agent.model_router import usage_tier
+
             log_turn(
                 session_id=config["configurable"]["thread_id"],
                 question=meta.get("question", ""),
                 uid=meta.get("uid", ""),
                 channel=meta.get("channel", "http"),
-                final_messages=(state.values or {}).get("messages", []),
+                final_messages=final_messages,
                 usage=usage,
                 latency_s=latency_s,
+                model_tier=usage_tier(usage.get("models") or []),
             )
-        yield {"type": "done", "usage": usage, "latency_s": latency_s}
+
+        # ---- 语义缓存写入判定（任务⑥）----
+        # 只缓存「纯政策问答」：本轮工具调用 ⊆ {search_hr_policy}（政策是公共
+        # 信息，与 uid 无关）、无审批挂起、最终答案非转人工/熔断话术。
+        # 含个人数据（档案/余额）或写操作（证明/请假）的答案绝不缓存；
+        # 审计打回后重写的最终答案本身就是审计通过的产物，可以缓存。
+        if meta and question and not approval_pending:
+            from agent.semantic_cache import cache_store
+
+            last_msg = final_messages[-1] if final_messages else None
+            answer = getattr(last_msg, "content", "") or ""
+            if (answer
+                    and isinstance(last_msg, AIMessage)
+                    and tool_names_seen
+                    and set(tool_names_seen) <= {"search_hr_policy"}
+                    and not answer.startswith(HANDOFF_PREFIX)
+                    and not answer.startswith(AUDIT_FALLBACK_MESSAGE)):
+                cache_store(question, answer, sources=sources_seen or None,
+                            alias=search_query_used or None)
+        yield {"type": "done", "usage": usage, "latency_s": latency_s,
+               "cache_hit": False}
     finally:
         if identity_token is not None:
             from auth.context import reset_current_identity

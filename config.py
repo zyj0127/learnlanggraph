@@ -75,6 +75,20 @@ class Settings(BaseSettings):
     llm_base_url: str = ""
     llm_api_key: str = ""
     llm_model: str = ""
+    # 分级路由轻量档位（任务⑦）：闲聊/问候走此模型；默认空 = 与主模型无差别
+    # （配了才分流，未配置行为与现状完全一致）。审计节点永远用主模型。
+    llm_model_light: str = ""
+
+    # ---- 语义缓存（任务⑥：政策问答答案缓存）----
+    # 总开关：False 时 lookup/store 全部旁路，行为与现状完全一致
+    semantic_cache_enabled: bool = True
+    # 余弦相似度命中阈值。2026-10-04 本地 BGE bge-small-zh 实测标定：
+    # 同义改写 0.91（病假能休几天/可以休多少天），危险混淆对 0.86
+    # （事假扣工资/病假扣工资）——安全区间 0.87~0.91，取 0.90 保守档。
+    # 宁缺毋滥：错命中（返回别的问题的答案）比未命中危害大得多。
+    semantic_cache_threshold: float = 0.90
+    # 缓存有效期（天）：政策会修订，过期条目查询时自动清除
+    semantic_cache_ttl_days: int = 7
 
     # ---- 企业化第二阶段：认证授权（auth/ 包）----
     # 总开关：False 时所有鉴权逻辑完全旁路，回到第一阶段行为
@@ -118,6 +132,10 @@ class Settings(BaseSettings):
     def telemetry_db(self) -> Path:
         return PROJECT_ROOT / "db" / "telemetry.db"
 
+    @property
+    def semantic_cache_db(self) -> Path:
+        return PROJECT_ROOT / "db" / "semantic_cache.db"
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
@@ -153,5 +171,24 @@ def get_chat_llm(temperature: float = 0.0):
         model=model,
         api_key=api_key,
         base_url=base_url,
+        temperature=temperature,
+    )
+
+
+def get_light_chat_llm(temperature: float = 0.0):
+    """轻量档位 Chat 客户端（分级模型路由用）。
+
+    配置了 LLM_MODEL_LIGHT 时返回该模型的客户端（凭据/网关与主模型相同）；
+    未配置时回退主模型——路由分级退化为无差别，行为与现状完全一致。
+    """
+    settings = get_settings()
+    if not settings.llm_model_light:
+        return get_chat_llm(temperature=temperature)
+    from langchain_openai import ChatOpenAI  # 延迟导入
+
+    return ChatOpenAI(
+        model=settings.llm_model_light,
+        api_key=settings.llm_api_key or settings.deepseek_api_key or os.getenv("DEEPSEEK_API_KEY"),
+        base_url=settings.llm_base_url or settings.deepseek_base_url or os.getenv("DEEPSEEK_BASE_URL"),
         temperature=temperature,
     )

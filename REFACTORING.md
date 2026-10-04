@@ -600,3 +600,43 @@ test/conftest.py        # 统一处理导入路径；test_milestone4.py 命名�
   首次运行录制；若实测远低于阈值应先修提示词/防线再录基线
 - chitchat 题（如「帮我算乘法」）按 HR 助手定位要求拒答，若产品后续放开闲聊
   口径需同步调整该分组
+
+## 二十三、语义缓存 + 分级模型路由（成本/性能优化）
+
+> 政策问答占流量大头且答案公共（与 uid 无关），反复走完整 LLM 链路是浪费；
+> 闲聊问候用旗舰模型同理。本节上两道省钱闸：语义缓存（命中零 token）+
+> 分级路由（闲聊走轻量模型）。原则：**宁缺毋滥（错命中危害远大于未命中）、
+> 审计链路不被旁路、开关/阈值不可达时行为与现状完全一致**。
+
+| # | 改动 | 涉及文件 | 说明 |
+|---|------|----------|------|
+| 1 | 语义缓存模块：key = 问题 embedding 余弦相似度（复用本地 BGE 零 token 成本，缓存百级规模全量扫描不上 ANN）；sqlite `db/semantic_cache.db` 自愈建表（对齐 telemetry 模式，WAL + 显式关闭连接防 Windows 句柄锁）；TTL 7 天（政策会修订）+ 命中计数 + 全局 lookups/hits 计数器；lookup/store 任何异常静默降级，缓存是优化不是依赖 | `agent/semantic_cache.py`（新增） | embed_fn/db_path 可注入，测试零模型零网络 |
+| 2 | 阈值实测标定 0.90（默认）：本地 BGE 实测同义改写对 0.913（病假能休几天/可以休多少天）、危险混淆对 0.857（事假扣工资/病假扣工资）——安全区间 0.87~0.91，取 0.90；`SEMANTIC_CACHE_THRESHOLD` 可调 | `config.py`（Settings） | 标注实测日期与依据，禁止凭感觉调 |
+| 3 | 接入 session_runner：命中时按既有 token 事件分片流出 + sources 事件原样透出（前端无感，SSE 契约 additive 仅 done 加 cache_hit 字段），本轮 usage 全 0；审批恢复（Command 输入）永不走缓存。写入判定：**本轮工具调用 ⊆ {search_hr_policy} 且无审批挂起、最终答案非转人工/熔断话术**——含个人数据（档案/余额）与写操作（证明/请假）的答案绝不缓存；审计打回后重写的最终答案本身是审计通过的产物，可缓存。追问改写后的检索查询作为**别名行**一并写入（改写后相同追问也能命中） | `agent/session_runner.py` | 缓存内容与 uid 无关（政策是公共信息）；命中答案不经审计是因为它已经审计过 |
+| 4 | 分级路由：`route_model_tier` 纯函数——light 需同时满足 ≤15 字 + 无政策主题词 + 无工具意图词 + 命中问候模式，其余一律 main（保守：宁可少分流也不错分流）；`usage_tier` 从本轮模型名列表归纳档位（混合按 main 记） | `agent/model_router.py`（新增） | 路由矩阵纯函数可测 |
+| 5 | Settings 新增 `llm_model_light`（LLM_MODEL_LIGHT，默认空 = 与主模型无差别，配了才分流）+ `get_light_chat_llm` 工厂（未配置回退主模型）；chatbot 节点按路由选模型，**轻量路径仍绑定全量工具**（误判兜底）；审计节点恒主模型不动 | `config.py`、`agent/nodes.py` | 未配置时行为与现状完全一致 |
+| 6 | 埋点：UsageTracker 采集每次调用的模型名（summary 增 models 字段）；session_events 自愈迁移加 `cache_hit`/`model_tier` 两列（ALTER 幂等）；周报新增「成本优化」小节（缓存命中率 + 档位分布） | `observability/usage.py`、`telemetry/sink.py`、`telemetry/metrics.py`、`telemetry/report.py` | 省钱看得见 |
+| 7 | 测试 21 条：缓存命中/未命中/计数与统计/别名命中/阈值不可达/TTL 过期清理/开关旁路/空输入/余弦纯函数/session_runner 命中短路契约（图不被驱动、事件序列、埋点 cache_hit）与未命中放行；路由矩阵（问候分流/政策词/工具词/长句/空/混合问候+政策不分流）、usage_tier 归纳、轻量工厂回退 | `test/test_semantic_cache.py`、`test/test_model_router.py`（新增） | 假 embedding + tmp 库，零外部依赖 |
+
+### 验证结果
+
+- 全量 `pytest test/ -q`：**199 passed / 5 skipped**（178 存量 + 新增 21 条）
+- compileall + check_import_cycles（66 模块无环）通过
+- 741 检索门禁回归（本地 BGE 双模型）：**6 passed**——缓存/路由不触碰检索管线口径
+- 真实 BGE 冒烟（零 LLM 调用）：同义改写 HIT（0.913）、原问 HIT（1.0）、
+  危险混淆对 MISS（0.857 < 0.90）、跨主题 MISS——阈值标定生效
+- 未做真实轻量模型冒烟：本地 .env 未配置 LLM_MODEL_LIGHT（回退路径已被单测覆盖）；
+  配置后首跑建议观察周报档位分布
+
+### 遗留项
+
+- 评测联动提醒：若后续默认配置 LLM_MODEL_LIGHT 且把闲聊类分流出去，
+  工具调用（70 题）/拒答（42 题）评测集里的 chitchat 题答案可能变化——
+  门禁阈值注释已写明「基线变更需重录」，换档后应重跑一次 nightly 录新基线
+- 缓存对同义改写覆盖有限（差旅类 paraphrase 0.79-0.81 低于阈值不命中），
+  命中率上限受 embedding 区分度约束；如需更高命中可评估 query 归一化
+  （去问号/统一主语）后参与 embedding，但需重新标定阈值
+- 缓存计数器为累计口径（不区分周期）；缓存条目无容量上限（TTL 自然收敛，
+  政策问题空间有限，量级安全）
+- 「无工具调用」口径落地为「工具调用 ⊆ {search_hr_policy}」：纯政策问答
+  必经检索工具，若严格零工具几乎无答案可缓存；安全边界由白名单保证

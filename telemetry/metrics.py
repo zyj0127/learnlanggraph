@@ -115,6 +115,24 @@ def weekly_report(days: int = 7) -> dict:
         for r in rows if (r["handed_off"] or r["audit_rejected"])
     ][:10]
 
+    # 任务⑥⑦：缓存命中与模型档位分布（旧库无列时按 0 处理，不报错）
+    try:
+        cache_hit_turns = sum(r.get("cache_hit") or 0 for r in rows)
+        tier_counts: dict = {}
+        for r in rows:
+            tier = r.get("model_tier") or "main"
+            tier_counts[tier] = tier_counts.get(tier, 0) + 1
+    except AttributeError:
+        cache_hit_turns, tier_counts = 0, {}
+
+    # 语义缓存命中率（计数器是累计值，口径见 agent/semantic_cache.py）
+    try:
+        from agent.semantic_cache import cache_stats
+
+        semantic_cache = cache_stats(days)
+    except Exception:
+        semantic_cache = None
+
     return {
         "period_days": days,
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -131,6 +149,10 @@ def weekly_report(days: int = 7) -> dict:
         "total_tokens": tokens,
         "estimated_cost_rmb": round(cost, 4),
         "top_badcases": badcases,
+        # 任务⑥⑦：缓存命中轮次、模型档位分布、缓存命中率（省钱看得见）
+        "cache_hit_turns": cache_hit_turns,
+        "model_tier_turns": tier_counts,
+        "semantic_cache": semantic_cache,
         # 企业化第二阶段：授权审计（auth_events）聚合，口径见 auth_security_summary
         "auth_security": auth_security_summary(days),
     }
