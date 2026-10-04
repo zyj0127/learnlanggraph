@@ -40,6 +40,8 @@ if not _HAS_LANGCHAIN:
         "test_milestone2.py",
         "test_milestone3.py",
         "test_milestone4.py",
+        # 槽位链路测试在模块顶部即 import langchain / agent 节点
+        "test_slot_filling_link.py",
     ]
 if not (_HAS_FASTAPI and _HAS_LANGGRAPH):
     # test_api / test_admin_queue / test_my_requests 在测试方法内 import

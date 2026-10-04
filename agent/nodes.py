@@ -143,7 +143,12 @@ def chatbot_node(state: AgentState) -> dict:
             content=f"你是飞羽科技的高级hr 智能助理。\n"
                     f'当前提问员工的 uid 是：{state.get("current_uid")}。\n'
                     f"回答具体问题前，请务必先调用 get_employee_profile 获取该员工的工作属性，再基于事实作答。\n"
-                    f"必须基于工具的返回事实，绝不能编造数字或条件")
+                    f"必须基于工具的返回事实，绝不能编造数字或条件。\n"
+                    f"调用工具前必须确认必填参数齐全：例如请假需要请假类型（年假/病假/事假）、"
+                    f"起止日期（YYYY-MM-DD）；开证明需要证明类型（在职/收入）。"
+                    f"用户没提供时不要编造参数，先用自然语言追问收集（可多轮），"
+                    f"结合对话历史合并已知信息，只追问仍缺失的部分；"
+                    f"参数齐全后再一次性发起工具调用。")
         messages = [system_msg] + messages
 
     response = get_llm_with_tools().invoke(messages)
@@ -195,6 +200,34 @@ def _leave_pending(tool_call: dict, applicant_uid: str) -> str:
 def human_review_node(state: AgentState) -> dict:
     """人工介入节点：敏感工具调用挂起，等待 approve / reject。"""
     last_message = state["messages"][-1]
+
+    # 槽位预检（执行/审批之前）：任何登记的必填槽位缺失 → 不执行工具、不进审批，
+    # 回 ToolMessage 提示让 chatbot 向用户反问（路由 router_after_review 见到
+    # ToolMessage 自动回 chatbot，图拓扑零改动）。同一 AIMessage 里的其他调用
+    # 一并回「暂缓」ToolMessage（OpenAI 协议要求每个 tool_call 都有响应）。
+    if getattr(last_message, "tool_calls", None):
+        from tools.slot_filling import build_slot_hint, check_tool_slots
+
+        replies: list[ToolMessage] = []
+        for tc in last_message.tool_calls:
+            missing = check_tool_slots(tc["name"], tc.get("args"))
+            if missing:
+                logger.info("槽位预检拦截：%s 缺 %s", tc["name"], "、".join(missing))
+                replies.append(ToolMessage(
+                    content=build_slot_hint(tc["name"], missing),
+                    name=tc["name"], tool_call_id=tc["id"],
+                ))
+        if replies:
+            answered = {m.tool_call_id for m in replies}
+            for tc in last_message.tool_calls:
+                if tc["id"] not in answered:
+                    replies.append(ToolMessage(
+                        content=("system:同一轮存在槽位不完整的调用，本次调用暂缓执行；"
+                                 "请先协助用户补齐缺失信息。"),
+                        name=tc["name"], tool_call_id=tc["id"],
+                    ))
+            return {"messages": replies}
+
     # 检查大模型是否调用敏感工具
     sensitive_tool_call = None
     if hasattr(last_message, "tool_calls"):
